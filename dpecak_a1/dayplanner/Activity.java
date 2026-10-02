@@ -1,4 +1,4 @@
-package dpecak_a1;
+package dayplanner;
 
 
 public class Activity {
