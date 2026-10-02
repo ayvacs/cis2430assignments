@@ -28,7 +28,22 @@ public class DayPlanner {
             System.out.println("3) Quit");
             option = KEYBOARD.readInt();
 
-            System.out.println(option);
+            switch (option) {
+                case 1:
+                    addActivity();
+                    break;
+                case 2:
+                    searchForActivity();
+                    break;
+                case 3:
+                    doLoop = false;
+                    break;
+                default:
+                    System.out.println("Invalid option; type an integer between 1 and 3 inclusive.");
+                    break;
+            }
         }
+
+        System.out.println("Now quitting DayPlanner. Goodbye!");
     }
 }

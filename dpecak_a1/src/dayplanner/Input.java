@@ -22,7 +22,7 @@ public class Input {
         int input = SCANNER.nextInt();
         clearNewline();
         
-        System.out.println();
+        System.out.println(" ");
         return input;
     }
 }
