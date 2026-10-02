@@ -34,6 +34,12 @@ public class DayPlanner {
             comment = KEYBOARD.readString();
         }
 
+        String location = "-1";
+        if (type == 3) {
+            System.out.println("Enter a location.");
+            location = KEYBOARD.readString();
+        }
+
 
         // Create the activity
         Activity activity;
@@ -43,7 +49,7 @@ public class DayPlanner {
             } else if (type == 2) {
                 activity = new SchoolActivity(title, startTime, endTime);
             } else if (type == 3) {
-                activity = new OtherActivity(title, startTime, endTime);
+                activity = new OtherActivity(title, startTime, endTime, location);
             }
         } else {
             if (type == 1) {
@@ -51,7 +57,7 @@ public class DayPlanner {
             } else if (type == 2) {
                 activity = new SchoolActivity(title, startTime, endTime, comment);
             } else if (type == 3) {
-                activity = new OtherActivity(title, startTime, endTime, comment);
+                activity = new OtherActivity(title, startTime, endTime, location, comment);
             }
         }
     }
