@@ -157,7 +157,7 @@ public class Time {
     /**
      * Attempt to set the specified <code>hour</code>.
      * Subject to input validation based on the allowed range of hours. If the new field is not valid, the operation cancels without affecting the instance.
-     * Must be <code>0</code> through <code>59</code> inclusive.
+     * Must be <code>0</code> through <code>23</code> inclusive.
      * @param int The new hour.
      */
     public void setHour(int hour) {
