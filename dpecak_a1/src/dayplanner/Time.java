@@ -1,6 +1,10 @@
 package dayplanner;
 
 
+/**
+ * Represents a combination of date and time, with no specified timezone.
+ * Does not take seconds into account.
+ */
 public class Time {
     private static final int MIN_YEAR = 1970;
     private static final int MIN_MONTH = 1;
@@ -8,7 +12,7 @@ public class Time {
     private static final int MIN_HOUR = 0;
     private static final int MIN_MINUTE = 0;
 
-    private static final int MAX_YEAR = MIN_YEAR + 200;
+    private static final int MAX_YEAR = 2170;
     private static final int MAX_MONTH = 12;
     private static final int MAX_DAY = 31;
     private static final int MAX_HOUR = 23;
@@ -24,9 +28,13 @@ public class Time {
 
 
 
-    private static boolean isLeapYear(int year) {
-        // https://www.programiz.com/cpp-programming/examples/leap-year
-
+    /**
+     * Determines whether the given <code>year</code> is a leap year.
+     * Code adapted from <a href="https://www.programiz.com/cpp-programming/examples/leap-year">Programiz</a>.
+     * @return Whether or not <code>Year</code> is a leap year.
+     * @param year The year to check.
+     */
+    public static boolean isLeapYear(int year) {
         if (year % 400 == 0)
             return true;
         else if (year % 100 == 0)
@@ -39,6 +47,10 @@ public class Time {
 
 
 
+    /**
+     * Instantiates a new <code>Time</code> with no initial fields.
+     * Each field defaults to the minimum allowed values.
+     */
     public Time() {
         // Assume default values
         this.year = MIN_YEAR;
@@ -48,6 +60,10 @@ public class Time {
         this.minute = MIN_MINUTE;
     }
 
+    /**
+     * Instantiates a new <code>Time</code> with each required field specified.
+     * If any field is not valid, it defaults to its minimum allowed value.
+     */
     public Time(int year, int month, int day, int hour, int minute) {
         // Assume default values
         this();
@@ -59,6 +75,10 @@ public class Time {
         setMinute(minute);
     }
 
+    /**
+     * Instantiates a new <code>Time</code> based on the given <code>formatString</code>.
+     * @param String of the format <code>YYYY/MM/DD HH:MM</code>. Input is validated against specified minimum and maximum values; if any field is not valid, it defaults to its minimum allowed. Note: This parameter's format matches the return format of <code>toString()</code> exactly.
+     */
     public Time(String formatString) {
         // Assume default values
         this();
@@ -78,17 +98,34 @@ public class Time {
     }
 
 
-
+    /**
+     * Attempt to set the specified year.
+     * Subject to input validation based on the allowed range of years. If the new field is not valid, the operation cancels without affecting the instance.
+     * Must be <code>1970</code> through <code>2170</code> inclusive.
+     * @param int The new year.
+     */
     public void setYear(int year) {
         if (year >= MIN_YEAR && year <= MAX_YEAR)
             this.year = year;
     }
 
+    /**
+     * Attempt to set the specified month.
+     * Subject to input validation based on the allowed range of months. If the new field is not valid, the operation cancels without affecting the instance.
+     * Must be <code>1</code> through <code>12</code> inclusive.
+     * @param int The new month.
+     */
     public void setMonth(int month) {
         if (month >= MIN_MONTH && month <= MAX_MONTH)
             this.month = month;
     }
 
+    /**
+     * Attempt to set the specified day.
+     * Subject to input validation based on the allowed range of days. If the new field is not valid, the operation cancels without affecting the instance.
+     * Must be <code>0</code> through <code>31</code> inclusive, except if the current month is February. Days in February must be <code>0</code> through <code>29</code> inclusive on leap years, and <code>0</code> through <code>28</code> inclusive on non-leap years.
+     * @param int The new day.
+     */
     public void setDay(int day) {
         int year = getYear();
         int month = getMonth();
@@ -117,11 +154,24 @@ public class Time {
             this.day = day;
     }
 
+    /**
+     * Attempt to set the specified day.
+     * Subject to input validation based on the allowed range of days. If the new field is not valid, the operation cancels without affecting the instance.
+     * Must be <code>0</code> through <code>59</code> inclusive.
+     * @param int The new day.
+     */
     public void setHour(int hour) {
         if (hour >= MIN_HOUR && hour <= MAX_HOUR)
             this.hour = hour;
     }
 
+    /**
+     * Attempt to set the specified minute.
+     * Subject to input validation based on the allowed range of minutes.
+     * If the new field is not valid, the operation cancels without affecting the instance.
+     * Must be <code>0</code> through <code>59</code> inclusive.
+     * @param int The new minute.
+     */
     public void setMinute(int minute) {
         if (minute >= MIN_MINUTE && minute <= MAX_MINUTE)
             this.minute = minute;
@@ -129,20 +179,34 @@ public class Time {
 
 
 
+    /** @return This <code>Time</code>'s <b>year</b> field as an integer. */
     public int getYear()   { return this.year;   }
+
+    /** @return This <code>Time</code>'s <b>month</b> field as an integer. */
     public int getMonth()  { return this.month;  }
+
+    /** @return This <code>Time</code>'s <b>day</b> field as an integer. */
     public int getDay()    { return this.day;    }
+
+    /** @return This <code>Time</code>'s <b>hour</b> field as an integer. */
     public int getHour()   { return this.hour;   }
+
+    /** @return This <code>Time</code>'s <b>minute</b> field as an integer. */
     public int getMinute() { return this.minute; }
 
 
 
+    /** @return A <code>String</code> representation of this <code>Time</code> of the format <code>YYYY/MM/DD HH:MM</code>. */
     public String toString() {
         return String.format("%d/%d/%d %d:%d",
             getYear(), getMonth(), getDay(),
             getHour(), getMinute());
     }
 
+    /**
+     * @return Whether or not this <code>Time</code> equals <code>other</code>.
+     * @param other The other <code>Time</code> to compare with.
+     */
     public boolean equals(Time other) {
         return toString().equals(other.toString());
     }

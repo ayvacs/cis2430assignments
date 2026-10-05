@@ -25,6 +25,11 @@ run: compile
 	$(JVM) -cp $(BIN_DIR) $(MAIN_CLASS)
 
 
+# Build javadoc instructions
+docs: compile
+	javadoc src/**/*.java -d bin/docs
+
+
 # Clean instructions
 clean:
 	rm -rf $(BIN_DIR)
