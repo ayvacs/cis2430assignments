@@ -4,6 +4,7 @@ JCFLAGS = -d $(BIN_DIR) -cp $(SRC_DIR)
 
 SRC_DIR = src
 BIN_DIR = bin
+DOC_DIR = $(BIN_DIR)/docs
 
 PACKAGE = dayplanner
 MAIN_CLASS = $(PACKAGE).DayPlanner
@@ -27,7 +28,7 @@ run: compile
 
 # Build javadoc instructions
 docs:
-	javadoc src/**/*.java -d bin/docs
+	javadoc src/**/*.java -d $(DOC_DIR)
 
 
 # Clean instructions
