@@ -26,7 +26,7 @@ run: compile
 
 
 # Build javadoc instructions
-docs: compile
+docs:
 	javadoc src/**/*.java -d bin/docs
 
 
