@@ -3,7 +3,16 @@ package dayplanner;
 
 public class Time {
     private static final int MIN_YEAR = 1970;
+    private static final int MIN_MONTH = 1;
+    private static final int MIN_DAY = 1;
+    private static final int MIN_HOUR = 0;
+    private static final int MIN_MINUTE = 0;
+
     private static final int MAX_YEAR = MIN_YEAR + 200;
+    private static final int MAX_MONTH = 12;
+    private static final int MAX_DAY = 31;
+    private static final int MAX_HOUR = 23;
+    private static final int MAX_MINUTE = 59;
 
 
 
@@ -15,13 +24,28 @@ public class Time {
 
 
 
+    private static boolean isLeapYear(int year) {
+        // https://www.programiz.com/cpp-programming/examples/leap-year
+
+        if (year % 400 == 0)
+            return true;
+        else if (year % 100 == 0)
+            return false;
+        else if (year % 4 == 0)
+            return true;
+
+        return false;
+    }
+
+
+
     public Time() {
         // Assume default values
         this.year = MIN_YEAR;
-        this.month = 1;
-        this.day = 1;
-        this.hour = 1;
-        this.minute = 1;
+        this.month = MIN_MONTH;
+        this.day = MIN_DAY;
+        this.hour = MIN_HOUR;
+        this.minute = MIN_MINUTE;
     }
 
     public Time(int year, int month, int day, int hour, int minute) {
@@ -61,26 +85,45 @@ public class Time {
     }
 
     public void setMonth(int month) {
-        if (month >= 1 && month <= 12)
+        if (month >= MIN_MONTH && month <= MAX_MONTH)
             this.month = month;
     }
 
     public void setDay(int day) {
-        if (day >= 1 && day <= 31)
+        int year = getYear();
+        int month = getMonth();
+        boolean isLeap = isLeapYear(year);
+        boolean isFeb = month == 2;
+
+        // First, determine whether the given day exceeds the number of days in the month.
+        int thisMonthsMaxDay = -1;
+
+        if (isFeb) {
+            if (isLeap)
+                thisMonthsMaxDay = 29;
+            else
+                thisMonthsMaxDay = 28;
+        } else {
+            if (switch (month) {
+                case 1, 3, 5, 7, 8, 10, 12 -> true;
+                default -> false; })
+                thisMonthsMaxDay = 31;
+            else
+                thisMonthsMaxDay = 30;
+        }
+        
+        // If valid, populate the field.
+        if (day >= MIN_DAY && month <= thisMonthsMaxDay)
             this.day = day;
     }
 
     public void setHour(int hour) {
-        if (hour == 24)
-            setHour(0);
-        if (hour >= 0 && hour <= 23)
+        if (hour >= MIN_HOUR && hour <= MAX_HOUR)
             this.hour = hour;
     }
 
     public void setMinute(int minute) {
-        if (minute == 60)
-            setMinute(0);
-        if (minute >= 0 && minute <= 59)
+        if (minute >= MIN_MINUTE && minute <= MAX_MINUTE)
             this.minute = minute;
     }
 
