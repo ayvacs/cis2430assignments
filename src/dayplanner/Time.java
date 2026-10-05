@@ -77,7 +77,7 @@ public class Time {
 
     /**
      * Instantiates a new <code>Time</code> based on the given <code>formatString</code>.
-     * @param String of the format <code>YYYY/MM/DD HH:MM</code>. Input is validated against specified minimum and maximum values; if any field is not valid, it defaults to its minimum allowed. Note: This parameter's format matches the return format of <code>toString()</code> exactly.
+     * @param String of the format <code>YYYY/MM/DD HH:MM</code>. Input is validated against specified minimum and maximum values; if any field is not valid, it defaults to its minimum allowed value. Note: This parameter's required format matches the return format of <code>toString()</code> exactly.
      */
     public Time(String formatString) {
         // Assume default values
@@ -99,7 +99,7 @@ public class Time {
 
 
     /**
-     * Attempt to set the specified year.
+     * Attempt to set the specified <code>year</code>.
      * Subject to input validation based on the allowed range of years. If the new field is not valid, the operation cancels without affecting the instance.
      * Must be <code>1970</code> through <code>2170</code> inclusive.
      * @param int The new year.
@@ -110,7 +110,7 @@ public class Time {
     }
 
     /**
-     * Attempt to set the specified month.
+     * Attempt to set the specified <code>month</code>.
      * Subject to input validation based on the allowed range of months. If the new field is not valid, the operation cancels without affecting the instance.
      * Must be <code>1</code> through <code>12</code> inclusive.
      * @param int The new month.
@@ -121,7 +121,7 @@ public class Time {
     }
 
     /**
-     * Attempt to set the specified day.
+     * Attempt to set the specified <code>day</code>.
      * Subject to input validation based on the allowed range of days. If the new field is not valid, the operation cancels without affecting the instance.
      * Must be <code>0</code> through <code>31</code> inclusive, except if the current month is February. Days in February must be <code>0</code> through <code>29</code> inclusive on leap years, and <code>0</code> through <code>28</code> inclusive on non-leap years.
      * @param int The new day.
@@ -155,10 +155,10 @@ public class Time {
     }
 
     /**
-     * Attempt to set the specified day.
-     * Subject to input validation based on the allowed range of days. If the new field is not valid, the operation cancels without affecting the instance.
+     * Attempt to set the specified <code>hour</code>.
+     * Subject to input validation based on the allowed range of hours. If the new field is not valid, the operation cancels without affecting the instance.
      * Must be <code>0</code> through <code>59</code> inclusive.
-     * @param int The new day.
+     * @param int The new hour.
      */
     public void setHour(int hour) {
         if (hour >= MIN_HOUR && hour <= MAX_HOUR)
@@ -166,7 +166,7 @@ public class Time {
     }
 
     /**
-     * Attempt to set the specified minute.
+     * Attempt to set the specified <code>minute</code>.
      * Subject to input validation based on the allowed range of minutes.
      * If the new field is not valid, the operation cancels without affecting the instance.
      * Must be <code>0</code> through <code>59</code> inclusive.
@@ -196,7 +196,9 @@ public class Time {
 
 
 
-    /** @return A <code>String</code> representation of this <code>Time</code> of the format <code>YYYY/MM/DD HH:MM</code>. */
+    /**
+     * @return A <code>String</code> representation of this <code>Time</code> of the format <code>YYYY/MM/DD HH:MM</code>.
+     */
     public String toString() {
         return String.format("%d/%d/%d %d:%d",
             getYear(), getMonth(), getDay(),
@@ -209,5 +211,14 @@ public class Time {
      */
     public boolean equals(Time other) {
         return toString().equals(other.toString());
+    }
+
+    /**
+     * Compare two <code>Time</code> instances lexicographically.
+     * @return An integer indicating the relationship between the two strings: A value of 0 indicates they are equal; a negative value indicates the calling <code>Time</code> <b>precedes</b> the argument; and a positive value indicates the calling <code>Time</code> <b>follows</b> the argument.
+     * @param other The other <code>Time</code> to compare with.
+     */
+    public int compareTo(Time other) {
+        return toString().compareTo(other.toString());
     }
 }
