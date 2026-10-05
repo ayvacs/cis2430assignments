@@ -14,16 +14,27 @@ public class Input {
     }
 
 
-    private void clearNewline() {
+    /*private void clearNewline() {
         SCANNER.nextLine();
-    }
+    }*/
 
 
     public int readInt(){
         System.out.print("> ");
 
-        int input = SCANNER.nextInt();
-        clearNewline();
+        // from Defensive Programming Examples
+        // int input = SCANNER.nextInt();
+        int input = 0;
+        String line;
+        do {
+            line = SCANNER.nextLine();
+            if (line.matches("[-+]?[0-9]+")) {
+                input = Integer.parseInt(line);
+                break;
+            } else {
+                System.out.print("Invalid integer. Try again:\n> ");
+            }
+        } while (true);
         
         System.out.println(" ");
         return input;
@@ -42,13 +53,24 @@ public class Input {
 
 
     public boolean readBool(){
-        System.out.print("Y/n > ");
+        System.out.print("Y/N > ");
 
-        String input = readString();
-        boolean bool = (Character.toUpperCase(input.charAt(0)) == 'Y');
+        char input;
+        boolean ret = false;
+        do {
+            input = Character.toUpperCase(readString().charAt(0));
+            if (input == 'Y') {
+                ret = true;
+                break;
+            }
+            else if (input == 'N')
+                break;
+            else
+                System.out.print("Invalid boolean. Try typing Yes or No.\nY/N > ");
+        } while (true);
         
         System.out.println(" ");
-        return bool;
+        return ret;
     }
 
 
