@@ -124,6 +124,42 @@ public class ActivityList<Type> implements Iterable<Type> {
     }
 
     /**
+     * Encodes this instance into <code>RAS</code> <b>(Readable Activity Serial)</b>, a text format that allows it to be written to text files.
+     * <code>RAS</code> lists follow the following format:
+     * <pre>capacity=n
+     * &lt;entry...&gt;
+     * &lt;entry...&gt;
+     * &lt;entry...&gt;</pre>
+     * where:
+     * <ul>
+     * <li><code>n</code> denotes the capacity of the list as an integer.</li>
+     * <li><code>&lt;entry...&gt;</code> is one single RAS entry (which represents one activity).</li>
+     * </ul>
+     * For more details, see <code>Activity.toRAS()</code> or <code>README.md</code>.
+     * @return A <code>RAS</code> representation of this <code>ActivityList</code>.
+     */
+    public String toRAS() {
+        String ret = "";
+        String tmp;
+
+        ret += "capacity=" + capacity + "\n";
+
+        for (Type a : this) {
+            tmp = "";
+
+            try {
+                tmp += ((Activity)a).toRAS();
+            } catch (Exception e) {
+                tmp = "(exception)";
+            }
+
+            ret += tmp + "\n";
+        }
+
+        return ret;
+    }
+
+    /**
      * @return Whether or not this <code>ActivityList</code> equals <code>other</code>.
      * @param other The other <code>ActivityList</code> to compare with.
      */

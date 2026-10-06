@@ -51,3 +51,27 @@ There are two operations for execution.
     ```
     make clean
     ```
+
+# Specifications
+
+## RAS
+
+**Readable Activity Serial** is a format that allows Activities and ActivityLists to be serialized to text files, then read back later.
+
+RAS lists follow the following format:
+
+```
+capacity=n
+<entry...>
+<entry...>
+<entry...>
+```
+
+where:
+
+* `n` denotes the capacity of the list as an integer.
+* `<entry...>` is one single RAS entry (which represents one activity) that comprises of the following ordered entries separated by spaces:
+    * A <code>String</code> denoting the activity type.
+    * A <code>String</code> denoting the activity title.
+    * <code>String</code> representation of the start and end times.
+    * A <code>String</code> denoting the comment, or <code>NIL</code> if there is no comment.

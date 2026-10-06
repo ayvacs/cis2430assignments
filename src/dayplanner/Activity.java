@@ -75,6 +75,34 @@ public class Activity {
     }
 
     /**
+     * Encodes this instance into <code>RAS</code> <b>(Readable Activity Serial)</b>, a text format that allows it to be written to text files.
+     * <code>RAS</code> entries are surrounded by angle brackets, and split into columns separated by spaces:
+     * <ul>
+     * <li>A <code>String</code> denoting the activity type.</li>
+     * <li>A <code>String</code> denoting the activity title.</li>
+     * <li><code>String</code> representation of the start and end times.</li>
+     * <li>A <code>String</code> denoting the comment, or <code>NIL</code> if there is no comment.</li>
+     * </ul>
+     * For more details, see <code>ActivityList.toRAS()</code> or <code>README.md</code>.
+     * @return A <code>RAS</code> representation of this <code>Activity</code>.
+     */
+    public String toRAS() {
+        String ret = String.format("%s %s %s %s ",
+            getClass().getName(),
+            getTitle(),
+            getStartTime().toString(),
+            getEndTime().toString());
+
+        String com = getComment();
+        if (com == null)
+            ret += "NIL";
+        else
+            ret += com;
+
+        return "<" + ret + ">";
+    }
+
+    /**
      * @return Whether or not this <code>Activity</code> equals <code>other</code>.
      * @param other The other <code>Activity</code> to compare with.
      */
