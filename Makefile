@@ -27,11 +27,11 @@ run: compile
 
 # Build javadocs
 docs:
-	javadoc $(SRC_DIR)/**/*.java -d $(DOC_DIR)
+	javadoc -quiet $(SRC_DIR)/**/*.java -d $(DOC_DIR)
 
 # Compile and build executable
 jar: compile
-	jar cvfe $(JAR) $(MAIN_CLASS) -C $(BIN_DIR) .
+	jar cfe $(JAR) $(MAIN_CLASS) -C $(BIN_DIR) .
 
 # Clean output directory
 clean:
