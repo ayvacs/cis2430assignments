@@ -79,6 +79,14 @@ public class Activity {
      * @param other The other <code>Activity</code> to compare with.
      */
     public boolean equals(Activity other) {
-        return toString().equals(other.toString());
+        if (!getTitle().equals(other.getTitle())
+            || !getStartTime().equals(other.getStartTime())
+            || !getEndTime().equals(other.getEndTime()))
+            return false;
+        
+        String c1 = getComment();
+        String c2 = other.getComment();
+
+        return c1 != null && c2 != null && c1.equals(c2);
     }
 }

@@ -223,19 +223,31 @@ public class Time {
     }
 
     /**
+     * Compare two <code>Time</code> instances lexicographically.
+     * @return An integer indicating the relationship between the two strings: A value of <code>0</code> indicates they are equal; a negative value indicates the calling <code>Time</code> <b>precedes</b> the argument; and a positive value indicates the calling <code>Time</code> <b>follows</b> the argument.
+     * @param other The other <code>Time</code> to compare with.
+     */
+    public int compareTo(Time other) {
+        if (getYear() != other.getYear())
+            return getYear() - other.getYear();
+        
+        if (getMonth() != other.getMonth())
+            return getMonth() - other.getMonth();
+        
+        if (getDay() != other.getDay())
+            return getDay() - other.getDay();
+        
+        if (getHour() != other.getHour())
+            return getHour() - other.getHour();
+
+        return getMinute() - other.getMinute();
+    }
+
+    /**
      * @return Whether or not this <code>Time</code> equals <code>other</code>.
      * @param other The other <code>Time</code> to compare with.
      */
     public boolean equals(Time other) {
-        return toString().equals(other.toString());
-    }
-
-    /**
-     * Compare two <code>Time</code> instances lexicographically.
-     * @return An integer indicating the relationship between the two strings: A value of 0 indicates they are equal; a negative value indicates the calling <code>Time</code> <b>precedes</b> the argument; and a positive value indicates the calling <code>Time</code> <b>follows</b> the argument.
-     * @param other The other <code>Time</code> to compare with.
-     */
-    public int compareTo(Time other) {
-        return toString().compareTo(other.toString());
+        return compareTo(other) == 0;
     }
 }
