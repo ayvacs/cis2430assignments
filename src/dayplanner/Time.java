@@ -2,8 +2,15 @@ package dayplanner;
 
 
 /**
- * Represents a combination of date and time, with no specified timezone.
- * Does not take seconds into account.
+ * Represents a specific instance in time, with minute precision.
+ * In all methods of this class, the following representations are used:
+ * <ul>
+ * <li>A year is represented by an integer, i.e. <pre>1970.</pre></li>
+ * <li>A month is represented by an integer, i.e. <pre>1 = January.</pre></li>
+ * <li>A day is represented by an integer; i.e. <pre>1 = 1</pre> (the first day of the month).</li>
+ * <li>An hour is represented by an integer; i.e. <pre>23 = 23:xx = 11:xx pm.</pre></li>
+ * <li>A minute is represented by an integer; i.e. <pre>1 = xx:01.</pre></li>
+ * </ul>
  */
 public class Time {
     private static final int MIN_YEAR = 1970;
@@ -20,11 +27,11 @@ public class Time {
 
 
 
-    private int year;
-    private int month;
-    private int day;
-    private int hour;
-    private int minute;
+    private int year;   // Required
+    private int month;  // Required
+    private int day;    // Required
+    private int hour;   // Required
+    private int minute; // Required
 
 
 

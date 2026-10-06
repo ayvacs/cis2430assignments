@@ -28,7 +28,7 @@ run: compile
 
 # Build javadoc instructions
 docs:
-	javadoc src/**/*.java -d $(DOC_DIR)
+	javadoc $(SRC_DIR)/**/*.java -d $(DOC_DIR)
 
 
 # Clean instructions
