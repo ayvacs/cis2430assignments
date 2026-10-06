@@ -62,7 +62,7 @@ public class ActivityList implements Iterable<Activity> {
             String line;
 
             while ((line = fr.readLine()) != null)
-                append(new Activity(line));
+                append(activityFromRAS(line));
 
             fr.close();
         }
@@ -76,6 +76,24 @@ public class ActivityList implements Iterable<Activity> {
         } catch (Exception e) {
             e.printStackTrace();
             return;
+        }
+    }
+
+    /**
+     * Parse the type tag from a RAS string and instantiate the correct <code>Activity</code> subclass.
+     * @param ras A valid RAS entry string.
+     * @return The appropriate <code>Activity</code> subclass instance.
+     */
+    private static Activity activityFromRAS(String ras) {
+        // check the first token inside the angle brackets to get the type tag
+        String inner = ras.substring(1, ras.length() - 1);
+        String type = inner.split(",")[0];
+
+        switch (type) {
+            case "HomeActivity":   return new HomeActivity(ras);
+            case "SchoolActivity": return new SchoolActivity(ras);
+            case "OtherActivity":  return new OtherActivity(ras);
+            default:               return new Activity(ras);
         }
     }
 

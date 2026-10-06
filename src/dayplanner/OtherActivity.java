@@ -42,13 +42,13 @@ public class OtherActivity extends Activity {
      */
     public OtherActivity(String ras) {
         super(ras);
-        System.out.println("WOOP!");
         // remove angle brackets and tokenize
         ras = ras.substring(1, ras.length() - 1);
         String[] tokens = ras.split(",");
-        
-        if (tokens.length >= 4 && tokens[4] != null && !tokens[4].isEmpty() && tokens[4] != "NIL")
-            this.location = tokens[4];
+
+        // tokens[0]=type, [1]=title, [2]=start, [3]=end, [4]=comment, [5]=location
+        if (tokens.length >= 6 && tokens[5] != null && !tokens[5].isEmpty() && !tokens[5].equals("NIL"))
+            this.location = tokens[5];
     }
 
 
@@ -89,13 +89,12 @@ public class OtherActivity extends Activity {
      * @return A <code>RAS</code> representation of this <code>Activity</code>.
      */
     public String toRAS() {
+        // super.toRAS() gives us <OtherActivity,title,start,end,comment>
+        // strip the brackets and append the location field then re-close the brackets.
         String ret = super.toRAS();
-        ret = ret.replaceAll("[<>]","");
+        ret = ret.substring(0, ret.length() - 1);
 
-        ret += ",";
-        ret += getComment();
-
-        ret = "<" + ret + ">";
+        ret += "," + getLocation() + ">";
         return ret;
     }
 }

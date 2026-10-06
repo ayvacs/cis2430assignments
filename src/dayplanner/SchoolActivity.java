@@ -27,4 +27,12 @@ public class SchoolActivity extends Activity {
     public SchoolActivity(String title, Time startTime, Time endTime, String comment) {
         super(title, startTime, endTime, comment);
     }
+
+    /**
+     * Instantiates a new <code>SchoolActivity</code> from RAS format.
+     * @param ras String of valid RAS format from which to populate fields.
+     */
+    public SchoolActivity(String ras) {
+        super(ras);
+    }
 }

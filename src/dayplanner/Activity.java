@@ -52,14 +52,15 @@ public class Activity {
         ras = ras.substring(1, ras.length() - 1);
         String[] tokens = ras.split(",");
         
-        if (tokens.length >= 0 && tokens[0] != null && !tokens[0].isEmpty())
-            this.title = tokens[0];
-        if (tokens.length >= 1 && tokens[1] != null && !tokens[1].isEmpty())
-            this.startTime = new Time(tokens[1]);
-        if (tokens.length >= 2 && tokens[2] != null && !tokens[2].isEmpty())
-            this.endTime = new Time(tokens[2]);
-        if (tokens.length >= 3 && tokens[3] != null && !tokens[3].isEmpty() && tokens[3] != "NIL")
-            this.comment = tokens[3];
+        // tokens[0] is the type tag (e.g. "HomeActivity") — skip it here
+        if (tokens.length >= 2 && tokens[1] != null && !tokens[1].isEmpty())
+            this.title = tokens[1];
+        if (tokens.length >= 3 && tokens[2] != null && !tokens[2].isEmpty())
+            this.startTime = new Time(tokens[2]);
+        if (tokens.length >= 4 && tokens[3] != null && !tokens[3].isEmpty())
+            this.endTime = new Time(tokens[3]);
+        if (tokens.length >= 5 && tokens[4] != null && !tokens[4].isEmpty() && tokens[4] != "NIL")
+            this.comment = tokens[4];
     }
 
 
@@ -112,7 +113,8 @@ public class Activity {
         if (comment == null)
             comment = "NIL";
 
-        return String.format("<%s,%s,%s,%s>",
+        return String.format("<%s,%s,%s,%s,%s>",
+            getClass().getSimpleName(),
             getTitle(),
             getStartTime().toString(),
             getEndTime().toString(),
