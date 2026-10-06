@@ -43,7 +43,7 @@ public class ActivityList implements Iterable<Activity> {
      * Determine whether this <code>ActivityList</code> is full.
      * @return Boolean (if <code>true</code>, no more elements can be added).
      */
-    boolean isFull() {
+    public boolean isFull() {
         return length == capacity;
     }
 
@@ -51,7 +51,7 @@ public class ActivityList implements Iterable<Activity> {
      * Determine whether this <code>ActivityList</code> is empty.
      * @return Boolean (if <code>true</code>, there are no elements in the list).
      */
-    boolean isEmpty() {
+    public boolean isEmpty() {
         return length == 0;
     }
 
@@ -60,7 +60,7 @@ public class ActivityList implements Iterable<Activity> {
      * If full, do nothing.
      * @param activity The new <code>Activity</code> to append.
      */
-    void append(Activity activity) {
+    public void append(Activity activity) {
         if (isFull())
             return;
 
@@ -70,6 +70,17 @@ public class ActivityList implements Iterable<Activity> {
 
 
 
+    /**
+     * Return an <code>Iterator</code> that allows you to easily iterate through this <code>ActivityList</code>.
+     * For example:
+     * 
+     * <pre>
+     * for (Activity a : activityList) {
+     *     System.out.println(a.toString());
+     * }
+     * </pre>
+     * @return <code>Iterator</code> representation of this list.
+     */
     public Iterator<Activity> iterator() {
         return new Iterator<Activity>() {
             private int index = 0;
