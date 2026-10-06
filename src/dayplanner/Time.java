@@ -95,11 +95,11 @@ public class Time {
         // Assume default values
         this();
 
-        // Remove all spaces
-        String fs = formatString.trim().replaceAll(" ", "");
+        // Remove all double, triple, etc spaces
+        formatString = formatString.trim().replaceAll("\\s{2,}", "");
 
         // Split up the 5 components by slashes, colons, and commas
-        String[] components = fs.split("[/:,]");
+        String[] components = formatString.split("[/:, ]");
 
         // Populate attributes (parseInt defaults to NaN if no integer is found, which our setter methods refuse to operate on, thus avoiding any exceptions.)
         setYear(Integer.parseInt(components[0]));

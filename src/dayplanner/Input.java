@@ -21,6 +21,7 @@ public class Input {
     }
 
 
+
     /**
      * Read and return an integer value.
      * Continues prompting the user until a valid integer is entered.
@@ -74,7 +75,7 @@ public class Input {
 
         do {
             System.out.print("(bool) > ");
-            input = Character.toUpperCase(readString().charAt(0));
+            input = Character.toUpperCase(SCANNER.nextLine().trim().charAt(0));
             if (input == 'Y') {
                 ret = true;
                 break;

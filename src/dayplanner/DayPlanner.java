@@ -6,11 +6,19 @@ package dayplanner;
  * Application execution point.
  */
 public class DayPlanner {
-    private static final int ACTIVITY_ARRAY_SIZE = 256;
     private static final Input KEYBOARD = new Input(System.in);
-    private static final HomeActivity[] HOME_ACTIVITIES = new HomeActivity[ACTIVITY_ARRAY_SIZE];
-    private static final SchoolActivity[] SCHOOL_ACTIVITIES = new SchoolActivity[ACTIVITY_ARRAY_SIZE];
-    private static final OtherActivity[] OTHER_ACTIVITIES = new OtherActivity[ACTIVITY_ARRAY_SIZE];
+    private static final int ACTIVITY_ARRAY_SIZE = 256;
+    private static final Activity[] HOME_ACTIVITIES = new HomeActivity[ACTIVITY_ARRAY_SIZE];
+    private static final Activity[] SCHOOL_ACTIVITIES = new SchoolActivity[ACTIVITY_ARRAY_SIZE];
+    private static final Activity[] OTHER_ACTIVITIES = new OtherActivity[ACTIVITY_ARRAY_SIZE];
+    // For the arrays, the superclass is used instead of the appropriate subclass.
+    // This is intentional as it simplifies code later on.
+
+
+
+    private static int homeActivitiesLength = 0;
+    private static int schoolActivitiesLength = 0;
+    private static int otherActivitiesLength = 0;
 
 
 
@@ -24,6 +32,17 @@ public class DayPlanner {
         System.out.println("For Home, type 1. For School, type 2. For Other, type 3.");
         int type = KEYBOARD.readInt();
 
+        // If the specified array is full, exit now
+        if (type == 1 && homeActivitiesLength >= ACTIVITY_ARRAY_SIZE
+        || type == 2 && schoolActivitiesLength >= ACTIVITY_ARRAY_SIZE
+        || type == 3 && otherActivitiesLength >= ACTIVITY_ARRAY_SIZE) {
+            System.out.println("You're pretty busy... the specified array is full, sorry!");
+            return;
+        }
+
+
+        // Ask the user to input all fields
+
         System.out.println("Enter a title.");
         String title = KEYBOARD.readString();
 
@@ -35,38 +54,57 @@ public class DayPlanner {
 
         System.out.println("Would you like to enter a comment?");
         boolean doComment = KEYBOARD.readBool();
-        String comment = "-1";
+        String comment = "empty";
         if (doComment) {
             System.out.println("Enter a comment.");
             comment = KEYBOARD.readString();
         }
 
-        String location = "-1";
+        String location = "empty";
         if (type == 3) {
             System.out.println("Enter a location.");
             location = KEYBOARD.readString();
         }
 
 
-        // Create the activity
+        // Instantiate the activity
         Activity activity;
         if (doComment) {
-            if (type == 1) {
-                activity = new HomeActivity(title, startTime, endTime);
-            } else if (type == 2) {
-                activity = new SchoolActivity(title, startTime, endTime);
-            } else if (type == 3) {
-                activity = new OtherActivity(title, startTime, endTime, location);
-            }
-        } else {
             if (type == 1) {
                 activity = new HomeActivity(title, startTime, endTime, comment);
             } else if (type == 2) {
                 activity = new SchoolActivity(title, startTime, endTime, comment);
-            } else if (type == 3) {
-                activity = new OtherActivity(title, startTime, endTime, location, comment);
+            } else {
+                activity = new OtherActivity(title, startTime, endTime, comment, location);
+            }
+        } else {
+            if (type == 1) {
+                activity = new HomeActivity(title, startTime, endTime);
+            } else if (type == 2) {
+                activity = new SchoolActivity(title, startTime, endTime);
+            } else {
+                activity = new OtherActivity(title, startTime, endTime, location);
             }
         }
+
+
+        // Append the activity to the appropriate list
+        if (type == 1) {
+            HOME_ACTIVITIES[homeActivitiesLength] = activity;
+            homeActivitiesLength++;
+        }
+        else if (type == 2) {
+            SCHOOL_ACTIVITIES[schoolActivitiesLength] = activity;
+            schoolActivitiesLength++;
+        }
+        else {
+            OTHER_ACTIVITIES[otherActivitiesLength] = activity;
+            otherActivitiesLength++;
+        }
+
+
+        System.out.println("Successfully created the new activity:");
+        System.out.println(activity.toString());
     }
 
 
