@@ -16,25 +16,22 @@ SOURCES := $(shell find $(SRC_DIR) -name "*.java")
 all: compile
 
 
-# Compilation instructions
+# Compile the program
 compile:
 	$(JC) $(JCFLAGS) $(SOURCES)
 
-
-# Run instructions
+# Compile and execute the program
 run: compile
 	$(JVM) -cp $(BIN_DIR) $(MAIN_CLASS)
 
-
-# Build javadoc instructions
+# Build javadocs
 docs:
 	javadoc $(SRC_DIR)/**/*.java -d $(DOC_DIR)
 
-
-# Clean instructions
+# Clean output directory
 clean:
 	rm -rf $(BIN_DIR)
 
 
-# Phony
-.PHONY: all compile run clean
+# Phony rule
+.PHONY: all compile run docs clean

@@ -21,7 +21,8 @@ public class Time {
 
     private static final int MAX_YEAR = 2170;
     private static final int MAX_MONTH = 12;
-    private static final int MAX_DAY = 31;
+    // There is no MAX_DAY because the highest possible
+    // day is variable, depending on the month.
     private static final int MAX_HOUR = 23;
     private static final int MAX_MINUTE = 59;
 
