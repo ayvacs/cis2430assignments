@@ -38,7 +38,7 @@ public class Input {
                 input = Integer.parseInt(line);
                 break;
             } else {
-                System.out.println("Invalid integer. Try again:");
+                System.out.println("\nInvalid integer. Try again:");
             }
         } while (true);
         
@@ -85,7 +85,7 @@ public class Input {
                 break;
             }
             else
-                System.out.println("Invalid boolean. Try again; try typing Yes or No.");
+                System.out.println("\nInvalid boolean. Try again; try typing Yes or No.");
         } while (true);
         
         System.out.println(" ");

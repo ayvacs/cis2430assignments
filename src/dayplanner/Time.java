@@ -103,11 +103,15 @@ public class Time {
         String[] components = formatString.split("[/:, ]");
 
         // Populate attributes (parseInt defaults to NaN if no integer is found, which our setter methods refuse to operate on, thus avoiding any exceptions.)
-        setYear(Integer.parseInt(components[0]));
-        setMonth(Integer.parseInt(components[1]));
-        setDay(Integer.parseInt(components[2]));
-        setHour(Integer.parseInt(components[3]));
-        setMinute(Integer.parseInt(components[4]));
+        try {
+            setYear(Integer.parseInt(components[0]));
+            setMonth(Integer.parseInt(components[1]));
+            setDay(Integer.parseInt(components[2]));
+            setHour(Integer.parseInt(components[3]));
+            setMinute(Integer.parseInt(components[4]));
+        } catch (Exception e) {
+            System.out.println("One or more fields were not properly entered; defaulting to " + toString() + ".");
+        }
     }
 
 
@@ -213,7 +217,7 @@ public class Time {
      * @return A <code>String</code> representation of this <code>Time</code> of the format <code>YYYY/MM/DD HH:MM</code>.
      */
     public String toString() {
-        return String.format("%d/%d/%d %d:%d",
+        return String.format("%04d/%02d/%02d %02d:%02d",
             getYear(), getMonth(), getDay(),
             getHour(), getMinute());
     }

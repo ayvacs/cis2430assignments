@@ -37,7 +37,9 @@ public class Activity {
      */
     public Activity(String title, Time startTime, Time endTime, String comment) {
         this(title, startTime, endTime);
-        this.comment = comment;
+
+        if (comment != null)
+            this.comment = comment;
     }
 
 

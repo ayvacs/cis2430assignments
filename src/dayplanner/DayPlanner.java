@@ -19,39 +19,67 @@ public class DayPlanner {
     private static void addActivity() {
         System.out.println("Let's add a new activity to the DayPlanner.");
 
-        System.out.println("Enter the type of this activity.");
-        System.out.println("For Home, type 1. For School, type 2. For Other, type 3.");
-        int type = KEYBOARD.readInt();
+        // User input: activity type
+        int type;
+        ActivityList<? extends Activity> arr;
 
-        // If the specified array is full, exit now
-        if (type == 1 && HOME_ACTIVITIES.isFull()
-        || type == 2 && SCHOOL_ACTIVITIES.isFull()
-        || type == 3 && OTHER_ACTIVITIES.isFull()) {
-            System.out.println("You're pretty busy... the specified array is full, sorry!");
-            return;
+        while (true) {
+            System.out.println("Enter the type of this activity.");
+            System.out.println("For Home, type 1. For School, type 2. For Other, type 3.");
+            type = KEYBOARD.readInt();
+
+            if (type < 1 || type > 3) {
+                System.out.println("Type has to be between 1 and 3. Try again:");
+                continue;
+            }
+
+            // Determine proper array
+            if (type == 1)
+                arr = HOME_ACTIVITIES;
+            else if (type == 2)
+                arr = SCHOOL_ACTIVITIES;
+            else
+                arr = OTHER_ACTIVITIES;
+
+            // If the array array is full, exit now
+            if (arr.isFull()) {
+                System.out.println("You're pretty busy... the specified array is full, sorry!");
+                return;
+            }
+
+            break;
         }
 
-
-        // Ask the user to input all fields
-
+        // User input: title
         System.out.println("Enter a title.");
         String title = KEYBOARD.readString();
 
+        // User input: start time
         System.out.println("Enter a starting time.");
         Time startTime = KEYBOARD.readTime();
 
-        System.out.println("Enter an ending time.");
-        Time endTime = KEYBOARD.readTime();
+        // User input: end time
+        Time endTime;
+        while (true) {
+            System.out.println("Enter an ending time.");
+            endTime = KEYBOARD.readTime();
 
+            if (startTime.compareTo(endTime) < 0)
+                break;
+
+            System.out.println("Ending time has to be after the starting time. Try again:");
+        }
+
+        // User input: comment
         System.out.println("Would you like to enter a comment?");
-        boolean doComment = KEYBOARD.readBool();
-        String comment = "empty";
-        if (doComment) {
+        String comment = null;
+        if (KEYBOARD.readBool()) {
             System.out.println("Enter a comment.");
             comment = KEYBOARD.readString();
         }
 
-        String location = "empty";
+        // User input: location
+        String location = null;
         if (type == 3) {
             System.out.println("Enter a location.");
             location = KEYBOARD.readString();
@@ -59,37 +87,26 @@ public class DayPlanner {
 
 
         // Instantiate the activity
-        Activity activity;
-        if (doComment) {
-            if (type == 1) {
-                activity = new HomeActivity(title, startTime, endTime, comment);
-            } else if (type == 2) {
-                activity = new SchoolActivity(title, startTime, endTime, comment);
-            } else {
-                activity = new OtherActivity(title, startTime, endTime, comment, location);
-            }
-        } else {
-            if (type == 1) {
-                activity = new HomeActivity(title, startTime, endTime);
-            } else if (type == 2) {
-                activity = new SchoolActivity(title, startTime, endTime);
-            } else {
-                activity = new OtherActivity(title, startTime, endTime, location);
-            }
+        switch (type) {
+            // cant use arr here because it is a wildcard.
+            case 1:
+                HOME_ACTIVITIES.append(
+                    new HomeActivity(title, startTime, endTime, comment)
+                );
+                break;
+            case 2:
+                SCHOOL_ACTIVITIES.append(
+                    new SchoolActivity(title, startTime, endTime, comment)
+                );
+                break;
+            case 3:
+                OTHER_ACTIVITIES.append(
+                    new OtherActivity(title, startTime, endTime, comment, location)
+                );
+                break;
         }
 
-
-        // Append the activity to the appropriate list
-        if (type == 1)
-            HOME_ACTIVITIES.append((HomeActivity)activity);
-        else if (type == 2)
-            SCHOOL_ACTIVITIES.append((SchoolActivity)activity);
-        else if (type == 3)
-            OTHER_ACTIVITIES.append((OtherActivity)activity);
-
-
         System.out.println("Successfully created the new activity:");
-        System.out.println(activity.toString());
     }
 
 
