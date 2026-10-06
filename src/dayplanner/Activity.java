@@ -53,11 +53,10 @@ public class Activity {
      * @return A <code>String</code> representation of this <code>Activity</code>.
      */
     public String toString() {
-        String ret = String.format("%s (%s - %s at %s)",
+        String ret = String.format("%s (%s - %s)",
             getTitle(),
             getStartTime().toString(),
-            getEndTime().toString(),
-            getComment());
+            getEndTime().toString());
 
         String com = getComment();
         if (com != null)
