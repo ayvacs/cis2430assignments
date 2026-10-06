@@ -5,17 +5,18 @@ import java.util.Iterator;
 
 
 /**
- * Represents a collection of Activities of any type.
+ * Represents a collection of Activities.
  * Implementation of standard arrays, with some helpful methods.
+ * <code>Type</code> determines the single type of activity this list accepts; i.e. <code>OtherActivity</code>.
  */
-public class ActivityList implements Iterable<Activity> {
+public class ActivityList<Type> implements Iterable<Type> {
     private static final int DEFAULT_CAPACITY = 256;
 
 
 
     private int capacity;   // Maximum possible length of this list
     private int length;     // Current length of this list
-    private Activity[] array;
+    private Type[] array;
 
 
 
@@ -30,11 +31,14 @@ public class ActivityList implements Iterable<Activity> {
      * Instantiate a new <code>ActivityList</code> with the specified integer capacity.
      * @param capacity The new <code>ActivityList</code>'s capacity. If zero or negative, use the default instead.
      */
+    @SuppressWarnings("unchecked") // make the compiler shut up about typecasting
     public ActivityList(int capacity) {
         if (capacity < 1)
             capacity = DEFAULT_CAPACITY;
         this.capacity = capacity;
-        this.array = new Activity[capacity];
+
+        // cant create a generic array so cast it instead.
+        this.array = (Type[]) new Object[capacity];
     }
 
 
@@ -60,7 +64,7 @@ public class ActivityList implements Iterable<Activity> {
      * If full, do nothing.
      * @param activity The new <code>Activity</code> to append.
      */
-    public void append(Activity activity) {
+    public void append(Type activity) {
         if (isFull())
             return;
 
@@ -81,16 +85,16 @@ public class ActivityList implements Iterable<Activity> {
      * </pre>
      * @return <code>Iterator</code> representation of this list.
      */
-    public Iterator<Activity> iterator() {
-        return new Iterator<Activity>() {
+    public Iterator<Type> iterator() {
+        return new Iterator<Type>() {
             private int index = 0;
 
             public boolean hasNext() {
                 return index < length;
             }
 
-            public Activity next() {
-                Activity ret = array[index];
+            public Type next() {
+                Type ret = array[index];
                 index++;
                 return ret;
             }
@@ -108,7 +112,7 @@ public class ActivityList implements Iterable<Activity> {
         if (isEmpty()) {
             ret += "(empty)\n";
         } else {
-            for (Activity a: this)
+            for (Type a: this)
                 if (a == null)
                     ret += "(null)\n";
                 else
@@ -123,7 +127,7 @@ public class ActivityList implements Iterable<Activity> {
      * @return Whether or not this <code>ActivityList</code> equals <code>other</code>.
      * @param other The other <code>ActivityList</code> to compare with.
      */
-    public boolean equals(ActivityList other) {
+    public boolean equals(ActivityList<Type> other) {
         return toString().equals(other.toString());
     }
 }

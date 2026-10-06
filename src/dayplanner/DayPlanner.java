@@ -7,9 +7,9 @@ package dayplanner;
  */
 public class DayPlanner {
     private static final Input KEYBOARD = new Input(System.in);
-    private static final ActivityList HOME_ACTIVITIES = new ActivityList();
-    private static final ActivityList SCHOOL_ACTIVITIES = new ActivityList();
-    private static final ActivityList OTHER_ACTIVITIES = new ActivityList();
+    private static final ActivityList<HomeActivity> HOME_ACTIVITIES = new ActivityList<HomeActivity>();
+    private static final ActivityList<SchoolActivity> SCHOOL_ACTIVITIES = new ActivityList<SchoolActivity>();
+    private static final ActivityList<OtherActivity> OTHER_ACTIVITIES = new ActivityList<OtherActivity>();
 
 
 
@@ -81,11 +81,11 @@ public class DayPlanner {
 
         // Append the activity to the appropriate list
         if (type == 1)
-            HOME_ACTIVITIES.append(activity);
+            HOME_ACTIVITIES.append((HomeActivity)activity);
         else if (type == 2)
-            SCHOOL_ACTIVITIES.append(activity);
+            SCHOOL_ACTIVITIES.append((SchoolActivity)activity);
         else if (type == 3)
-            OTHER_ACTIVITIES.append(activity);
+            OTHER_ACTIVITIES.append((OtherActivity)activity);
 
 
         System.out.println("Successfully created the new activity:");
