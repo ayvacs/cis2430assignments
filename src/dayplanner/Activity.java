@@ -4,7 +4,7 @@ package dayplanner;
 /**
  * Superclass for all types of Activities.
  * Contains all shared attributes and methods.
- * Activities contain titles, start and end times, and - optionally - comments.
+ * Activities must contain titles, start and end times. Optionally, activities can contain comments.
  */
 public class Activity {
     private String title;   // Required
@@ -16,6 +16,9 @@ public class Activity {
 
     /**
      * Instantiates a new <code>Activity</code> with a title and start and end time.
+     * @param title The new <code>Activity</code>'s title.
+     * @param startTime The new <code>Activity</code>'s start time.
+     * @param endTime The new <code>Activity</code>'s end time.
      */
     public Activity(String title, Time startTime, Time endTime) {
         this.title = title;
@@ -27,6 +30,10 @@ public class Activity {
 
     /**
      * Instantiates a new <code>Activity</code> with a title, start and end time, and comment.
+     * @param title The new <code>Activity</code>'s title.
+     * @param startTime The new <code>Activity</code>'s start time.
+     * @param endTime The new <code>Activity</code>'s end time.
+     * @param comment The new <code>Activity</code>'s comment.
      */
     public Activity(String title, Time startTime, Time endTime, String comment) {
         this(title, startTime, endTime);

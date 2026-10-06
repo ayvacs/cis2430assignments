@@ -70,6 +70,11 @@ public class Time {
     /**
      * Instantiates a new <code>Time</code> with each required field specified.
      * If any field is not valid, it defaults to its minimum allowed value.
+     * @param year The new <code>Time</code>'s year.
+     * @param month The new <code>Time</code>'s month.
+     * @param day The new <code>Time</code>'s day.
+     * @param hour The new <code>Time</code>'s hour.
+     * @param minute The new <code>Time</code>'s minute.
      */
     public Time(int year, int month, int day, int hour, int minute) {
         // Assume default values
@@ -84,7 +89,7 @@ public class Time {
 
     /**
      * Instantiates a new <code>Time</code> based on the given <code>formatString</code>.
-     * @param String of the format <code>YYYY/MM/DD HH:MM</code>. Input is validated against specified minimum and maximum values; if any field is not valid, it defaults to its minimum allowed value. Note: This parameter's required format matches the return format of <code>toString()</code> exactly.
+     * @param formatString Format <code>String</code> of the format <code>YYYY/MM/DD HH:MM</code>. Input is validated against specified minimum and maximum values; if any field is not valid, it defaults to its minimum allowed value. Note: This parameter's required format matches the return format of <code>toString()</code> exactly.
      */
     public Time(String formatString) {
         // Assume default values
@@ -109,7 +114,7 @@ public class Time {
      * Attempt to set the specified <code>year</code>.
      * Subject to input validation based on the allowed range of years. If the new field is not valid, the operation cancels without affecting the instance.
      * Must be <code>1970</code> through <code>2170</code> inclusive.
-     * @param int The new year.
+     * @param year The new year.
      */
     public void setYear(int year) {
         if (year >= MIN_YEAR && year <= MAX_YEAR)
@@ -120,7 +125,7 @@ public class Time {
      * Attempt to set the specified <code>month</code>.
      * Subject to input validation based on the allowed range of months. If the new field is not valid, the operation cancels without affecting the instance.
      * Must be <code>1</code> through <code>12</code> inclusive.
-     * @param int The new month.
+     * @param month The new month.
      */
     public void setMonth(int month) {
         if (month >= MIN_MONTH && month <= MAX_MONTH)
@@ -131,7 +136,7 @@ public class Time {
      * Attempt to set the specified <code>day</code>.
      * Subject to input validation based on the allowed range of days. If the new field is not valid, the operation cancels without affecting the instance.
      * Must be <code>0</code> through <code>31</code> inclusive, except if the current month is February. Days in February must be <code>0</code> through <code>29</code> inclusive on leap years, and <code>0</code> through <code>28</code> inclusive on non-leap years.
-     * @param int The new day.
+     * @param day The new day.
      */
     public void setDay(int day) {
         int year = getYear();
@@ -165,7 +170,7 @@ public class Time {
      * Attempt to set the specified <code>hour</code>.
      * Subject to input validation based on the allowed range of hours. If the new field is not valid, the operation cancels without affecting the instance.
      * Must be <code>0</code> through <code>23</code> inclusive.
-     * @param int The new hour.
+     * @param hour The new hour.
      */
     public void setHour(int hour) {
         if (hour >= MIN_HOUR && hour <= MAX_HOUR)
@@ -177,7 +182,7 @@ public class Time {
      * Subject to input validation based on the allowed range of minutes.
      * If the new field is not valid, the operation cancels without affecting the instance.
      * Must be <code>0</code> through <code>59</code> inclusive.
-     * @param int The new minute.
+     * @param minute The new minute.
      */
     public void setMinute(int minute) {
         if (minute >= MIN_MINUTE && minute <= MAX_MINUTE)

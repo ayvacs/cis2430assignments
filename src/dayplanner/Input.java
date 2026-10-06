@@ -14,15 +14,18 @@ public class Input {
 
     /**
      * Instantiate a new <code>Input</code> instance.
-     * @param InputStream The input stream this instance will read from.
+     * @param stream The input stream this instance will read from.
      */
-    public Input(InputStream in) {
-        SCANNER = new Scanner(in);
+    public Input(InputStream stream) {
+        SCANNER = new Scanner(stream);
     }
 
 
     /**
-     * Read and return an integer value. Continues prompting the user until a valid integer is entered. Code inspired by <b>Defensive Programming Examples</b> from this course's notes.
+     * Read and return an integer value.
+     * Continues prompting the user until a valid integer is entered.
+     * Code inspired by <b>Defensive Programming Examples</b> from this course's notes.
+     * @return User input as an integer.
      */
     public int readInt(){
         int input = 0;
@@ -44,7 +47,9 @@ public class Input {
 
 
     /**
-     * Read and return a <code>String</code> value. Trims all whitespace from the beginning and end of the <code>String</code>.
+     * Read and return a <code>String</code> value.
+     * Trims all whitespace from the beginning and end of the <code>String</code>.
+     * @return User input as a <code>String</code>.
      */
     public String readString(){
         System.out.print("(string) > ");
@@ -58,12 +63,15 @@ public class Input {
 
 
     /**
-     * Read and return a boolean value. Continues prompting the user until a valid boolean is entered. Accepts any word that starts with <code>Y</code> as <code>true</code> and any word that starts with <code>N</code> as <code>false</code>.
+     * Read and return a boolean value.
+     * Continues prompting the user until a valid boolean is entered.
+     * Accepts any word that starts with <code>Y</code> as <code>true</code> and any word that starts with <code>N</code> as <code>false</code>.
+     * @return User input as a boolean.
      */
     public boolean readBool(){
-
         char input;
         boolean ret;
+
         do {
             System.out.print("(bool) > ");
             input = Character.toUpperCase(readString().charAt(0));
@@ -85,7 +93,9 @@ public class Input {
 
 
     /**
-     * Read and return a <code>Time</code> value of the format <code>YYYY/MM/DD HH:MM</code>. Does not check whether the input follows the specified format; rather, relies on input validation as described in the <code>Time</code> class.
+     * Read and return a <code>Time</code> value of the format <code>YYYY/MM/DD HH:MM</code>.
+     * Does not check whether the input follows the specified format; rather, relies on input validation as described in the <code>Time</code> class.
+     * @return User input as a <code>Time</code>.
      */
     public Time readTime(){
         System.out.print("(YYYY/MM/DD HH:MM) > ");

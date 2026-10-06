@@ -1,6 +1,10 @@
 package dayplanner;
 
 
+
+/**
+ * Application execution point.
+ */
 public class DayPlanner {
     private static final int ACTIVITY_ARRAY_SIZE = 256;
     private static final Input KEYBOARD = new Input(System.in);
@@ -10,6 +14,9 @@ public class DayPlanner {
 
 
 
+    /**
+     * Function 1 of the command loop.
+     */
     private static void addActivity() {
         System.out.println("Let's add a new activity to the DayPlanner.");
 
@@ -63,12 +70,20 @@ public class DayPlanner {
     }
 
 
+
+    /**
+     * Function 2 of the command loop.
+     */
     private static void searchForActivity() {
         System.out.println("Let's search for activities in the DayPlanner.");
     }
 
 
 
+    /**
+     * Application execution point.
+     * @param args Command-line arguments, if any.
+     */
     public static void main(String[] args) {
         boolean doLoop = true;
         int option;

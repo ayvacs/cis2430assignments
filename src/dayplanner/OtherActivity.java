@@ -11,6 +11,10 @@ public class OtherActivity extends Activity {
 
     /**
      * Instantiates a new <code>OtherActivity</code> with a title, start and end time, and location.
+     * @param title The new <code>OtherActivity</code>'s title.
+     * @param startTime The new <code>OtherActivity</code>'s start time.
+     * @param endTime The new <code>OtherActivity</code>'s end time.
+     * @param location The new <code>OtherActivity</code>'s location.
      */
     public OtherActivity(String title, Time startTime, Time endTime, String location) {
         super(title, startTime, endTime);
@@ -21,6 +25,11 @@ public class OtherActivity extends Activity {
 
     /**
      * Instantiates a new <code>OtherActivity</code> with a title, start and end time, comment, and location.
+     * @param title The new <code>OtherActivity</code>'s title.
+     * @param startTime The new <code>OtherActivity</code>'s start time.
+     * @param endTime The new <code>OtherActivity</code>'s end time.
+     * @param comment The new <code>OtherActivity</code>'s comment.
+     * @param location The new <code>OtherActivity</code>'s location.
      */
     public OtherActivity(String title, Time startTime, Time endTime, String comment, String location) {
         super(title, startTime, endTime, comment);
