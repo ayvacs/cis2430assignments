@@ -52,15 +52,14 @@ public class Activity {
         ras = ras.substring(1, ras.length() - 1);
         String[] tokens = ras.split(",");
         
-        // string at index 0 is the classname and can be ignored
+        if (tokens.length >= 0 && tokens[0] != null && !tokens[0].isEmpty())
+            this.title = tokens[0];
         if (tokens.length >= 1 && tokens[1] != null && !tokens[1].isEmpty())
-            this.title = tokens[1];
+            this.startTime = new Time(tokens[1]);
         if (tokens.length >= 2 && tokens[2] != null && !tokens[2].isEmpty())
-            this.startTime = new Time(tokens[2]);
-        if (tokens.length >= 3 && tokens[3] != null && !tokens[3].isEmpty())
-            this.endTime = new Time(tokens[3]);
-        if (tokens.length >= 4 && tokens[4] != null && !tokens[4].isEmpty() && tokens[3] != "NIL")
-            this.comment = tokens[4];
+            this.endTime = new Time(tokens[2]);
+        if (tokens.length >= 3 && tokens[3] != null && !tokens[3].isEmpty() && tokens[3] != "NIL")
+            this.comment = tokens[3];
     }
 
 
@@ -103,6 +102,7 @@ public class Activity {
      * <li>A <code>String</code> denoting the activity title.</li>
      * <li><code>String</code> representation of the start and end times.</li>
      * <li>A <code>String</code> denoting the comment, or <code>NIL</code> if there is no comment.</li>
+     * <li>For OtherActivities, a <code>String</code> denoting the location.</li>
      * </ul>
      * For more details, see <code>ActivityList.toRAS()</code> or <code>README.md</code>.
      * @return A <code>RAS</code> representation of this <code>Activity</code>.
@@ -112,8 +112,7 @@ public class Activity {
         if (comment == null)
             comment = "NIL";
 
-        return String.format("<%s,%s,%s,%s,%s>",
-            getClass().getName(),
+        return String.format("<%s,%s,%s,%s>",
             getTitle(),
             getStartTime().toString(),
             getEndTime().toString(),

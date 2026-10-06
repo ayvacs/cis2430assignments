@@ -72,5 +72,6 @@ where: `<entry...>` is one single RAS entry (which represents one activity) that
 * A <code>String</code> denoting the activity title.
 * <code>String</code> representations of the start and end times.
 * A <code>String</code> denoting the comment, or <code>NIL</code> if there is no comment.
+* For <code>OtherActivities</code>, a <code>String</code> denoting the location.
 
 RAS lists are saved to `*.ras` files which is simply a standard text file that can be opened in any text editor, however do not edit the contents of these files because it may cause issues in reading and/or writing to them (and this is not tested against because I don't believe it's in the scope of this assignment).

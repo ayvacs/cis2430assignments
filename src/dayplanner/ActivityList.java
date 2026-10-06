@@ -175,7 +175,7 @@ public class ActivityList implements Iterable<Activity> {
 
         for (Activity a : this) {
             try {
-                tmp = ((Activity)a).toRAS();
+                tmp = a.toRAS();
             } catch (Exception e) {
                 tmp = e.toString();
             }
