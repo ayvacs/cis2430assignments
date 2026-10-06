@@ -8,12 +8,13 @@ DOC_DIR = docs
 
 PACKAGE = dayplanner
 MAIN_CLASS = $(PACKAGE).DayPlanner
+JAR = $(BIN_DIR)/DayPlanner.jar
 
 SOURCES := $(shell find $(SRC_DIR) -name "*.java")
 
 
 # Set default target
-all: compile docs
+all: compile docs jar
 
 
 # Compile the program
@@ -28,10 +29,14 @@ run: compile
 docs:
 	javadoc $(SRC_DIR)/**/*.java -d $(DOC_DIR)
 
+# Compile and build executable
+jar: compile
+	jar cvfe $(JAR) $(MAIN_CLASS) -C $(BIN_DIR) .
+
 # Clean output directory
 clean:
-	rm -rf $(BIN_DIR) $(DOC_DIR)
+	rm -rf $(BIN_DIR) $(DOC_DIR) $(JAR)
 
 
 # Phony rule
-.PHONY: all compile run docs clean
+.PHONY: all compile run docs jar clean
