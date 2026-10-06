@@ -7,18 +7,9 @@ package dayplanner;
  */
 public class DayPlanner {
     private static final Input KEYBOARD = new Input(System.in);
-    private static final int ACTIVITY_ARRAY_SIZE = 256;
-    private static final Activity[] HOME_ACTIVITIES = new HomeActivity[ACTIVITY_ARRAY_SIZE];
-    private static final Activity[] SCHOOL_ACTIVITIES = new SchoolActivity[ACTIVITY_ARRAY_SIZE];
-    private static final Activity[] OTHER_ACTIVITIES = new OtherActivity[ACTIVITY_ARRAY_SIZE];
-    // For the arrays, the superclass is used instead of the appropriate subclass.
-    // This is intentional as it simplifies code later on.
-
-
-
-    private static int homeActivitiesLength = 0;
-    private static int schoolActivitiesLength = 0;
-    private static int otherActivitiesLength = 0;
+    private static final ActivityList HOME_ACTIVITIES = new ActivityList();
+    private static final ActivityList SCHOOL_ACTIVITIES = new ActivityList();
+    private static final ActivityList OTHER_ACTIVITIES = new ActivityList();
 
 
 
@@ -33,9 +24,9 @@ public class DayPlanner {
         int type = KEYBOARD.readInt();
 
         // If the specified array is full, exit now
-        if (type == 1 && homeActivitiesLength >= ACTIVITY_ARRAY_SIZE
-        || type == 2 && schoolActivitiesLength >= ACTIVITY_ARRAY_SIZE
-        || type == 3 && otherActivitiesLength >= ACTIVITY_ARRAY_SIZE) {
+        if (type == 1 && HOME_ACTIVITIES.isFull()
+        || type == 2 && SCHOOL_ACTIVITIES.isFull()
+        || type == 3 && OTHER_ACTIVITIES.isFull()) {
             System.out.println("You're pretty busy... the specified array is full, sorry!");
             return;
         }
@@ -89,18 +80,12 @@ public class DayPlanner {
 
 
         // Append the activity to the appropriate list
-        if (type == 1) {
-            HOME_ACTIVITIES[homeActivitiesLength] = activity;
-            homeActivitiesLength++;
-        }
-        else if (type == 2) {
-            SCHOOL_ACTIVITIES[schoolActivitiesLength] = activity;
-            schoolActivitiesLength++;
-        }
-        else {
-            OTHER_ACTIVITIES[otherActivitiesLength] = activity;
-            otherActivitiesLength++;
-        }
+        if (type == 1)
+            HOME_ACTIVITIES.append(activity);
+        else if (type == 2)
+            SCHOOL_ACTIVITIES.append(activity);
+        else if (type == 3)
+            OTHER_ACTIVITIES.append(activity);
 
 
         System.out.println("Successfully created the new activity:");
