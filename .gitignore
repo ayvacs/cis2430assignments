@@ -1,4 +1,9 @@
+# Generated via compilation
 *.class
 bin/
 docs/
 *.jar
+
+# User data
+dat/
+*.ras

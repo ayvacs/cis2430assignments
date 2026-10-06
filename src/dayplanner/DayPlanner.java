@@ -7,9 +7,21 @@ package dayplanner;
  */
 public class DayPlanner {
     private static final Input KEYBOARD = new Input(System.in);
-    private static final ActivityList<HomeActivity> HOME_ACTIVITIES = new ActivityList<HomeActivity>();
-    private static final ActivityList<SchoolActivity> SCHOOL_ACTIVITIES = new ActivityList<SchoolActivity>();
-    private static final ActivityList<OtherActivity> OTHER_ACTIVITIES = new ActivityList<OtherActivity>();
+
+    private static final String DATA_DIRECTORY = "dat";
+    private static final String HOME_ACTIVITIES_NAME = "home.ras";
+    private static final String SCHOOL_ACTIVITIES_NAME = "school.ras";
+    private static final String OTHER_ACTIVITIES_NAME = "other.ras";
+
+    private static final ActivityList HOME_ACTIVITIES = new ActivityList(
+        DATA_DIRECTORY,
+        HOME_ACTIVITIES_NAME);
+    private static final ActivityList SCHOOL_ACTIVITIES = new ActivityList(
+        DATA_DIRECTORY,
+        SCHOOL_ACTIVITIES_NAME);
+    private static final ActivityList OTHER_ACTIVITIES = new ActivityList(
+        DATA_DIRECTORY,
+        OTHER_ACTIVITIES_NAME);
 
 
 
@@ -21,7 +33,7 @@ public class DayPlanner {
 
         // User input: activity type
         int type;
-        ActivityList<? extends Activity> arr;
+        ActivityList arr;
 
         while (true) {
             System.out.println("Enter the type of this activity.");
@@ -121,6 +133,22 @@ public class DayPlanner {
 
 
     /**
+     * Attempt to save the three lists to their corresponding text files.
+     * @return Boolean indicating if there were any errors.
+     */
+    private static boolean saveToRAS() {
+        int errors = 0;
+
+        errors += HOME_ACTIVITIES.saveToRAS(DATA_DIRECTORY, HOME_ACTIVITIES_NAME) ? 0 : 1;
+        errors += SCHOOL_ACTIVITIES.saveToRAS(DATA_DIRECTORY, SCHOOL_ACTIVITIES_NAME) ? 0 : 1;
+        errors += OTHER_ACTIVITIES.saveToRAS(DATA_DIRECTORY, OTHER_ACTIVITIES_NAME) ? 0 : 1;
+
+        return errors == 0;
+    }
+
+
+
+    /**
      * Application execution point.
      * @param args Command-line arguments, if any.
      */
@@ -151,6 +179,11 @@ public class DayPlanner {
             }
         }
 
-        System.out.println("Now quitting DayPlanner. Goodbye!");
+        if (saveToRAS())
+            System.out.println("\nAll lists saved successfully.");
+        else
+            System.out.println("\nError saving one or more lists.");
+
+        System.out.println("\nNow quitting DayPlanner. Goodbye!");
     }
 }

@@ -35,7 +35,7 @@ jar: compile
 
 # Clean output directory
 clean:
-	rm -rf $(BIN_DIR) $(DOC_DIR) $(JAR)
+	rm -rf $(BIN_DIR) $(DOC_DIR)
 
 
 # Phony rule

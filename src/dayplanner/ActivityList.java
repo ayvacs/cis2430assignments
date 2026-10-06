@@ -1,22 +1,27 @@
 package dayplanner;
 
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.BufferedReader;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.Iterator;
 
 
 /**
  * Represents a collection of Activities.
  * Implementation of standard arrays, with some helpful methods.
- * <code>Type</code> determines the single type of activity this list accepts; i.e. <code>OtherActivity</code>.
  */
-public class ActivityList<Type> implements Iterable<Type> {
+public class ActivityList implements Iterable<Activity> {
     private static final int DEFAULT_CAPACITY = 256;
 
 
 
     private int capacity;   // Maximum possible length of this list
     private int length;     // Current length of this list
-    private Type[] array;
+    private Activity[] array;
 
 
 
@@ -31,14 +36,47 @@ public class ActivityList<Type> implements Iterable<Type> {
      * Instantiate a new <code>ActivityList</code> with the specified integer capacity.
      * @param capacity The new <code>ActivityList</code>'s capacity. If zero or negative, use the default instead.
      */
-    @SuppressWarnings("unchecked") // make the compiler shut up about typecasting
     public ActivityList(int capacity) {
         if (capacity < 1)
             capacity = DEFAULT_CAPACITY;
         this.capacity = capacity;
 
         // cant create a generic array so cast it instead.
-        this.array = (Type[]) new Object[capacity];
+        this.array = new Activity[capacity];
+    }
+
+    /**
+     * Instantiate a new <code>ActivityList</code> from a RAS list saved to a file.
+     * @param dirName The name of the directory where the RAS file lives.
+     * @param fileName The name of the RAS file.
+     */
+    public ActivityList(String dirName, String fileName) {
+        this();
+
+        try {
+            // Get the file instance
+            File file = new File(dirName + "/" + fileName);
+            BufferedReader fr = new BufferedReader(
+                new FileReader(file));
+
+            String line;
+
+            while ((line = fr.readLine()) != null)
+                append(new Activity(line));
+
+            fr.close();
+        }
+        catch (FileNotFoundException e) {
+            // if the file is not found - thats fine
+            // that just means the user never
+            // saved data before
+            // so we can exit now without doing anything
+            System.out.println("There was no list found at " + dirName + "/" + fileName + ".");
+            return;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return;
+        }
     }
 
 
@@ -64,7 +102,7 @@ public class ActivityList<Type> implements Iterable<Type> {
      * If full, do nothing.
      * @param activity The new <code>Activity</code> to append.
      */
-    public void append(Type activity) {
+    public void append(Activity activity) {
         if (isFull())
             return;
 
@@ -85,16 +123,16 @@ public class ActivityList<Type> implements Iterable<Type> {
      * </pre>
      * @return <code>Iterator</code> representation of this list.
      */
-    public Iterator<Type> iterator() {
-        return new Iterator<Type>() {
+    public Iterator<Activity> iterator() {
+        return new Iterator<Activity>() {
             private int index = 0;
 
             public boolean hasNext() {
                 return index < length;
             }
 
-            public Type next() {
-                Type ret = array[index];
+            public Activity next() {
+                Activity ret = array[index];
                 index++;
                 return ret;
             }
@@ -112,7 +150,7 @@ public class ActivityList<Type> implements Iterable<Type> {
         if (isEmpty()) {
             ret += "(empty)\n";
         } else {
-            for (Type a: this)
+            for (Activity a: this)
                 if (a == null)
                     ret += "(null)\n";
                 else
@@ -126,14 +164,10 @@ public class ActivityList<Type> implements Iterable<Type> {
     /**
      * Encodes this instance into <code>RAS</code> <b>(Readable Activity Serial)</b>, a text format that allows it to be written to text files.
      * <code>RAS</code> lists follow the following format:
-     * <pre>capacity=n
-     * &lt;entry...&gt;
+     * <pre>&lt;entry...&gt;
      * &lt;entry...&gt;
      * &lt;entry...&gt;</pre>
-     * where:
-     * <ul>
-     * <li><code>n</code> denotes the capacity of the list as an integer.</li>
-     * <li><code>&lt;entry...&gt;</code> is one single RAS entry (which represents one activity).</li>
+     * where <li><code>&lt;entry...&gt;</code> is one single RAS entry (which represents one activity).</li>
      * </ul>
      * For more details, see <code>Activity.toRAS()</code> or <code>README.md</code>.
      * @return A <code>RAS</code> representation of this <code>ActivityList</code>.
@@ -142,15 +176,11 @@ public class ActivityList<Type> implements Iterable<Type> {
         String ret = "";
         String tmp;
 
-        ret += "capacity=" + capacity + "\n";
-
-        for (Type a : this) {
-            tmp = "";
-
+        for (Activity a : this) {
             try {
-                tmp += ((Activity)a).toRAS();
+                tmp = ((Activity)a).toRAS();
             } catch (Exception e) {
-                tmp = "(exception)";
+                tmp = e.toString();
             }
 
             ret += tmp + "\n";
@@ -160,10 +190,38 @@ public class ActivityList<Type> implements Iterable<Type> {
     }
 
     /**
+     * Attempt to save the <code>ActivityList</code> to the specified file in RAS format.
+     * Overwrites any existing content in the file.
+     * @param dirName Name of the directory where the file will be saved.
+     * @param fileName Name of the file where content will be saved.
+     * @return Boolean indicating if there were any errors.
+     */
+    public boolean saveToRAS(String dirName, String fileName) {
+        // Get the File instance
+        File file = new File(dirName + "/" + fileName);
+
+        // Create the directory if it doesnt exist
+        File parent = file.getParentFile();
+        if (parent != null)
+            parent.mkdirs();
+
+        try {
+            FileWriter writer = new FileWriter(file);
+            writer.write(toRAS());
+            writer.close();
+
+            return true;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    /**
      * @return Whether or not this <code>ActivityList</code> equals <code>other</code>.
      * @param other The other <code>ActivityList</code> to compare with.
      */
-    public boolean equals(ActivityList<Type> other) {
+    public boolean equals(ActivityList other) {
         return toString().equals(other.toString());
     }
 }

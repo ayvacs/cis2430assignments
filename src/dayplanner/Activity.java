@@ -26,8 +26,6 @@ public class Activity {
         this.endTime = endTime;
     }
 
-
-
     /**
      * Instantiates a new <code>Activity</code> with a title, start and end time, and comment.
      * @param title The new <code>Activity</code>'s title.
@@ -40,6 +38,28 @@ public class Activity {
 
         if (comment != null)
             this.comment = comment;
+    }
+
+    /**
+     * Instantiates a new <code>Activity</code> from RAS format.
+     */
+    public Activity(String ras) {
+        // default values in case of ras error
+        this("raserror", new Time(), new Time());
+
+        // remove angle brackets and tokenize
+        ras = ras.substring(1, ras.length() - 1);
+        String[] tokens = ras.split(",");
+        
+        // string at index 0 is the classname and can be ignored
+        if (tokens.length >= 1 && tokens[1] != null && !tokens[1].isEmpty())
+            this.title = tokens[1];
+        if (tokens.length >= 2 && tokens[2] != null && !tokens[2].isEmpty())
+            this.startTime = new Time(tokens[2]);
+        if (tokens.length >= 3 && tokens[3] != null && !tokens[3].isEmpty())
+            this.endTime = new Time(tokens[3]);
+        if (tokens.length >= 4 && tokens[4] != null && !tokens[4].isEmpty() && tokens[3] != "NIL")
+            this.comment = tokens[4];
     }
 
 
@@ -76,7 +96,7 @@ public class Activity {
 
     /**
      * Encodes this instance into <code>RAS</code> <b>(Readable Activity Serial)</b>, a text format that allows it to be written to text files.
-     * <code>RAS</code> entries are surrounded by angle brackets, and split into columns separated by spaces:
+     * <code>RAS</code> entries are surrounded by angle brackets, and split into columns separated by commas:
      * <ul>
      * <li>A <code>String</code> denoting the activity type.</li>
      * <li>A <code>String</code> denoting the activity title.</li>
@@ -87,19 +107,16 @@ public class Activity {
      * @return A <code>RAS</code> representation of this <code>Activity</code>.
      */
     public String toRAS() {
-        String ret = String.format("%s %s %s %s ",
+        String comment = getComment();
+        if (comment == null)
+            comment = "NIL";
+
+        return String.format("<%s,%s,%s,%s,%s>",
             getClass().getName(),
             getTitle(),
             getStartTime().toString(),
-            getEndTime().toString());
-
-        String com = getComment();
-        if (com == null)
-            ret += "NIL";
-        else
-            ret += com;
-
-        return "<" + ret + ">";
+            getEndTime().toString(),
+            comment);
     }
 
     /**

@@ -99,8 +99,11 @@ public class Time {
         // Remove all double, triple, etc spaces
         formatString = formatString.trim().replaceAll("\\s{2,}", "");
 
-        // Split up the 5 components by slashes, colons, and commas
-        String[] components = formatString.split("[/:, ]");
+        // Remove all commas
+        formatString = formatString.replaceAll(",", "");
+
+        // Split up the 5 components by slashes, colons, spaces
+        String[] components = formatString.split("[/:\\s]+");
 
         // Populate attributes (parseInt defaults to NaN if no integer is found, which our setter methods refuse to operate on, thus avoiding any exceptions.)
         try {
