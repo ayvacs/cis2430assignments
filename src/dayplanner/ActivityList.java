@@ -164,11 +164,8 @@ public class ActivityList implements Iterable<Activity> {
     /**
      * Encodes this instance into <code>RAS</code> <b>(Readable Activity Serial)</b>, a text format that allows it to be written to text files.
      * <code>RAS</code> lists follow the following format:
-     * <pre>&lt;entry...&gt;
-     * &lt;entry...&gt;
-     * &lt;entry...&gt;</pre>
-     * where <li><code>&lt;entry...&gt;</code> is one single RAS entry (which represents one activity).</li>
-     * </ul>
+     * <pre>&lt;entry...&gt;<br>&lt;entry...&gt;<br>&lt;entry...&gt;</pre>
+     * where <code>&lt;entry...&gt;</code> is one single RAS entry (which represents one activity).
      * For more details, see <code>Activity.toRAS()</code> or <code>README.md</code>.
      * @return A <code>RAS</code> representation of this <code>ActivityList</code>.
      */

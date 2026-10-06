@@ -42,6 +42,7 @@ public class Activity {
 
     /**
      * Instantiates a new <code>Activity</code> from RAS format.
+     * @param ras String of valid RAS format from which to populate fields.
      */
     public Activity(String ras) {
         // default values in case of ras error
