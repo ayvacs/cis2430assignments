@@ -4,7 +4,7 @@ JCFLAGS = -d $(BIN_DIR) -cp $(SRC_DIR)
 
 SRC_DIR = src
 BIN_DIR = bin
-DOC_DIR = $(BIN_DIR)/docs
+DOC_DIR = docs
 
 PACKAGE = dayplanner
 MAIN_CLASS = $(PACKAGE).DayPlanner
@@ -13,7 +13,7 @@ SOURCES := $(shell find $(SRC_DIR) -name "*.java")
 
 
 # Set default target
-all: compile
+all: compile docs
 
 
 # Compile the program
@@ -30,7 +30,7 @@ docs:
 
 # Clean output directory
 clean:
-	rm -rf $(BIN_DIR)
+	rm -rf $(BIN_DIR) $(DOC_DIR)
 
 
 # Phony rule

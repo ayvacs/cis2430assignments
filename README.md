@@ -6,13 +6,23 @@ Complete commit history is available on [GitHub](https://github.com/ayvacs/cis24
 
 ## Directory structure
 
-* **src/dayplanner**: Source code
-* **bin/dayplanner**: Compiler output
-* **bin/docs**: Javadoc output
+| Name | Description |
+| --- | --- |
+| `src` | Source code |
+| `bin` | Compiler output |
+| `docs` | Javadoc documentation |
 
 ## Instructions
 
-* **Compile:** `make`
-* **Execute:** `make run` (always compiles beforehand)
-* **Generate Javadocs:** `make docs`
-* **Remove generated files:** `make clean` (removes the entirety of the `bin` folder, including all of its subfolders)
+Run the following terminals in the project's root directory (i.e. the same directory where this `README.md` file is located)
+
+* **Build everything:** `make`
+    * compiles the program and generates documentation
+* **Execute:** `make run`
+    * always compiles beforehand
+---
+* **Compile:** `make compile`
+* **Generate documentation:** `make docs`
+---
+* **Remove generated files:** `make clean`
+    removes all generated folders and subfolders
