@@ -154,11 +154,13 @@ public class DayPlanner {
      */
     public static boolean commandLoop() {
         System.out.println("\nDayPlanner Main Menu; select an option:");
-        System.out.println("1) Insert a new activity");
-        System.out.println("2) Search for an activity");
-        System.out.println("3) Quit");
 
-        int option = KEYBOARD.readInt();
+        String[] options = {
+            "Insert a new activity",
+            "Search for an activity",
+            "Quit" };
+            
+        int option = KEYBOARD.fromOptions(options);
         switch (option) {
             case 1:
                 addActivity();
@@ -168,9 +170,6 @@ public class DayPlanner {
                 break;
             case 3:
                 return false;
-            default:
-                System.out.println("Invalid option; type an integer between 1 and 3 inclusive.");
-                return commandLoop();
         }
 
         return true;
