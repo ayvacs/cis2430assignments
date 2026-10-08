@@ -297,7 +297,7 @@ public class ActivityList extends AbstractList<Activity> {
      * Overwrites any existing content in the file.
      * @param dirName Name of the directory where the file will be saved.
      * @param fileName Name of the file where content will be saved.
-     * @return Boolean indicating if there were any errors.
+     * @return Boolean indicating if there were any errors. (<code>true</code> = success, <code>false</code> = failure)
      */
     public boolean saveToRAS(String dirName, String fileName) {
         // Get the File instance
@@ -312,12 +312,12 @@ public class ActivityList extends AbstractList<Activity> {
             FileWriter writer = new FileWriter(file);
             writer.write(toRAS());
             writer.close();
-
-            return true;
         } catch (IOException e) {
             e.printStackTrace();
             return false;
         }
+
+        return true;
     }
 
     /**

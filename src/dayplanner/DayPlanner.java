@@ -6,7 +6,7 @@ package dayplanner;
  * Application execution point.
  */
 public class DayPlanner {
-    private static final Input KEYBOARD = new Input(System.in);
+    private static final Input KEYBOARD = new Input();
 
     private static final String DATA_DIRECTORY = "dat";
     private static final String HOME_ACTIVITIES_NAME = "home.ras";
@@ -134,7 +134,7 @@ public class DayPlanner {
 
     /**
      * Attempt to save the three lists to their corresponding text files.
-     * @return Boolean indicating if there were any errors.
+     * @return Boolean indicating if there were any errors. (<code>true</code> = success, <code>false</code> = failure)
      */
     private static boolean saveToRAS() {
         int errors = 0;
@@ -143,46 +143,55 @@ public class DayPlanner {
         errors += SCHOOL_ACTIVITIES.saveToRAS(DATA_DIRECTORY, SCHOOL_ACTIVITIES_NAME) ? 0 : 1;
         errors += OTHER_ACTIVITIES.saveToRAS(DATA_DIRECTORY, OTHER_ACTIVITIES_NAME) ? 0 : 1;
 
-        return errors == 0;
+        return errors > 0;
+    }
+
+
+
+    /**
+     * Main command loop flow.
+     * @return Boolean indicating whether or not the user wants to continue with the command loop again.
+     */
+    public static boolean commandLoop() {
+        System.out.println("\nDayPlanner Main Menu; select an option:");
+        System.out.println("1) Insert a new activity");
+        System.out.println("2) Search for an activity");
+        System.out.println("3) Quit");
+
+        int option = KEYBOARD.readInt();
+        switch (option) {
+            case 1:
+                addActivity();
+                break;
+            case 2:
+                searchForActivity();
+                break;
+            case 3:
+                return false;
+            default:
+                System.out.println("Invalid option; type an integer between 1 and 3 inclusive.");
+                return commandLoop();
+        }
+
+        return true;
     }
 
 
 
     /**
      * Application execution point.
-     * @param args Command-line arguments, if any.
+     * @param args Execution arguments, if any.
      */
     public static void main(String[] args) {
+        // Perform the command loop until the user quits
         boolean doLoop = true;
-        int option;
+        while (doLoop)
+            doLoop = commandLoop();
 
-        while (doLoop) {
-            System.out.println("\nDayPlanner Main Menu; select an option:");
-            System.out.println("1) Insert a new activity");
-            System.out.println("2) Search for an activity");
-            System.out.println("3) Quit");
-            option = KEYBOARD.readInt();
-
-            switch (option) {
-                case 1:
-                    addActivity();
-                    break;
-                case 2:
-                    searchForActivity();
-                    break;
-                case 3:
-                    doLoop = false;
-                    break;
-                default:
-                    System.out.println("Invalid option; type an integer between 1 and 3 inclusive.");
-                    break;
-            }
-        }
-
-        if (saveToRAS())
-            System.out.println("\nAll lists saved successfully.");
-        else
-            System.out.println("\nError saving one or more lists.");
+        // Attempt to save the list in RAS format
+        boolean errors = saveToRAS();
+        if (errors) System.out.println("\nError saving one or more lists.");
+        else        System.out.println("\nAll lists saved successfully.");
 
         System.out.println("\nNow quitting DayPlanner. Goodbye!");
     }
