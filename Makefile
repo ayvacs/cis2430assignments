@@ -20,6 +20,8 @@ all: compile docs jar
 # Compile the program
 compile:
 	$(JC) $(JCFLAGS) $(SOURCES)
+	mkdir -p $(BIN_DIR)/$(PACKAGE)
+	cp $(SRC_DIR)/$(PACKAGE)/*.properties $(BIN_DIR)/
 
 # Compile and execute the program
 run: compile

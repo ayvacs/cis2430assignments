@@ -69,6 +69,8 @@ where: `<entry...>` is one single RAS entry (which represents one activity) that
 
 RAS lists are saved to `.ras` files in text format. Do not edit the contents of these files because doing so might cause issues in reading/writing them. <i>(This is not tested against, because I do not believe it is in the scope of this assignment.)</i>
 
+The directory and names of each of the lists can be easily altered in the `src/dayplanner/ras.properties` file. This was implemented to separate the logic code from the user data as much as possible.
+
 I created a custom format rather than using standard serialization so that the contents can be easily inspected, helping during the testing portion of the assignment. (Standard serialization uses binary files rather than text files.)
 
 # Test plan

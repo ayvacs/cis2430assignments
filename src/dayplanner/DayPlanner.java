@@ -2,16 +2,21 @@ package dayplanner;
 
 
 
+import java.util.ResourceBundle;
+
+
+
 /**
  * Application execution point.
  */
 public class DayPlanner {
     private static final Input KEYBOARD = new Input();
+    private static final ResourceBundle RESOURCES = ResourceBundle.getBundle("dayplanner");
 
-    private static final String DATA_DIRECTORY = "dat";
-    private static final String HOME_ACTIVITIES_NAME = "home.ras";
-    private static final String SCHOOL_ACTIVITIES_NAME = "school.ras";
-    private static final String OTHER_ACTIVITIES_NAME = "other.ras";
+    private static final String DATA_DIRECTORY = RESOURCES.getString("directory_data");
+    private static final String HOME_ACTIVITIES_NAME = RESOURCES.getString("filename_home");
+    private static final String SCHOOL_ACTIVITIES_NAME = RESOURCES.getString("filename_school");
+    private static final String OTHER_ACTIVITIES_NAME = RESOURCES.getString("filename_other");
 
     private static final ActivityList HOME_ACTIVITIES = new ActivityList(
         DATA_DIRECTORY,
