@@ -11,7 +11,7 @@ import java.util.ResourceBundle;
  */
 public class DayPlanner {
     private static final Input KEYBOARD = new Input();
-    private static final ResourceBundle RESOURCES = ResourceBundle.getBundle("dayplanner");
+    private static final ResourceBundle RESOURCES = ResourceBundle.getBundle("ras");
 
     private static final String DATA_DIRECTORY = RESOURCES.getString("directory_data");
     private static final String HOME_ACTIVITIES_NAME = RESOURCES.getString("filename_home");
