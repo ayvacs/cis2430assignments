@@ -6,7 +6,7 @@ package dayplanner;
  * Contains all shared attributes and methods.
  * Activities must contain titles, start and end times. Optionally, activities can contain comments.
  */
-public class Activity {
+public class Activity implements Comparable<Activity> {
     private String title;   // Required
     private Time startTime; // Required
     private Time endTime;   // Required
@@ -135,5 +135,15 @@ public class Activity {
         String c2 = other.getComment();
 
         return c1 != null && c2 != null && c1.equals(c2);
+    }
+
+    /**
+     * Compare two <code>Activity</code> instances by starting time.
+     * @return An integer indicating the relationship between the two instances: A value of <code>0</code> indicates they start at the same time; a negative value indicates the calling <code>Activity</code> <b>precedes</b> the argument; and a positive value indicates the calling <code>Activity</code> <b>follows</b> the argument.
+     * @param other The other <code>Activity</code> to compare with.
+     */
+    @Override
+    public int compareTo(Activity other) {
+        return getStartTime().compareTo(other.getStartTime());
     }
 }

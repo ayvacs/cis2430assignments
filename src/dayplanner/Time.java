@@ -226,8 +226,8 @@ public class Time {
     }
 
     /**
-     * Compare two <code>Time</code> instances lexicographically.
-     * @return An integer indicating the relationship between the two strings: A value of <code>0</code> indicates they are equal; a negative value indicates the calling <code>Time</code> <b>precedes</b> the argument; and a positive value indicates the calling <code>Time</code> <b>follows</b> the argument.
+     * Compare two <code>Time</code> instances.
+     * @return An integer indicating the relationship between the two instances: A value of <code>0</code> indicates they are equal; a negative value indicates the calling <code>Time</code> <b>precedes</b> the argument; and a positive value indicates the calling <code>Time</code> <b>follows</b> the argument.
      * @param other The other <code>Time</code> to compare with.
      */
     public int compareTo(Time other) {

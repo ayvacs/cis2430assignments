@@ -1,13 +1,14 @@
 package dayplanner;
 
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
-import java.io.BufferedReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.AbstractList;
+import java.util.Arrays;
 import java.util.Iterator;
 
 
@@ -15,7 +16,9 @@ import java.util.Iterator;
  * Represents a collection of Activities.
  * Implementation of standard arrays, with some helpful methods.
  */
-public class ActivityList extends AbstractList<Activity> {
+public class ActivityList
+extends AbstractList<Activity>
+{
     private static final int DEFAULT_CAPACITY = 256;
 
 
@@ -329,5 +332,12 @@ public class ActivityList extends AbstractList<Activity> {
      */
     public boolean equals(ActivityList other) {
         return toString().equals(other.toString());
+    }
+
+    /**
+     * Sort the ActivityList in-place in ascending order by starting time (activities that start earlier appear earlier).
+     */
+    public void sort() {
+        Arrays.sort(array);
     }
 }
