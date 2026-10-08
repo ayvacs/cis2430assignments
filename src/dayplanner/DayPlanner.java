@@ -26,6 +26,66 @@ public class DayPlanner {
 
 
     /**
+     * Application execution point.
+     * @param args Execution arguments, if any.
+     */
+    public static void main(String[] args) {
+        // Perform the command loop until the user quits
+        boolean doLoop = true;
+        while (doLoop)
+            doLoop = commandLoop();
+
+        // Attempt to save the list in RAS format
+        boolean errors = saveToRAS();
+        if (errors)    System.out.println("\nError saving one or more lists.");
+        else           System.out.println("\nAll lists saved successfully.");
+
+        System.out.println("\nNow quitting DayPlanner. Goodbye!");
+    }
+
+
+
+    /**
+     * Show the main menu one time.
+     * @return Boolean indicating whether or not the user wants to continue with the command loop again.
+     */
+    private static boolean commandLoop() {
+        System.out.println("\n\n          ===-=-==-=====-==-=-===\n\n");
+        System.out.println("  『 DAY PLANNER 』  Main Menu\n");
+
+        String[] operationList = {
+            "Insert a new activity",
+            "Search for an activity",
+            "Quit"};
+            
+        int operation = KEYBOARD.fromOptions(operationList);
+        switch (operation) {
+            case 1:    addActivity();          break;
+            case 2:    searchForActivity();    break;
+            case 3:    return false; }
+
+        return true;
+    }
+
+
+
+    /**
+     * Attempt to save the three lists to their corresponding text files.
+     * @return Boolean indicating if there were any errors. (<code>true</code> = success, <code>false</code> = failure)
+     */
+    private static boolean saveToRAS() {
+        int errors = 0;
+
+        errors += HOME_ACTIVITIES.saveToRAS(DATA_DIRECTORY, HOME_ACTIVITIES_NAME) ? 0 : 1;
+        errors += SCHOOL_ACTIVITIES.saveToRAS(DATA_DIRECTORY, SCHOOL_ACTIVITIES_NAME) ? 0 : 1;
+        errors += OTHER_ACTIVITIES.saveToRAS(DATA_DIRECTORY, OTHER_ACTIVITIES_NAME) ? 0 : 1;
+
+        return errors > 0;
+    }
+    
+
+
+    /**
      * Function 1 of the command loop.
      */
     private static void addActivity() {
@@ -99,26 +159,28 @@ public class DayPlanner {
 
 
         // Instantiate the activity
+        String string;
         switch (type) {
-            // cant use arr here because it is a wildcard.
             case 1:
-                HOME_ACTIVITIES.append(
-                    new HomeActivity(title, startTime, endTime, comment)
-                );
+                HomeActivity hact = new HomeActivity(title, startTime, endTime, comment);
+                HOME_ACTIVITIES.append(hact);
+                string = hact.toString();
                 break;
             case 2:
-                SCHOOL_ACTIVITIES.append(
-                    new SchoolActivity(title, startTime, endTime, comment)
-                );
+                SchoolActivity sact = new SchoolActivity(title, startTime, endTime, comment);
+                SCHOOL_ACTIVITIES.append(sact);
+                string = sact.toString();
                 break;
             case 3:
-                OTHER_ACTIVITIES.append(
-                    new OtherActivity(title, startTime, endTime, comment, location)
-                );
+                OtherActivity oact = new OtherActivity(title, startTime, endTime, comment, location);
+                OTHER_ACTIVITIES.append(oact);
+                string = oact.toString();
                 break;
+            default:
+                string = "foo";
         }
 
-        System.out.println("Successfully created the new activity:");
+        System.out.println("Successfully created the new activity:\n\t" + string);
     }
 
 
@@ -128,70 +190,5 @@ public class DayPlanner {
      */
     private static void searchForActivity() {
         System.out.println("Let's search for activities in the DayPlanner.");
-    }
-
-
-
-    /**
-     * Attempt to save the three lists to their corresponding text files.
-     * @return Boolean indicating if there were any errors. (<code>true</code> = success, <code>false</code> = failure)
-     */
-    private static boolean saveToRAS() {
-        int errors = 0;
-
-        errors += HOME_ACTIVITIES.saveToRAS(DATA_DIRECTORY, HOME_ACTIVITIES_NAME) ? 0 : 1;
-        errors += SCHOOL_ACTIVITIES.saveToRAS(DATA_DIRECTORY, SCHOOL_ACTIVITIES_NAME) ? 0 : 1;
-        errors += OTHER_ACTIVITIES.saveToRAS(DATA_DIRECTORY, OTHER_ACTIVITIES_NAME) ? 0 : 1;
-
-        return errors > 0;
-    }
-
-
-
-    /**
-     * Main command loop flow.
-     * @return Boolean indicating whether or not the user wants to continue with the command loop again.
-     */
-    public static boolean commandLoop() {
-        System.out.println("\nDayPlanner Main Menu; select an option:");
-
-        String[] options = {
-            "Insert a new activity",
-            "Search for an activity",
-            "Quit" };
-            
-        int option = KEYBOARD.fromOptions(options);
-        switch (option) {
-            case 1:
-                addActivity();
-                break;
-            case 2:
-                searchForActivity();
-                break;
-            case 3:
-                return false;
-        }
-
-        return true;
-    }
-
-
-
-    /**
-     * Application execution point.
-     * @param args Execution arguments, if any.
-     */
-    public static void main(String[] args) {
-        // Perform the command loop until the user quits
-        boolean doLoop = true;
-        while (doLoop)
-            doLoop = commandLoop();
-
-        // Attempt to save the list in RAS format
-        boolean errors = saveToRAS();
-        if (errors) System.out.println("\nError saving one or more lists.");
-        else        System.out.println("\nAll lists saved successfully.");
-
-        System.out.println("\nNow quitting DayPlanner. Goodbye!");
     }
 }

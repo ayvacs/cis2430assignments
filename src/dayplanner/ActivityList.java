@@ -207,13 +207,16 @@ public class ActivityList extends AbstractList<Activity> {
      * Append a new <code>Activity</code> to the end of this list.
      * If full, do nothing.
      * @param activity The new <code>Activity</code> to append.
+     * @return The <code>Activity</code> that was just appended, or <code>null</code> when the list is full.
      */
-    public void append(Activity activity) {
+    public Activity append(Activity activity) {
         if (isFull())
-            return;
+            return null;
 
         array[length] = activity;
         length++;
+        
+        return activity;
     }
 
 
