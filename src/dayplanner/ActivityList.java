@@ -7,6 +7,7 @@ import java.io.FileReader;
 import java.io.BufferedReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.AbstractList;
 import java.util.Iterator;
 
 
@@ -14,7 +15,7 @@ import java.util.Iterator;
  * Represents a collection of Activities.
  * Implementation of standard arrays, with some helpful methods.
  */
-public class ActivityList implements Iterable<Activity> {
+public class ActivityList extends AbstractList<Activity> {
     private static final int DEFAULT_CAPACITY = 256;
 
 
@@ -34,14 +35,14 @@ public class ActivityList implements Iterable<Activity> {
 
     /**
      * Instantiate a new <code>ActivityList</code> with the specified integer capacity.
-     * @param capacity The new <code>ActivityList</code>'s capacity. If zero or negative, use the default instead.
+     * @param capacity The new <code>ActivityList</code>'s capacity.
+     * @throws IllegalArgumentException when <code>capacity</code> is negative.
      */
     public ActivityList(int capacity) {
-        if (capacity < 1)
-            capacity = DEFAULT_CAPACITY;
-        this.capacity = capacity;
+        if (capacity < 0)
+            throw new IllegalArgumentException("Capacity cannot be negative");
 
-        // cant create a generic array so cast it instead.
+        this.capacity = capacity;
         this.array = new Activity[capacity];
     }
 
@@ -85,8 +86,9 @@ public class ActivityList implements Iterable<Activity> {
      * @return The appropriate <code>Activity</code> subclass instance.
      */
     private static Activity activityFromRAS(String ras) {
-        // check the first token inside the angle brackets to get the type tag
+        // remove the outer angled brackets
         String inner = ras.substring(1, ras.length() - 1);
+        // tokenize and grab token 0
         String type = inner.split(",")[0];
 
         switch (type) {
@@ -98,6 +100,92 @@ public class ActivityList implements Iterable<Activity> {
     }
 
 
+
+    /**
+     * Get the Activity at the specified index.
+     * @param index Index to look at.
+     * @return Activity at the specified index.
+     * @throws IndexOutOfBoundsException If <code>index</code> is negative or greater than the size.
+     */
+    @Override
+    public Activity get(int index) {
+        if (index < 0 || index >= size())
+            throw new IndexOutOfBoundsException("Index " + index + ", Size" + size());
+
+        return array[index];
+    }
+
+    
+    /**
+     * Return the current size (number of elements) of this <code>ActivityList</code>.
+     * @return Integer corresponding to the current number of elements
+     */
+    @Override
+    public int size() {
+        return length;
+    }
+
+    /**
+     * Replace the Activity at the specified index.
+     * @param index Index to put element.
+     * @param activity Activity to put there.
+     * @throws IndexOutOfBoundsException If <code>index</code> is negative or greater than the size.
+     * @return The old Activity located at <code>index</code>.
+     */
+    @Override
+    public Activity set(int index, Activity activity) {
+        if (index < 0 || index >= size())
+            throw new IndexOutOfBoundsException("Index " + index + ", Size" + size());
+
+        Activity old = get(index);
+        array[index] = activity;
+        return old;
+    }
+
+    /**
+     * Insert the Activity to the specified index and shift all elements behind it, if any, back by one.
+     * @param index Index to insert element.
+     * @param activity Activity to put there.
+     * @throws IndexOutOfBoundsException If <code>index</code> is negative or greater than the size.
+     */
+    public void add(int index, Activity activity) {
+        if (index < 0 || index > size())
+            throw new IndexOutOfBoundsException("Index " + index + ", Size " + size());
+
+        // If the array is full then we don't need to shift any elements
+        if (size() != capacity)
+            System.arraycopy(
+                array, index,
+                array, index + 1,
+                size() - index);
+
+        array[index] = activity;
+        length++;
+    }
+
+    /**
+     * Remove the Activity at the specified index, shifting all elements behind it forward by one.
+     * @param index Index of the element to remove.
+     * @throws IndexOutOfBoundsException If <code>index</code> is negative or greater than or equal to the size.
+     * @return The removed Activity.
+     */
+    @Override
+    public Activity remove(int index) {
+        if (index < 0 || index >= size())
+            throw new IndexOutOfBoundsException("Index " + index + ", Size " + size());
+
+        Activity old = get(index);
+
+        // Shift all elements after index forward by one
+        System.arraycopy(
+            array, index + 1,
+            array, index,
+            size() - index - 1);
+
+        array[length - 1] = null;
+        length--;
+        return old;
+    }
 
     /**
      * Determine whether this <code>ActivityList</code> is full.
