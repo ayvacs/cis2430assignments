@@ -2,14 +2,14 @@ package dayplanner;
 
 
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.ResourceBundle;
 
 
 
 /**
- * Application execution point.
+ * Application execution point for DayPlanner.
  */
 public class DayPlanner {
     private static final Input KEYBOARD = new Input();
@@ -98,7 +98,57 @@ public class DayPlanner {
 
         return errors > 0;
     }
-    
+
+
+
+    /**
+     * Resolves an activity type input string to an integer representation (1=Home, 2=School, 3=Other).
+     * @param input Raw user input string.
+     * @return Integer 1, 2, 3 if recognized, or -1 if invalid.
+     */
+    private static int parseActivityType(String input) {
+        if (input == null)
+            return -1;
+
+        String s = input.trim().toLowerCase();
+        if (s.equals("1") || s.equals("home") || s.equals("h"))
+            return 1;
+        if (s.equals("2") || s.equals("school") || s.equals("s"))
+            return 2;
+        if (s.equals("3") || s.equals("other") || s.equals("o"))
+            return 3;
+
+        return -1;
+    }
+
+    /**
+     * Returns the ActivityList matching the specified type code.
+     * @param type Integer type code (1=Home, 2=School, 3=Other).
+     * @return Corresponding <code>ActivityList</code>, or <code>null</code> if invalid.
+     */
+    private static ActivityList getActivityList(int type) {
+        return switch (type) {
+            case 1 -> HOME_ACTIVITIES;
+            case 2 -> SCHOOL_ACTIVITIES;
+            case 3 -> OTHER_ACTIVITIES;
+            default -> null;
+        };
+    }
+
+    /**
+     * Returns the human-readable name of the activity category.
+     * @param type Integer type code (1=Home, 2=School, 3=Other).
+     * @return String name of the category.
+     */
+    private static String getActivityTypeName(int type) {
+        return switch (type) {
+            case 1 -> "Home";
+            case 2 -> "School";
+            case 3 -> "Other";
+            default -> "Unknown";
+        };
+    }
+
 
 
     /**
@@ -107,30 +157,23 @@ public class DayPlanner {
     private static void addActivity() {
         System.out.println("Let's add a new activity to the DayPlanner.");
 
-        // User input: activity type
+        // 1. Activity type
         int type;
         ActivityList arr;
 
         while (true) {
             System.out.println("Enter the type of this activity.");
             System.out.println("For Home, type 'home' or 1. For School, type 'school' or 2. For Other, type 'other' or 3:");
-            String input = KEYBOARD.readString().toLowerCase();
+            type = parseActivityType(KEYBOARD.readString());
 
-            if (input.equals("1") || input.equals("home") || input.equals("h")) {
-                type = 1;
-                arr = HOME_ACTIVITIES;
-            } else if (input.equals("2") || input.equals("school") || input.equals("s")) {
-                type = 2;
-                arr = SCHOOL_ACTIVITIES;
-            } else if (input.equals("3") || input.equals("other") || input.equals("o")) {
-                type = 3;
-                arr = OTHER_ACTIVITIES;
-            } else {
-                System.out.println("Invalid activity type: \"" + input + "\". Try again:");
+            if (type == -1) {
+                System.out.println("Invalid activity type. Try again:");
                 continue;
             }
 
-            // Check first if there are rooms available in the corresponding array per Requirement (2)
+            arr = getActivityList(type);
+
+            // Check first if room is available per Requirement (2)
             if (arr.isFull()) {
                 System.out.println("You're pretty busy... the specified array is full, sorry!");
                 return;
@@ -139,7 +182,7 @@ public class DayPlanner {
             break;
         }
 
-        // User input: title
+        // 2. Title
         String title;
         while (true) {
             System.out.println("Enter a title.");
@@ -149,11 +192,11 @@ public class DayPlanner {
             System.out.println("Title cannot be empty. Try again:");
         }
 
-        // User input: start time
+        // 3. Start time
         System.out.println("Enter a starting time.");
         Time startTime = KEYBOARD.readTime();
 
-        // User input: end time
+        // 4. End time
         Time endTime;
         while (true) {
             System.out.println("Enter an ending time.");
@@ -165,7 +208,7 @@ public class DayPlanner {
             System.out.println("Ending time has to be after the starting time (" + startTime + "). Try again:");
         }
 
-        // User input: comment
+        // 5. Optional comment
         System.out.println("Would you like to enter a comment?");
         String comment = null;
         if (KEYBOARD.readBool()) {
@@ -175,7 +218,7 @@ public class DayPlanner {
                 comment = null;
         }
 
-        // User input: location
+        // 6. Location (Other activities only)
         String location = null;
         if (type == 3) {
             while (true) {
@@ -187,27 +230,73 @@ public class DayPlanner {
             }
         }
 
-        // Instantiate the activity
-        Activity act;
-        switch (type) {
-            case 1:
-                act = new HomeActivity(title, startTime, endTime, comment);
-                HOME_ACTIVITIES.append(act);
-                break;
-            case 2:
-                act = new SchoolActivity(title, startTime, endTime, comment);
-                SCHOOL_ACTIVITIES.append(act);
-                break;
-            case 3:
-                act = new OtherActivity(title, startTime, endTime, comment, location);
-                OTHER_ACTIVITIES.append(act);
-                break;
-            default:
-                act = null;
-        }
+        // 7. Instantiate and insert activity
+        Activity act = switch (type) {
+            case 1 -> new HomeActivity(title, startTime, endTime, comment);
+            case 2 -> new SchoolActivity(title, startTime, endTime, comment);
+            case 3 -> new OtherActivity(title, startTime, endTime, comment, location);
+            default -> null;
+        };
 
-        if (act != null)
+        if (act != null) {
+            arr.append(act);
             System.out.println("Successfully created the new activity:\n\t" + act.toString());
+        }
+    }
+
+
+
+    /**
+     * Prompts the user for a time period filter and parses the start and end times.
+     * @return A two-element array containing <code>{ searchStart, searchEnd }</code>.
+     */
+    private static Time[] readTimePeriod() {
+        while (true) {
+            System.out.println("Enter a time period (e.g. '2026/9/12, 6:00 - 2026/9/22, 11:59', '2026/9/12, 6:00 -', '- 2026/9/22, 11:59'), or press Enter for any time:");
+            String line = KEYBOARD.readString();
+
+            if (line.isEmpty())
+                return new Time[] { null, null };
+
+            // Find dash delimiter (hyphen, en-dash, em-dash)
+            int dashIndex = -1;
+            char[] dashes = { '-', '–', '—' };
+            for (char d : dashes) {
+                dashIndex = line.indexOf(d);
+                if (dashIndex != -1)
+                    break;
+            }
+
+            if (dashIndex != -1) {
+                String part1 = line.substring(0, dashIndex).trim();
+                String part2 = line.substring(dashIndex + 1).trim();
+
+                Time start = part1.isEmpty() ? null : Input.parseTime(part1);
+                Time end = part2.isEmpty() ? null : Input.parseTime(part2);
+
+                if (!part1.isEmpty() && start == null) {
+                    System.out.println("Invalid starting time. Use format YYYY/MM/DD HH:MM. Try again:");
+                    continue;
+                }
+                if (!part2.isEmpty() && end == null) {
+                    System.out.println("Invalid ending time. Use format YYYY/MM/DD HH:MM. Try again:");
+                    continue;
+                }
+                if (start != null && end != null && start.compareTo(end) >= 0) {
+                    System.out.println("Starting time must be before ending time. Try again:");
+                    continue;
+                }
+
+                return new Time[] { start, end };
+            }
+
+            // Single time entered without dash
+            Time single = Input.parseTime(line);
+            if (single != null)
+                return new Time[] { single, null };
+
+            System.out.println("Invalid time period. Expected 'start - end', 'start -', '- end', or press Enter to skip. Try again:");
+        }
     }
 
 
@@ -222,122 +311,38 @@ public class DayPlanner {
         int type = 0;
         while (true) {
             System.out.println("Enter activity type ('home', 'school', 'other'), or press Enter to search all types:");
-            String input = KEYBOARD.readString().toLowerCase();
+            String input = KEYBOARD.readString();
 
             if (input.isEmpty()) {
-                type = 0; // all types
+                type = 0;
                 break;
-            } else if (input.equals("1") || input.equals("home") || input.equals("h")) {
-                type = 1;
-                break;
-            } else if (input.equals("2") || input.equals("school") || input.equals("s")) {
-                type = 2;
-                break;
-            } else if (input.equals("3") || input.equals("other") || input.equals("o")) {
-                type = 3;
-                break;
-            } else {
-                System.out.println("Invalid activity type: \"" + input + "\". Please enter 'home', 'school', 'other', or press Enter to skip:");
             }
+
+            type = parseActivityType(input);
+            if (type != -1)
+                break;
+
+            System.out.println("Invalid activity type: \"" + input + "\". Please enter 'home', 'school', 'other', or press Enter to skip:");
         }
 
         // 2. Title keywords
         System.out.println("Enter title keywords (separated by spaces), or press Enter to match any title:");
         String keywordInput = KEYBOARD.readString();
-        String[] keywords = null;
-        if (!keywordInput.isEmpty()) {
-            keywords = keywordInput.trim().split("\\s+");
-        }
+        String[] keywords = keywordInput.isEmpty() ? null : keywordInput.trim().split("\\s+");
 
         // 3. Time period
-        Time searchStart = null;
-        Time searchEnd = null;
+        Time[] period = readTimePeriod();
+        Time searchStart = period[0];
+        Time searchEnd = period[1];
 
-        while (true) {
-            System.out.println("Enter a time period (e.g. '2026/9/12, 6:00 - 2026/9/22, 11:59', '2026/9/12, 6:00 -', '- 2026/9/22, 11:59'), or press Enter for any time:");
-            String periodInput = KEYBOARD.readString();
+        // 4. Sequential search through target array(s)
+        ActivityList[] listsToSearch = (type == 0)
+            ? new ActivityList[] { HOME_ACTIVITIES, SCHOOL_ACTIVITIES, OTHER_ACTIVITIES }
+            : new ActivityList[] { getActivityList(type) };
 
-            if (periodInput.isEmpty()) {
-                searchStart = null;
-                searchEnd = null;
-                break;
-            }
-
-            // Check if delimiter exists (- or – or —)
-            int dashIndex = -1;
-            char[] dashes = { '-', '–', '—' };
-            for (char d : dashes) {
-                dashIndex = periodInput.indexOf(d);
-                if (dashIndex != -1)
-                    break;
-            }
-
-            if (dashIndex != -1) {
-                String part1 = periodInput.substring(0, dashIndex).trim();
-                String part2 = periodInput.substring(dashIndex + 1).trim();
-
-                Time sStart = null;
-                Time sEnd = null;
-                boolean valid = true;
-
-                if (!part1.isEmpty()) {
-                    sStart = Input.parseTime(part1);
-                    if (sStart == null) {
-                        System.out.println("Invalid starting time in time period. Please use format YYYY/MM/DD HH:MM. Try again:");
-                        valid = false;
-                    }
-                }
-
-                if (valid && !part2.isEmpty()) {
-                    sEnd = Input.parseTime(part2);
-                    if (sEnd == null) {
-                        System.out.println("Invalid ending time in time period. Please use format YYYY/MM/DD HH:MM. Try again:");
-                        valid = false;
-                    }
-                }
-
-                if (valid && sStart != null && sEnd != null) {
-                    if (sStart.compareTo(sEnd) >= 0) {
-                        System.out.println("Starting time must be before ending time. Try again:");
-                        valid = false;
-                    }
-                }
-
-                if (valid) {
-                    searchStart = sStart;
-                    searchEnd = sEnd;
-                    break;
-                }
-            } else {
-                // Single time entered without dash: treat as starting time with open end
-                Time single = Input.parseTime(periodInput);
-                if (single != null) {
-                    searchStart = single;
-                    searchEnd = null;
-                    break;
-                } else {
-                    System.out.println("Invalid time period. Expected 'start - end', 'start -', '- end', or press Enter to skip. Try again:");
-                }
-            }
-        }
-
-        // Sequential search through appropriate array(s)
-        ActivityList[] listsToSearch;
-        String[] listNames;
-
-        if (type == 1) {
-            listsToSearch = new ActivityList[] { HOME_ACTIVITIES };
-            listNames = new String[] { "Home" };
-        } else if (type == 2) {
-            listsToSearch = new ActivityList[] { SCHOOL_ACTIVITIES };
-            listNames = new String[] { "School" };
-        } else if (type == 3) {
-            listsToSearch = new ActivityList[] { OTHER_ACTIVITIES };
-            listNames = new String[] { "Other" };
-        } else {
-            listsToSearch = new ActivityList[] { HOME_ACTIVITIES, SCHOOL_ACTIVITIES, OTHER_ACTIVITIES };
-            listNames = new String[] { "Home", "School", "Other" };
-        }
+        String[] listNames = (type == 0)
+            ? new String[] { "Home", "School", "Other" }
+            : new String[] { getActivityTypeName(type) };
 
         int totalMatches = 0;
         System.out.println("\nSearch results:");
@@ -401,27 +406,12 @@ public class DayPlanner {
         if (title == null)
             return false;
 
-        // Split title into word tokens (removing punctuation and whitespace)
-        String[] rawWords = title.toLowerCase().split("[^a-zA-Z0-9]+");
-        List<String> titleWords = new ArrayList<>();
-        for (String w : rawWords) {
-            if (!w.isEmpty())
-                titleWords.add(w);
-        }
+        HashSet<String> titleWords = new HashSet<>(
+            Arrays.asList(title.toLowerCase().split("[^a-zA-Z0-9]+")));
 
         for (String kw : keywords) {
             String cleanKw = kw.toLowerCase().replaceAll("^[^a-zA-Z0-9]+|[^a-zA-Z0-9]+$", "");
-            if (cleanKw.isEmpty())
-                continue;
-
-            boolean found = false;
-            for (String tw : titleWords) {
-                if (tw.equals(cleanKw)) {
-                    found = true;
-                    break;
-                }
-            }
-            if (!found)
+            if (!cleanKw.isEmpty() && !titleWords.contains(cleanKw))
                 return false;
         }
 

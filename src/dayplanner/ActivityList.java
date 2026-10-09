@@ -57,29 +57,20 @@ extends AbstractList<Activity>
     public ActivityList(String dirName, String fileName) {
         this();
 
-        try {
-            // Get the file instance
-            File file = new File(dirName + "/" + fileName);
-            BufferedReader fr = new BufferedReader(
-                new FileReader(file));
-
+        File file = new File(dirName + "/" + fileName);
+        try (BufferedReader fr = new BufferedReader(new FileReader(file))) {
             String line;
-
-            while ((line = fr.readLine()) != null)
-                append(activityFromRAS(line));
-
-            fr.close();
-        }
-        catch (FileNotFoundException e) {
+            while ((line = fr.readLine()) != null) {
+                if (!line.trim().isEmpty())
+                    append(activityFromRAS(line));
+            }
+        } catch (FileNotFoundException e) {
             // if the file is not found - thats fine
             // that just means the user never
             // saved data before
-            // so we can exit now without doing anything
             System.out.println("There was no list found at " + dirName + "/" + fileName + ".");
-            return;
         } catch (Exception e) {
             e.printStackTrace();
-            return;
         }
     }
 
@@ -314,10 +305,8 @@ extends AbstractList<Activity>
         if (parent != null)
             parent.mkdirs();
 
-        try {
-            FileWriter writer = new FileWriter(file);
+        try (FileWriter writer = new FileWriter(file)) {
             writer.write(toRAS());
-            writer.close();
         } catch (IOException e) {
             e.printStackTrace();
             return false;

@@ -181,16 +181,9 @@ public class Input {
                 int h = Integer.parseInt(components[3]);
                 int min = Integer.parseInt(components[4]);
 
-                if (y < 1) {
-                    System.out.println("\nInvalid year (" + y + "): Year must be a positive integer starting from 1. Try again:");
-                } else if (m < 1 || m > 12) {
-                    System.out.println("\nInvalid month (" + m + "): Month must be between 1 and 12. Try again:");
-                } else if (d < 1 || d > Time.maxDaysInMonth(y, m)) {
-                    System.out.println("\nInvalid day (" + d + "): Month " + m + " has max " + Time.maxDaysInMonth(y, m) + " days. Try again:");
-                } else if (h < 0 || h > 23) {
-                    System.out.println("\nInvalid hour (" + h + "): Hour must be between 0 and 23. Try again:");
-                } else if (min < 0 || min > 59) {
-                    System.out.println("\nInvalid minute (" + min + "): Minute must be between 0 and 59. Try again:");
+                String err = Time.getValidationError(y, m, d, h, min);
+                if (err != null) {
+                    System.out.println("\nInvalid time: " + err + " Try again:");
                 } else {
                     System.out.println("\nInvalid time values. Try again:");
                 }

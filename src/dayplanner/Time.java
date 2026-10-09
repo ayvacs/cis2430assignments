@@ -73,6 +73,30 @@ public class Time implements Comparable<Time> {
     }
 
     /**
+     * Returns an informative error message if any time component is invalid, or <code>null</code> if valid.
+     * @param year The year.
+     * @param month The month.
+     * @param day The day.
+     * @param hour The hour.
+     * @param minute The minute.
+     * @return Description of the error, or <code>null</code> if all values are valid.
+     */
+    public static String getValidationError(int year, int month, int day, int hour, int minute) {
+        if (year < MIN_YEAR || year > MAX_YEAR)
+            return "Year (" + year + ") must be a positive integer between " + MIN_YEAR + " and " + MAX_YEAR + ".";
+        if (month < MIN_MONTH || month > MAX_MONTH)
+            return "Month (" + month + ") must be between " + MIN_MONTH + " and " + MAX_MONTH + ".";
+        int maxDays = maxDaysInMonth(year, month);
+        if (day < MIN_DAY || day > maxDays)
+            return "Day (" + day + ") is invalid: month " + month + " has max " + maxDays + " days.";
+        if (hour < MIN_HOUR || hour > MAX_HOUR)
+            return "Hour (" + hour + ") must be between " + MIN_HOUR + " and " + MAX_HOUR + ".";
+        if (minute < MIN_MINUTE || minute > MAX_MINUTE)
+            return "Minute (" + minute + ") must be between " + MIN_MINUTE + " and " + MAX_MINUTE + ".";
+        return null;
+    }
+
+    /**
      * Validates whether the specified date and time values represent a valid time.
      * @param year The year (must be positive, starting from 1).
      * @param month The month (1-12).
@@ -82,19 +106,7 @@ public class Time implements Comparable<Time> {
      * @return <code>true</code> if all values are valid, <code>false</code> otherwise.
      */
     public static boolean isValidTime(int year, int month, int day, int hour, int minute) {
-        if (year < MIN_YEAR || year > MAX_YEAR)
-            return false;
-        if (month < MIN_MONTH || month > MAX_MONTH)
-            return false;
-        int maxDays = maxDaysInMonth(year, month);
-        if (day < MIN_DAY || day > maxDays)
-            return false;
-        if (hour < MIN_HOUR || hour > MAX_HOUR)
-            return false;
-        if (minute < MIN_MINUTE || minute > MAX_MINUTE)
-            return false;
-
-        return true;
+        return getValidationError(year, month, day, hour, minute) == null;
     }
 
 
