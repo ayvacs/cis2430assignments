@@ -35,4 +35,17 @@ public class HomeActivity extends Activity {
     public HomeActivity(String ras) {
         super(ras);
     }
+
+    /**
+     * @return Whether or not this <code>HomeActivity</code> equals <code>other</code>.
+     * @param other The object to compare with.
+     */
+    @Override
+    public boolean equals(Object other) {
+        if (this == other)
+            return true;
+        if (other == null || getClass() != other.getClass())
+            return false;
+        return super.equals(other);
+    }
 }

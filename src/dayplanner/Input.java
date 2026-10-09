@@ -40,11 +40,15 @@ public class Input {
 
         do {
             System.out.print("(integer) > ");
-            String line = SCANNER.nextLine();
+            String line = SCANNER.nextLine().trim();
 
             if (line.matches("[-+]?[0-9]+")) {
-                input = Integer.parseInt(line);
-                break;
+                try {
+                    input = Integer.parseInt(line);
+                    break;
+                } catch (NumberFormatException e) {
+                    System.out.println("\nInteger value out of range. Try again:");
+                }
             } else {
                 System.out.println("\nInvalid integer. Try again:");
             }
@@ -85,7 +89,14 @@ public class Input {
 
         do {
             System.out.print("(Y/N) > ");
-            input = Character.toUpperCase(SCANNER.nextLine().trim().charAt(0));
+            String line = SCANNER.nextLine().trim();
+
+            if (line.isEmpty()) {
+                System.out.println("\nInput cannot be empty. Try typing Yes or No.");
+                continue;
+            }
+
+            input = Character.toUpperCase(line.charAt(0));
 
             if (input == 'Y') {
                 ret = true;
@@ -106,19 +117,98 @@ public class Input {
 
 
     /**
+     * Safely parse a Time from a string representation.
+     * @param str The string representing a time in YYYY/MM/DD HH:MM format.
+     * @return A valid <code>Time</code> instance, or <code>null</code> if invalid or empty.
+     */
+    public static Time parseTime(String str) {
+        if (str == null || str.trim().isEmpty())
+            return null;
+
+        String[] components = str.trim().split("[/:,\\s]+");
+        if (components.length < 5)
+            return null;
+
+        try {
+            int y = Integer.parseInt(components[0]);
+            int m = Integer.parseInt(components[1]);
+            int d = Integer.parseInt(components[2]);
+            int h = Integer.parseInt(components[3]);
+            int min = Integer.parseInt(components[4]);
+
+            if (Time.isValidTime(y, m, d, h, min))
+                return new Time(y, m, d, h, min);
+        } catch (NumberFormatException e) {
+            return null;
+        }
+
+        return null;
+    }
+
+    /**
      * Read and return a <code>Time</code> value of the format <code>YYYY/MM/DD HH:MM</code>.
-     * Does not check whether the input follows the specified format; rather, relies on input validation as described in the <code>Time</code> class.
-     * @return User input as a <code>Time</code>.
+     * Defensively validates year, month, day, hour, and minute ranges.
+     * Continues prompting the user until a valid time is entered.
+     * @return User input as a valid <code>Time</code>.
      */
     public Time readTime() {
-        System.out.print("(YYYY/MM/DD HH:MM) > ");
+        do {
+            System.out.print("(YYYY/MM/DD HH:MM) > ");
+            String line = SCANNER.nextLine().trim();
 
-        String input = SCANNER.nextLine();
-        Time time = new Time(input);
-        // new Time(input) never fails when input is a string
-        
-        System.out.println(" ");
-        return time;
+            if (line.isEmpty()) {
+                System.out.println("\nTime cannot be empty. Please enter format YYYY/MM/DD HH:MM (e.g. 2026/9/10 17:30). Try again:");
+                continue;
+            }
+
+            Time parsed = parseTime(line);
+            if (parsed != null) {
+                System.out.print("\n");
+                return parsed;
+            }
+
+            // Detailed validation error feedback
+            String[] components = line.split("[/:,\\s]+");
+            if (components.length < 5) {
+                System.out.println("\nInvalid format. Expected: YYYY/MM/DD HH:MM (e.g. 2026/9/10 17:30). Try again:");
+                continue;
+            }
+
+            try {
+                int y = Integer.parseInt(components[0]);
+                int m = Integer.parseInt(components[1]);
+                int d = Integer.parseInt(components[2]);
+                int h = Integer.parseInt(components[3]);
+                int min = Integer.parseInt(components[4]);
+
+                if (y < 1) {
+                    System.out.println("\nInvalid year (" + y + "): Year must be a positive integer starting from 1. Try again:");
+                } else if (m < 1 || m > 12) {
+                    System.out.println("\nInvalid month (" + m + "): Month must be between 1 and 12. Try again:");
+                } else if (d < 1 || d > Time.maxDaysInMonth(y, m)) {
+                    System.out.println("\nInvalid day (" + d + "): Month " + m + " has max " + Time.maxDaysInMonth(y, m) + " days. Try again:");
+                } else if (h < 0 || h > 23) {
+                    System.out.println("\nInvalid hour (" + h + "): Hour must be between 0 and 23. Try again:");
+                } else if (min < 0 || min > 59) {
+                    System.out.println("\nInvalid minute (" + min + "): Minute must be between 0 and 59. Try again:");
+                } else {
+                    System.out.println("\nInvalid time values. Try again:");
+                }
+            } catch (NumberFormatException e) {
+                System.out.println("\nTime components must be integers. Try again:");
+            }
+        } while (true);
+    }
+
+    /**
+     * Read and return a command string from the user.
+     * @return User command input trimmed of whitespace.
+     */
+    public String readCommand() {
+        System.out.print("(command) > ");
+        String input = SCANNER.nextLine().trim();
+        System.out.print("\n");
+        return input;
     }
 
 

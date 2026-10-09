@@ -56,6 +56,41 @@ public class OtherActivity extends Activity {
     /** @return This <code>OtherActivity</code>'s <b>location</b> field as a <code>String</code>. */
     public String getLocation() { return this.location; }
 
+    /**
+     * Set this <code>OtherActivity</code>'s <b>location</b>.
+     * @param location The new location.
+     */
+    public void setLocation(String location) {
+        this.location = location;
+    }
+
+    /**
+     * @return Whether or not this <code>OtherActivity</code> equals <code>other</code>.
+     * @param other The other <code>OtherActivity</code> to compare with.
+     */
+    public boolean equals(OtherActivity other) {
+        if (other == null)
+            return false;
+        if (!super.equals(other))
+            return false;
+        if (getLocation() == null)
+            return other.getLocation() == null;
+        return getLocation().equals(other.getLocation());
+    }
+
+    /**
+     * @return Whether or not this <code>OtherActivity</code> equals <code>other</code>.
+     * @param other The object to compare with.
+     */
+    @Override
+    public boolean equals(Object other) {
+        if (this == other)
+            return true;
+        if (other == null || getClass() != other.getClass())
+            return false;
+        return equals((OtherActivity) other);
+    }
+
 
 
     /**

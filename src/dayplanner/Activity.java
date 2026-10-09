@@ -59,7 +59,7 @@ public class Activity implements Comparable<Activity> {
             this.startTime = new Time(tokens[2]);
         if (tokens.length >= 4 && tokens[3] != null && !tokens[3].isEmpty())
             this.endTime = new Time(tokens[3]);
-        if (tokens.length >= 5 && tokens[4] != null && !tokens[4].isEmpty() && tokens[4] != "NIL")
+        if (tokens.length >= 5 && tokens[4] != null && !tokens[4].isEmpty() && !tokens[4].equals("NIL"))
             this.comment = tokens[4];
     }
 
@@ -76,6 +76,40 @@ public class Activity implements Comparable<Activity> {
     
     /** @return This <code>Activity</code>'s <b>comment</b> field as a <code>String</code>. If no comment is defined, return <code>null</code>.*/
     public String getComment() { return this.comment; }
+
+
+
+    /**
+     * Set this <code>Activity</code>'s <b>title</b>.
+     * @param title The new title.
+     */
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    /**
+     * Set this <code>Activity</code>'s <b>start time</b>.
+     * @param startTime The new start time.
+     */
+    public void setStartTime(Time startTime) {
+        this.startTime = startTime;
+    }
+
+    /**
+     * Set this <code>Activity</code>'s <b>end time</b>.
+     * @param endTime The new end time.
+     */
+    public void setEndTime(Time endTime) {
+        this.endTime = endTime;
+    }
+
+    /**
+     * Set this <code>Activity</code>'s <b>comment</b>.
+     * @param comment The new comment.
+     */
+    public void setComment(String comment) {
+        this.comment = comment;
+    }
 
 
 
@@ -126,15 +160,38 @@ public class Activity implements Comparable<Activity> {
      * @param other The other <code>Activity</code> to compare with.
      */
     public boolean equals(Activity other) {
-        if (!getTitle().equals(other.getTitle())
-            || !getStartTime().equals(other.getStartTime())
-            || !getEndTime().equals(other.getEndTime()))
+        if (other == null || getClass() != other.getClass())
+            return false;
+
+        if (getTitle() == null ? other.getTitle() != null : !getTitle().equals(other.getTitle()))
+            return false;
+
+        if (getStartTime() == null ? other.getStartTime() != null : !getStartTime().equals(other.getStartTime()))
+            return false;
+
+        if (getEndTime() == null ? other.getEndTime() != null : !getEndTime().equals(other.getEndTime()))
             return false;
         
         String c1 = getComment();
         String c2 = other.getComment();
 
-        return c1 != null && c2 != null && c1.equals(c2);
+        if (c1 == null)
+            return c2 == null;
+
+        return c1.equals(c2);
+    }
+
+    /**
+     * @return Whether or not this <code>Activity</code> equals <code>other</code>.
+     * @param other The object to compare with.
+     */
+    @Override
+    public boolean equals(Object other) {
+        if (this == other)
+            return true;
+        if (other == null || getClass() != other.getClass())
+            return false;
+        return equals((Activity) other);
     }
 
     /**

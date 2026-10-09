@@ -331,13 +331,34 @@ extends AbstractList<Activity>
      * @param other The other <code>ActivityList</code> to compare with.
      */
     public boolean equals(ActivityList other) {
-        return toString().equals(other.toString());
+        if (other == null || size() != other.size())
+            return false;
+
+        for (int i = 0; i < size(); i++) {
+            if (!get(i).equals(other.get(i)))
+                return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * @return Whether or not this <code>ActivityList</code> equals <code>other</code>.
+     * @param other The object to compare with.
+     */
+    @Override
+    public boolean equals(Object other) {
+        if (this == other)
+            return true;
+        if (other == null || getClass() != other.getClass())
+            return false;
+        return equals((ActivityList) other);
     }
 
     /**
      * Sort the ActivityList in-place in ascending order by starting time (activities that start earlier appear earlier).
      */
     public void sort() {
-        Arrays.sort(array);
+        Arrays.sort(array, 0, length);
     }
 }

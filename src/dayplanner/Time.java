@@ -12,14 +12,14 @@ package dayplanner;
  * <li>A minute is represented by an integer; i.e. <pre>1 = xx:01.</pre></li>
  * </ul>
  */
-public class Time {
-    private static final int MIN_YEAR = 1970;
+public class Time implements Comparable<Time> {
+    private static final int MIN_YEAR = 1;
     private static final int MIN_MONTH = 1;
     private static final int MIN_DAY = 1;
     private static final int MIN_HOUR = 0;
     private static final int MIN_MINUTE = 0;
 
-    private static final int MAX_YEAR = 2170;
+    private static final int MAX_YEAR = 9999;
     private static final int MAX_MONTH = 12;
     // There is no MAX_DAY because the highest possible
     // day is variable, depending on the month.
@@ -51,6 +51,50 @@ public class Time {
             return true;
 
         return false;
+    }
+
+    /**
+     * Calculates the maximum number of days in the given month and year.
+     * @param year The year.
+     * @param month The month (1-12).
+     * @return The maximum number of days in that month, or -1 if the month is invalid.
+     */
+    public static int maxDaysInMonth(int year, int month) {
+        if (month < MIN_MONTH || month > MAX_MONTH)
+            return -1;
+
+        if (month == 2)
+            return isLeapYear(year) ? 29 : 28;
+
+        return switch (month) {
+            case 1, 3, 5, 7, 8, 10, 12 -> 31;
+            default -> 30;
+        };
+    }
+
+    /**
+     * Validates whether the specified date and time values represent a valid time.
+     * @param year The year (must be positive, starting from 1).
+     * @param month The month (1-12).
+     * @param day The day (1 to max days in month).
+     * @param hour The hour (0-23).
+     * @param minute The minute (0-59).
+     * @return <code>true</code> if all values are valid, <code>false</code> otherwise.
+     */
+    public static boolean isValidTime(int year, int month, int day, int hour, int minute) {
+        if (year < MIN_YEAR || year > MAX_YEAR)
+            return false;
+        if (month < MIN_MONTH || month > MAX_MONTH)
+            return false;
+        int maxDays = maxDaysInMonth(year, month);
+        if (day < MIN_DAY || day > maxDays)
+            return false;
+        if (hour < MIN_HOUR || hour > MAX_HOUR)
+            return false;
+        if (minute < MIN_MINUTE || minute > MAX_MINUTE)
+            return false;
+
+        return true;
     }
 
 
@@ -96,24 +140,32 @@ public class Time {
         // Assume default values
         this();
 
-        // Remove all double, triple, etc spaces
-        formatString = formatString.trim().replaceAll("\\s{2,}", "");
+        if (formatString == null || formatString.trim().isEmpty())
+            return;
 
-        // Remove all commas
-        formatString = formatString.replaceAll(",", "");
+        // Split up components by slashes, colons, commas, or whitespace
+        String[] components = formatString.trim().split("[/:,\\s]+");
 
-        // Split up the 5 components by slashes, colons, spaces
-        String[] components = formatString.split("[/:\\s]+");
+        if (components.length >= 5) {
+            try {
+                int y = Integer.parseInt(components[0]);
+                int m = Integer.parseInt(components[1]);
+                int d = Integer.parseInt(components[2]);
+                int h = Integer.parseInt(components[3]);
+                int min = Integer.parseInt(components[4]);
 
-        // Populate attributes (parseInt defaults to NaN if no integer is found, which our setter methods refuse to operate on, thus avoiding any exceptions.)
-        try {
-            setYear(Integer.parseInt(components[0]));
-            setMonth(Integer.parseInt(components[1]));
-            setDay(Integer.parseInt(components[2]));
-            setHour(Integer.parseInt(components[3]));
-            setMinute(Integer.parseInt(components[4]));
-        } catch (Exception e) {
-            System.out.println("One or more fields were not properly entered; defaulting to " + toString() + ".");
+                if (isValidTime(y, m, d, h, min)) {
+                    this.year = y;
+                    this.month = m;
+                    this.day = d;
+                    this.hour = h;
+                    this.minute = min;
+                } else {
+                    System.out.println("One or more fields were not properly entered; defaulting to " + toString() + ".");
+                }
+            } catch (Exception e) {
+                System.out.println("One or more fields were not properly entered; defaulting to " + toString() + ".");
+            }
         }
     }
 
@@ -121,7 +173,7 @@ public class Time {
     /**
      * Attempt to set the specified <code>year</code>.
      * Subject to input validation based on the allowed range of years. If the new field is not valid, the operation cancels without affecting the instance.
-     * Must be <code>1970</code> through <code>2170</code> inclusive.
+     * Must be <code>1</code> through <code>9999</code> inclusive.
      * @param year The new year.
      */
     public void setYear(int year) {
@@ -143,34 +195,14 @@ public class Time {
     /**
      * Attempt to set the specified <code>day</code>.
      * Subject to input validation based on the allowed range of days. If the new field is not valid, the operation cancels without affecting the instance.
-     * Must be <code>0</code> through <code>31</code> inclusive, except if the current month is February. Days in February must be <code>0</code> through <code>29</code> inclusive on leap years, and <code>0</code> through <code>28</code> inclusive on non-leap years.
+     * Must be <code>1</code> through <code>31</code> inclusive, depending on the month and leap year rules.
      * @param day The new day.
      */
     public void setDay(int day) {
-        int year = getYear();
-        int month = getMonth();
-        boolean isLeap = isLeapYear(year);
-        boolean isFeb = month == 2;
-
-        // First, determine whether the given day exceeds the number of days in the month.
-        int thisMonthsMaxDay = -1;
-
-        if (isFeb) {
-            if (isLeap)
-                thisMonthsMaxDay = 29;
-            else
-                thisMonthsMaxDay = 28;
-        } else {
-            if (switch (month) {
-                case 1, 3, 5, 7, 8, 10, 12 -> true;
-                default -> false; })
-                thisMonthsMaxDay = 31;
-            else
-                thisMonthsMaxDay = 30;
-        }
+        int maxDays = maxDaysInMonth(getYear(), getMonth());
         
         // If valid, populate the field.
-        if (day >= MIN_DAY && month <= thisMonthsMaxDay)
+        if (day >= MIN_DAY && day <= maxDays)
             this.day = day;
     }
 
@@ -230,7 +262,11 @@ public class Time {
      * @return An integer indicating the relationship between the two instances: A value of <code>0</code> indicates they are equal; a negative value indicates the calling <code>Time</code> <b>precedes</b> the argument; and a positive value indicates the calling <code>Time</code> <b>follows</b> the argument.
      * @param other The other <code>Time</code> to compare with.
      */
+    @Override
     public int compareTo(Time other) {
+        if (other == null)
+            throw new NullPointerException("Cannot compare Time to null");
+
         if (getYear() != other.getYear())
             return getYear() - other.getYear();
         
@@ -251,6 +287,21 @@ public class Time {
      * @param other The other <code>Time</code> to compare with.
      */
     public boolean equals(Time other) {
+        if (other == null)
+            return false;
         return compareTo(other) == 0;
+    }
+
+    /**
+     * @return Whether or not this <code>Time</code> equals <code>other</code>.
+     * @param other The object to compare with.
+     */
+    @Override
+    public boolean equals(Object other) {
+        if (this == other)
+            return true;
+        if (other == null || getClass() != other.getClass())
+            return false;
+        return equals((Time) other);
     }
 }
