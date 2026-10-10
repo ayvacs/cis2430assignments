@@ -440,8 +440,7 @@ public class DayPlanner {
             FileReader fr = new FileReader(file);
             BufferedReader br = new BufferedReader(fr);
 
-            String line;
-            while ((line = br.readLine()) != null) {}
+            String line = br.readLine().trim();
 
             br.close();
             return line;
