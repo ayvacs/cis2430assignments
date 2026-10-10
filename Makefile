@@ -8,6 +8,7 @@ DOC_DIR = docs
 
 PACKAGE = dayplanner
 MAIN_CLASS = $(PACKAGE).DayPlanner
+TEST_CLASS = $(PACKAGE).Tester
 JAR = $(BIN_DIR)/DayPlanner.jar
 
 SOURCES := $(shell find $(SRC_DIR) -name "*.java")
@@ -27,6 +28,10 @@ compile:
 run: compile
 	$(JVM) -cp $(BIN_DIR) $(MAIN_CLASS)
 
+# Compile and run the automated test suite
+test: compile
+	$(JVM) -cp $(BIN_DIR) $(TEST_CLASS)
+
 # Build javadocs
 docs:
 	javadoc -quiet $(SRC_DIR)/**/*.java -d $(DOC_DIR)
@@ -41,4 +46,4 @@ clean:
 
 
 # Phony rule
-.PHONY: all compile run docs jar clean
+.PHONY: all compile run test docs jar clean

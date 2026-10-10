@@ -410,9 +410,10 @@ public class DayPlanner {
             Arrays.asList(title.toLowerCase().split("[^a-zA-Z0-9]+")));
 
         for (String kw : keywords) {
-            String cleanKw = kw.toLowerCase().replaceAll("^[^a-zA-Z0-9]+|[^a-zA-Z0-9]+$", "");
-            if (!cleanKw.isEmpty() && !titleWords.contains(cleanKw))
-                return false;
+            String[] tokens = kw.toLowerCase().split("[^a-zA-Z0-9]+");
+            for (String token : tokens)
+                if (!token.isEmpty() && !titleWords.contains(token))
+                    return false;
         }
 
         return true;
