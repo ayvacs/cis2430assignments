@@ -2,6 +2,11 @@ package dayplanner;
 
 
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.ResourceBundle;
@@ -29,6 +34,9 @@ public class DayPlanner {
     private static final ActivityList OTHER_ACTIVITIES = new ActivityList(
         DATA_DIRECTORY,
         OTHER_ACTIVITIES_NAME);
+
+    private static final String USERNAME_FILE = RESOURCES.getString("filename_username");
+    private static final String USERNAME = getUsername();
 
 
 
@@ -59,7 +67,8 @@ public class DayPlanner {
      */
     private static boolean commandLoop() {
         System.out.println("\n\n\t\t===-=-==-=====-==-=-===\n\n");
-        System.out.println("\t『 DAY PLANNER 』  Main Menu\n");
+        System.out.println("\t『 DAY PLANNER 』  Main Menu");
+        System.out.println(String.format("\tHello, %s!\n", USERNAME));
         System.out.println("Please enter a command:");
         System.out.println("\t1. add    - Insert a new activity");
         System.out.println("\t2. search - Search for an activity");
@@ -417,6 +426,45 @@ public class DayPlanner {
         }
 
         return true;
+    }
+
+    /**
+     * Get the user's name.
+     * If not defined, prompt the user for a name.
+     * This persists between sessions.
+     */
+    public static String getUsername() {
+        File file = new File(DATA_DIRECTORY, USERNAME_FILE);
+
+        try {
+            FileReader fr = new FileReader(file);
+            BufferedReader br = new BufferedReader(fr);
+
+            String line;
+            while ((line = br.readLine()) != null) {}
+
+            br.close();
+            return line;
+        } catch (FileNotFoundException e) {
+
+            try {
+                if (!file.exists()) {
+                    file.createNewFile();
+                    FileWriter fw = new FileWriter(file);
+
+                    System.out.println("\n\nHello new user, please enter your name:");
+                    String name = KEYBOARD.readString();
+
+                    fw.write(name);
+                    fw.close();
+
+                    return name;
+                }
+            } catch (Exception f) {}
+
+        } catch (Exception e) {}
+        
+        return "exception";
     }
 
     
