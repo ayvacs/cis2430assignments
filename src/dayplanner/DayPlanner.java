@@ -32,6 +32,7 @@ public class DayPlanner {
         OTHER_ACTIVITIES_FILENAME);
 
     private static final String USERNAME_FILENAME = RESOURCES.getString("filename_username");
+    private static final String USERNAME = DayPlannerUtils.getUsername(DATA_DIRECTORY, USERNAME_FILENAME);
 
 
 
@@ -63,7 +64,7 @@ public class DayPlanner {
     private static boolean commandLoop() {
         System.out.println("\n\n\t\t===-=-==-=====-==-=-===\n\n");
         System.out.println("\t『 DAY PLANNER 』  Main Menu\n");
-        System.out.println("\t" + DayPlannerUtils.getGreeting(DATA_DIRECTORY, USERNAME_FILENAME));
+        System.out.println("\t" + DayPlannerUtils.getGreeting(USERNAME));
         System.out.println("\nPlease enter a command:");
         System.out.println("\t1. add    - Insert a new activity");
         System.out.println("\t2. search - Search for an activity");

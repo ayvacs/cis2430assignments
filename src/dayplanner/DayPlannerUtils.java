@@ -61,11 +61,10 @@ public class DayPlannerUtils {
 
     /**
      * Get a greeting for the user.
-     * @param dirName Name of the data directory
-     * @param fileName Name of the username file
+     * @param username User's name
      * @return Greeting (i.e. Good morning, John!)
      */
-    public static String getGreeting(String dirName, String fileName) {
+    public static String getGreeting(String username) {
         int hour = LocalTime.now().getHour();
         String greeting;
 
@@ -77,7 +76,7 @@ public class DayPlannerUtils {
             greeting = "Good evening";
 
         String text = "%s, %s!";
-        return String.format(text, greeting, getUsername(dirName, fileName));
+        return String.format(text, greeting, username);
     }
 
     /**
