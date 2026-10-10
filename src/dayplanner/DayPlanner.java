@@ -15,7 +15,7 @@ public class DayPlanner {
     private static final Input KEYBOARD = new Input();
     private static final ResourceBundle RESOURCES = ResourceBundle.getBundle("ras");
 
-    private static final String DATA_DIRECTORY = RESOURCES.getString("directory_data");
+    private static final String DATA_DIRECTORY = RESOURCES.getString("dirname");
     private static final String HOME_ACTIVITIES_NAME = RESOURCES.getString("filename_home");
     private static final String SCHOOL_ACTIVITIES_NAME = RESOURCES.getString("filename_school");
     private static final String OTHER_ACTIVITIES_NAME = RESOURCES.getString("filename_other");
@@ -58,8 +58,8 @@ public class DayPlanner {
      * @return Boolean indicating whether or not the user wants to continue with the command loop again.
      */
     private static boolean commandLoop() {
-        System.out.println("\n\n          ===-=-==-=====-==-=-===\n\n");
-        System.out.println("  『 DAY PLANNER 』  Main Menu\n");
+        System.out.println("\n\n\t\t===-=-==-=====-==-=-===\n\n");
+        System.out.println("\t『 DAY PLANNER 』  Main Menu\n");
         System.out.println("Please enter a command:");
         System.out.println("\t1. add    - Insert a new activity");
         System.out.println("\t2. search - Search for an activity");

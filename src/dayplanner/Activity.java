@@ -65,50 +65,70 @@ public class Activity implements Comparable<Activity> {
 
 
 
-    /** @return This <code>Activity</code>'s <b>title</b> field as a <code>String</code>. */
-    public String getTitle() { return this.title; }
+    /** Get this <code>Activity</code>'s <b>field</b>.
+     * @return This <code>Activity</code>'s <b>title</b> field as a <code>String</code>.
+     */
+    public String getTitle() {
+        return this.title;
+    }
     
-    /** @return This <code>Activity</code>'s <b>start time</b> field as a <code>Time</code>. */
-    public Time getStartTime() { return this.startTime; }
+    /** Get this <code>Activity</code>'s <b>field</b>.
+     * @return This <code>Activity</code>'s <b>start time</b> field as a <code>Time</code>.
+     */
+    public Time getStartTime() {
+        return this.startTime;
+    }
     
-    /** @return This <code>Activity</code>'s <b>end time</b> field as a <code>Time</code>. */
-    public Time getEndTime() { return this.endTime; }
+    /** Get this <code>Activity</code>'s <b>field</b>.
+     * @return This <code>Activity</code>'s <b>end time</b> field as a <code>Time</code>.
+     */
+    public Time getEndTime() {
+        return this.endTime;
+    }
     
-    /** @return This <code>Activity</code>'s <b>comment</b> field as a <code>String</code>. If no comment is defined, return <code>null</code>.*/
-    public String getComment() { return this.comment; }
+    /** Get this <code>Activity</code>'s <b>field</b>.
+     * @return This <code>Activity</code>'s <b>comment</b> field as a <code>String</code>. If no comment is defined, return <code>null</code>.
+     */
+    public String getComment() {
+        return this.comment;
+    }
 
 
 
     /**
      * Set this <code>Activity</code>'s <b>title</b>.
-     * @param title The new title.
+     * @param title The new title. If it is <code>null</code>, do nothing.
      */
     public void setTitle(String title) {
-        this.title = title;
+        if (title != null)
+            this.title = title;
     }
 
     /**
      * Set this <code>Activity</code>'s <b>start time</b>.
-     * @param startTime The new start time.
+     * @param startTime The new start time. If it is <code>null</code>, do nothing.
      */
     public void setStartTime(Time startTime) {
-        this.startTime = startTime;
+        if (startTime != null)
+            this.startTime = startTime;
     }
 
     /**
      * Set this <code>Activity</code>'s <b>end time</b>.
-     * @param endTime The new end time.
+     * @param endTime The new end time. If it is <code>null</code>, do nothing.
      */
     public void setEndTime(Time endTime) {
-        this.endTime = endTime;
+        if (endTime != null)
+            this.endTime = endTime;
     }
 
     /**
      * Set this <code>Activity</code>'s <b>comment</b>.
-     * @param comment The new comment.
+     * @param comment The new comment. If it is <code>null</code>, do nothing.
      */
     public void setComment(String comment) {
-        this.comment = comment;
+        if (comment != null)
+            this.comment = comment;
     }
 
 
@@ -156,32 +176,41 @@ public class Activity implements Comparable<Activity> {
     }
 
     /**
+     * Determine of two <code>Activity</code> instances are equal.
      * @return Whether or not this <code>Activity</code> equals <code>other</code>.
      * @param other The other <code>Activity</code> to compare with.
      */
     public boolean equals(Activity other) {
+        // compare the class first
+        // this is necessary because HomeActivity etc. are subclasses of this one
+        // and comparing activities of different classes, i.e. HomeActivity and SchoolActivity
+        // they should always be treated as unequal
         if (other == null || getClass() != other.getClass())
             return false;
 
+        // compare title
         if (getTitle() == null ? other.getTitle() != null : !getTitle().equals(other.getTitle()))
             return false;
 
+        // compare start time
         if (getStartTime() == null ? other.getStartTime() != null : !getStartTime().equals(other.getStartTime()))
             return false;
 
+        // compare end time
         if (getEndTime() == null ? other.getEndTime() != null : !getEndTime().equals(other.getEndTime()))
             return false;
         
+        // if we get here the only difference should be the comment
         String c1 = getComment();
         String c2 = other.getComment();
-
         if (c1 == null)
             return c2 == null;
-
-        return c1.equals(c2);
+        else
+            return c1.equals(c2);
     }
 
     /**
+     * Determine if the instance is equal to the other object.
      * @return Whether or not this <code>Activity</code> equals <code>other</code>.
      * @param other The object to compare with.
      */
@@ -201,6 +230,8 @@ public class Activity implements Comparable<Activity> {
      */
     @Override
     public int compareTo(Activity other) {
+        // since we are comparing based on time, which has its own compareTo method
+        // we can just piggyback off of that method
         return getStartTime().compareTo(other.getStartTime());
     }
 }

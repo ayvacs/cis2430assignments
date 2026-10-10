@@ -53,22 +53,36 @@ extends AbstractList<Activity>
      * Instantiate a new <code>ActivityList</code> from a RAS list saved to a file.
      * @param dirName The name of the directory where the RAS file lives.
      * @param fileName The name of the RAS file.
+     * @throws IllegalArgumentException If either of the two arguments are null or empty
      */
     public ActivityList(String dirName, String fileName) {
         this();
 
+        if (dirName == null || fileName == null || dirName.isEmpty() || fileName.isEmpty())
+            throw new IllegalArgumentException("One or more of the two arguments was null or empty:\n"
+                + "(dirName=" + dirName + ")\n"
+                + "(dirName=" + fileName + ")");
+
+        BufferedReader br;
+        FileReader fr;
         File file = new File(dirName + "/" + fileName);
-        try (BufferedReader fr = new BufferedReader(new FileReader(file))) {
+
+        try {
+
+            fr = new FileReader(file);
+            br = new BufferedReader(fr);
+
             String line;
-            while ((line = fr.readLine()) != null) {
+            while ((line = br.readLine()) != null)
                 if (!line.trim().isEmpty())
                     append(activityFromRAS(line));
-            }
+
         } catch (FileNotFoundException e) {
             // if the file is not found - thats fine
-            // that just means the user never
-            // saved data before
-            System.out.println("There was no list found at " + dirName + "/" + fileName + ".");
+            // that just means the user never saved data before.
+            // doing nothing starts this list as one
+            // with DEFAULT_CAPACITY
+            System.out.println("There was no list found at " + dirName + "/" + fileName + "; starting with an empty list");
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -82,7 +96,7 @@ extends AbstractList<Activity>
     private static Activity activityFromRAS(String ras) {
         // remove the outer angled brackets
         String inner = ras.substring(1, ras.length() - 1);
-        // tokenize and grab token 0
+        // tokenize and grab token 0 (classname)
         String type = inner.split(",")[0];
 
         switch (type) {
@@ -108,7 +122,6 @@ extends AbstractList<Activity>
 
         return array[index];
     }
-
     
     /**
      * Return the current size (number of elements) of this <code>ActivityList</code>.
@@ -294,19 +307,21 @@ extends AbstractList<Activity>
      * Overwrites any existing content in the file.
      * @param dirName Name of the directory where the file will be saved.
      * @param fileName Name of the file where content will be saved.
-     * @return Boolean indicating if there were any errors. (<code>true</code> = success, <code>false</code> = failure)
+     * @return Boolean indicating if the operation succeeded. (<code>true</code> = success, <code>false</code> = failure)
      */
     public boolean saveToRAS(String dirName, String fileName) {
-        // Get the File instance
-        File file = new File(dirName + "/" + fileName);
+        try {
+            // Get the File instance
+            File file = new File(dirName + "/" + fileName);
 
-        // Create the directory if it doesnt exist
-        File parent = file.getParentFile();
-        if (parent != null)
-            parent.mkdirs();
+            // Create the directory if it doesnt exist
+            File parent = file.getParentFile();
+            if (parent != null)
+                parent.mkdirs();
 
-        try (FileWriter writer = new FileWriter(file)) {
+            FileWriter writer = new FileWriter(file);
             writer.write(toRAS());
+            writer.close();
         } catch (IOException e) {
             e.printStackTrace();
             return false;
@@ -316,6 +331,7 @@ extends AbstractList<Activity>
     }
 
     /**
+     * Compare the two ActivityLists.
      * @return Whether or not this <code>ActivityList</code> equals <code>other</code>.
      * @param other The other <code>ActivityList</code> to compare with.
      */
@@ -332,6 +348,7 @@ extends AbstractList<Activity>
     }
 
     /**
+     * Compare the ActivityList with another Object.
      * @return Whether or not this <code>ActivityList</code> equals <code>other</code>.
      * @param other The object to compare with.
      */
