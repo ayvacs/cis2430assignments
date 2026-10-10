@@ -1,10 +1,8 @@
 # DayPlanner
 
-by Dom Pecak (1376696)
+*by Dom Pecak (1376696)*
 
-# General Problem
-
-The DayPlanner program is a schedule management tool built for CIS*2430 Assignment 1 that allows the user to track, schedule, and search for three categories of daily activities:
+The DayPlanner program is a schedule management tool that allows the user to track, schedule, and search for three categories of daily activities:
 
 * **Home activities**: Anything done at home like chores, grocery runs, and studying at home.
 * **School activities**: Anything done at university like attending lectures, scheduled labs, and ampus meetings.
@@ -30,51 +28,31 @@ To compile, build documentation, or run the application, run the appropriate `ma
 ```shell
 make            # Build everything (compile classes,
                 # generate javadoc, build JAR)
-                # Does not run the Tester as it is
-                # considered a separate program.
 
 make compile    # Compile source files to bin/
 make run        # Compile and execute via JVM
-make test       # Compile and run the Tester
-make jar        # Compile and package executable bin/DayPlanner.jar
+make jar        # Compile and package jar
 make docs       # Generate HTML javadoc in docs/
+
+make test       # Compile and run the Tester
 
 make clean      # Remove generated bin/ and docs/ folders
 ```
 
-After you compile you can run the packaged JAR directly:
+After you compile, an executable JAR file named `DayPlanner.jar` will be generated, you can execute the JAR from the terminal:
 
 ```shell
 java -jar bin/DayPlanner.jar
 ```
 
-However it might be convenient to compile and execute via JVM in one command like so:
-
-```shell
-make run
-```
-
 ## Interface
 
-When running the application, the command loop presents a main menu:
-
-```
-          ===-=-==-=====-==-=-===
-
-  『 DAY PLANNER 』  Main Menu
-
-Please enter a command:
-	1. add    - Insert a new activity
-	2. search - Search for an activity
-	3. quit   - Exit DayPlanner
-```
-
-The system defends against case variation and common aliases:
+When running the application, the command loop presents a main menu with options:
 
 * **Add an activity**: enter `add`, `a`, or `1`.
 * **Search for activities**: enter `search`, `s`, or `2`.
 * **Quit application**: enter `quit`, `q`, or `3`.
-* Any other input (e.g., `bye`, `exit`) is rejected with an error message and prompts the user to re-enter.
+* Any other input is rejected with an error message and prompts the user to re-enter.
 
 ### 1. Adding an Activity (`add`)
 
