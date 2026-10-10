@@ -93,6 +93,7 @@ public class DayPlannerUtils {
         }
 
         System.out.println("Done, although username isn't refreshed until program is relaunched");
+        KEYBOARD.pressEnterToContinue();
     }
 
     /**

@@ -233,4 +233,12 @@ public class Input {
         System.out.print("\n");
         return input;
     }
+
+    /**
+     * Prompts the user to click 'enter' to continue, then continues after the user presses 'enter'.
+     */
+    public void pressEnterToContinue() {
+        System.out.println("\nPress enter to continue.");
+        SCANNER.nextLine();
+    }
 }
