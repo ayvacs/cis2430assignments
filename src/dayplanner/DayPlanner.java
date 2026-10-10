@@ -2,12 +2,6 @@ package dayplanner;
 
 
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.time.LocalTime;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.ResourceBundle;
@@ -16,28 +10,28 @@ import java.util.ResourceBundle;
 
 /**
  * Application execution point for DayPlanner.
+ * Contains all code required for the main functions of the command loop.
  */
 public class DayPlanner {
     private static final Input KEYBOARD = new Input();
     private static final ResourceBundle RESOURCES = ResourceBundle.getBundle("ras");
 
     private static final String DATA_DIRECTORY = RESOURCES.getString("dirname");
-    private static final String HOME_ACTIVITIES_NAME = RESOURCES.getString("filename_home");
-    private static final String SCHOOL_ACTIVITIES_NAME = RESOURCES.getString("filename_school");
-    private static final String OTHER_ACTIVITIES_NAME = RESOURCES.getString("filename_other");
+    private static final String HOME_ACTIVITIES_FILENAME = RESOURCES.getString("filename_home");
+    private static final String SCHOOL_ACTIVITIES_FILENAME = RESOURCES.getString("filename_school");
+    private static final String OTHER_ACTIVITIES_FILENAME = RESOURCES.getString("filename_other");
 
     private static final ActivityList HOME_ACTIVITIES = new ActivityList(
         DATA_DIRECTORY,
-        HOME_ACTIVITIES_NAME);
+        HOME_ACTIVITIES_FILENAME);
     private static final ActivityList SCHOOL_ACTIVITIES = new ActivityList(
         DATA_DIRECTORY,
-        SCHOOL_ACTIVITIES_NAME);
+        SCHOOL_ACTIVITIES_FILENAME);
     private static final ActivityList OTHER_ACTIVITIES = new ActivityList(
         DATA_DIRECTORY,
-        OTHER_ACTIVITIES_NAME);
+        OTHER_ACTIVITIES_FILENAME);
 
-    private static final String USERNAME_FILE = RESOURCES.getString("filename_username");
-    private static final String USERNAME = getUsername();
+    private static final String USERNAME_FILENAME = RESOURCES.getString("filename_username");
 
 
 
@@ -69,7 +63,7 @@ public class DayPlanner {
     private static boolean commandLoop() {
         System.out.println("\n\n\t\t===-=-==-=====-==-=-===\n\n");
         System.out.println("\t『 DAY PLANNER 』  Main Menu\n");
-        System.out.println("\t"+getGreeting());
+        System.out.println("\t" + DayPlannerUtils.getGreeting(DATA_DIRECTORY, USERNAME_FILENAME));
         System.out.println("\nPlease enter a command:");
         System.out.println("\t1. add    - Insert a new activity");
         System.out.println("\t2. search - Search for an activity");
@@ -102,9 +96,9 @@ public class DayPlanner {
     private static boolean saveToRAS() {
         int errors = 0;
 
-        errors += HOME_ACTIVITIES.saveToRAS(DATA_DIRECTORY, HOME_ACTIVITIES_NAME) ? 0 : 1;
-        errors += SCHOOL_ACTIVITIES.saveToRAS(DATA_DIRECTORY, SCHOOL_ACTIVITIES_NAME) ? 0 : 1;
-        errors += OTHER_ACTIVITIES.saveToRAS(DATA_DIRECTORY, OTHER_ACTIVITIES_NAME) ? 0 : 1;
+        errors += HOME_ACTIVITIES.saveToRAS(DATA_DIRECTORY, HOME_ACTIVITIES_FILENAME) ? 0 : 1;
+        errors += SCHOOL_ACTIVITIES.saveToRAS(DATA_DIRECTORY, SCHOOL_ACTIVITIES_FILENAME) ? 0 : 1;
+        errors += OTHER_ACTIVITIES.saveToRAS(DATA_DIRECTORY, OTHER_ACTIVITIES_FILENAME) ? 0 : 1;
 
         return errors > 0;
     }
@@ -427,63 +421,6 @@ public class DayPlanner {
         }
 
         return true;
-    }
-
-    /**
-     * Get the user's name.
-     * If not defined, prompt the user for a name.
-     * This persists between sessions.
-     */
-    private static String getUsername() {
-        File file = new File(DATA_DIRECTORY, USERNAME_FILE);
-
-        try {
-            FileReader fr = new FileReader(file);
-            BufferedReader br = new BufferedReader(fr);
-
-            String line = br.readLine().trim();
-
-            br.close();
-            return line;
-        } catch (FileNotFoundException e) {
-
-            try {
-                if (!file.exists()) {
-                    file.createNewFile();
-                    FileWriter fw = new FileWriter(file);
-
-                    System.out.println("\n\nHello new user, please enter your name:");
-                    String name = KEYBOARD.readString();
-
-                    fw.write(name);
-                    fw.close();
-
-                    return name;
-                }
-            } catch (Exception f) {}
-
-        } catch (Exception e) {}
-        
-        return "exception";
-    }
-
-    /**
-     * Get a greeting for the user.
-     */
-    private static String getGreeting() {
-        String text = "%s, %s!";
-        String greeting;
-
-        int hour = LocalTime.now().getHour();
-
-        if (hour < 12)
-            greeting = "Good morning";
-        else if (hour < 17)
-            greeting = "Good afternoon";
-        else
-            greeting = "Good evening";
-
-        return String.format(text, greeting, USERNAME);
     }
 
     
