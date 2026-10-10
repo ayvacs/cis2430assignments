@@ -53,8 +53,13 @@ public class OtherActivity extends Activity {
 
 
 
-    /** @return This <code>OtherActivity</code>'s <b>location</b> field as a <code>String</code>. */
-    public String getLocation() { return this.location; }
+    /**
+     * Get this <code>OtherActivity</code>'s <b>location</b> field
+     * @return This <code>OtherActivity</code>'s <b>location</b> field as a <code>String</code>.
+     */
+    public String getLocation() {
+        return this.location;
+    }
 
     /**
      * Set this <code>OtherActivity</code>'s <b>location</b>.
@@ -65,6 +70,7 @@ public class OtherActivity extends Activity {
     }
 
     /**
+     * Compare two OtherActivities.
      * @return Whether or not this <code>OtherActivity</code> equals <code>other</code>.
      * @param other The other <code>OtherActivity</code> to compare with.
      */
@@ -79,6 +85,7 @@ public class OtherActivity extends Activity {
     }
 
     /**
+     * Compare this OtherActivity with another Object.
      * @return Whether or not this <code>OtherActivity</code> equals <code>other</code>.
      * @param other The object to compare with.
      */
@@ -94,6 +101,7 @@ public class OtherActivity extends Activity {
 
 
     /**
+     * Get a <code>String</code> representation.
      * @return A <code>String</code> representation of this <code>OtherActivity</code>.
      */
     public String toString() {

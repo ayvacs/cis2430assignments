@@ -418,4 +418,12 @@ public class DayPlanner {
 
         return true;
     }
+
+    
+
+    /**
+     * Default constructor (not used).
+     * This exists to suppress a Javadoc warning.
+     */
+    public DayPlanner() {}
 }

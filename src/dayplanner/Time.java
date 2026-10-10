@@ -243,20 +243,45 @@ public class Time implements Comparable<Time> {
 
 
 
-    /** @return This <code>Time</code>'s <b>year</b> field as an integer. */
-    public int getYear()   { return this.year;   }
+    /**
+     * Get this <code>Time</code>'s <b>attribute</b>.
+     * @return This <code>Time</code>'s <b>year</b> field as an integer.
+     */
+    public int getYear() {
+        return this.year;
+    }
 
-    /** @return This <code>Time</code>'s <b>month</b> field as an integer. */
-    public int getMonth()  { return this.month;  }
+    /**
+     * Get this <code>Time</code>'s <b>attribute</b>.
+     * @return This <code>Time</code>'s <b>month</b> field as an integer.
+     */
+    public int getMonth() {
+        return this.month;
+    }
 
-    /** @return This <code>Time</code>'s <b>day</b> field as an integer. */
-    public int getDay()    { return this.day;    }
+    /**
+     * Get this <code>Time</code>'s <b>attribute</b>.
+     * @return This <code>Time</code>'s <b>day</b> field as an integer.
+     */
+    public int getDay() {
+        return this.day;
+    }
 
-    /** @return This <code>Time</code>'s <b>hour</b> field as an integer. */
-    public int getHour()   { return this.hour;   }
+    /**
+     * Get this <code>Time</code>'s <b>attribute</b>.
+     * @return This <code>Time</code>'s <b>hour</b> field as an integer.
+     */
+    public int getHour() {
+        return this.hour;
+    }
 
-    /** @return This <code>Time</code>'s <b>minute</b> field as an integer. */
-    public int getMinute() { return this.minute; }
+    /**
+     * Get this <code>Time</code>'s <b>attribute</b>.
+     * @return This <code>Time</code>'s <b>minute</b> field as an integer.
+     */
+    public int getMinute() {
+        return this.minute;
+    }
 
 
 
@@ -295,6 +320,7 @@ public class Time implements Comparable<Time> {
     }
 
     /**
+     * Compare a Time instance with an Object.
      * @return Whether or not this <code>Time</code> equals <code>other</code>.
      * @param other The other <code>Time</code> to compare with.
      */

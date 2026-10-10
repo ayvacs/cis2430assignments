@@ -411,4 +411,12 @@ public class Tester {
 
         return sizeMatches && equalData;
     }
+
+    
+
+    /**
+     * Default constructor (not used).
+     * This exists to suppress a Javadoc warning.
+     */
+    public Tester() {}
 }
