@@ -84,7 +84,7 @@ Saves all activity lists to disk in RAS format and exits.
 
 ### Hidden functions
 
-There are hidden utility functions, which you can access by typing the full command name into the menu.
+There are hidden utility functions, which you can access by typing the full command name into the menu. These are not mentioned in the main command flow because they are only intended to be used while testing the program and there is no need for a regular user to use these commands.
 
 | Command name | Function |
 | --- | --- |
@@ -206,7 +206,7 @@ File paths are configured via `src/dayplanner/ras.properties` which makes it eas
 
 ## 2. Tester
 
-A tester program is included to verify all 22 test cases. To compile and run the test suite run
+A tester program is included to verify all of the test cases. To compile and run the test suite run
 
 ```shell
 make test
