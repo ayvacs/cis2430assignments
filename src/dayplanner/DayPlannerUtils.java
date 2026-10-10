@@ -80,6 +80,22 @@ public class DayPlannerUtils {
     }
 
     /**
+     * Delete the user's name and the username file, without prompting for a new name
+     * @param dirName Name of the data directory
+     * @param fileName Name of the username file
+     */
+    public static void flushUsername(String dirName, String fileName) {
+        try {
+            File file = new File(dirName, fileName);
+            file.delete();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        System.out.println("Done, although username isn't refreshed until program is relaunched");
+    }
+
+    /**
      * Default constructor (not used).
      * This exists to suppress a Javadoc warning.
      */

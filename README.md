@@ -82,6 +82,14 @@ A search query accepts up to three optional components (press Enter on any promp
 
 Saves all activity lists to disk in RAS format and exits.
 
+### Hidden functions
+
+There are hidden utility functions, which you can access by typing the full command name into the menu.
+
+| Command name | Function |
+| --- | --- |
+| `flush_username` | Delete the user's name and the username file, without prompting for a new name |
+
 # Implementation
 
 The DayPlanner consists of eight primary classes in the `dayplanner` package:
