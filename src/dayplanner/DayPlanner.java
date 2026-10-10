@@ -7,6 +7,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
+import java.time.LocalTime;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.ResourceBundle;
@@ -67,9 +68,9 @@ public class DayPlanner {
      */
     private static boolean commandLoop() {
         System.out.println("\n\n\t\t===-=-==-=====-==-=-===\n\n");
-        System.out.println("\t『 DAY PLANNER 』  Main Menu");
-        System.out.println(String.format("\tHello, %s!\n", USERNAME));
-        System.out.println("Please enter a command:");
+        System.out.println("\t『 DAY PLANNER 』  Main Menu\n");
+        System.out.println("\t"+getGreeting());
+        System.out.println("\nPlease enter a command:");
         System.out.println("\t1. add    - Insert a new activity");
         System.out.println("\t2. search - Search for an activity");
         System.out.println("\t3. quit   - Exit DayPlanner\n");
@@ -433,7 +434,7 @@ public class DayPlanner {
      * If not defined, prompt the user for a name.
      * This persists between sessions.
      */
-    public static String getUsername() {
+    private static String getUsername() {
         File file = new File(DATA_DIRECTORY, USERNAME_FILE);
 
         try {
@@ -464,6 +465,25 @@ public class DayPlanner {
         } catch (Exception e) {}
         
         return "exception";
+    }
+
+    /**
+     * Get a greeting for the user.
+     */
+    private static String getGreeting() {
+        String text = "%s, %s!";
+        String greeting;
+
+        int hour = LocalTime.now().getHour();
+
+        if (hour < 12)
+            greeting = "Good morning";
+        else if (hour < 17)
+            greeting = "Good afternoon";
+        else
+            greeting = "Good evening";
+
+        return String.format(text, greeting, USERNAME);
     }
 
     
