@@ -40,9 +40,12 @@ public class Input {
 
         do {
             System.out.print("(integer) > ");
-            String line = SCANNER.nextLine().trim();
 
-            if (line.matches("[-+]?[0-9]+")) {
+            String line = null;
+            if (SCANNER.hasNextLine())
+                line = SCANNER.nextLine().trim();
+
+            if (line != null && line.matches("[-+]?[0-9]+")) {
                 try {
                     input = Integer.parseInt(line);
                     break;
@@ -68,8 +71,9 @@ public class Input {
     public String readString() {
         System.out.print("(string) > ");
 
-        String input = SCANNER.nextLine();
-        input = input.trim();
+        String input = null;
+        if (SCANNER.hasNextLine())
+            input = SCANNER.nextLine().trim();
         
         System.out.print("\n");
         return input;
@@ -89,7 +93,10 @@ public class Input {
 
         do {
             System.out.print("(Y/N) > ");
-            String line = SCANNER.nextLine().trim();
+            
+            String line = null;
+            if (SCANNER.hasNextLine())
+                line = SCANNER.nextLine().trim();
 
             if (line.isEmpty()) {
                 System.out.println("\nInput cannot be empty. Try typing Yes or No.");
@@ -154,7 +161,9 @@ public class Input {
     public Time readTime() {
         do {
             System.out.print("(YYYY/MM/DD HH:MM) > ");
-            String line = SCANNER.nextLine().trim();
+            String line = null;
+            if (SCANNER.hasNextLine())
+                line = SCANNER.nextLine().trim();
 
             if (line.isEmpty()) {
                 System.out.println("\nTime cannot be empty. Please enter format YYYY/MM/DD HH:MM (e.g. 2026/9/10 17:30). Try again:");
@@ -199,36 +208,10 @@ public class Input {
      */
     public String readCommand() {
         System.out.print("(command) > ");
-        String input = SCANNER.nextLine().trim();
-        System.out.print("\n");
-        return input;
-    }
 
-
-
-    /**
-     * Prints out a list of options and return's the user's choice.
-     * Options and choices are both indexed at 1, meaning that the first item in the array of options corresponds to option number 1.
-     * @param options An array of option labels
-     * @return An integer that corresponds to the user's choice (indexed at 1 as described above). It is always guaranteed that the return value will be between 1 and the number of options.
-     * @throws IllegalArgumentException When the array of options is empty.
-     */
-    public int fromOptions(String[] options) {
-        if (options.length < 1)
-            throw new IllegalArgumentException("Options array is empty.");
-
-        // print out all of the options
-        System.out.println("\nPlease use your keyboard to select one of the following options:");
-        for (int i = 0; i < options.length; i++)
-            System.out.println("\t" + (i+1) + ": " + options[i]);
-
-        int input = readInt();
-
-        // validate info
-        if (input < 1 || input > options.length) {
-            System.out.println("\nYou selected an invalid option; try typing a number between 1 and " + options.length + ".");
-            return fromOptions(options);
-        }
+        String input = null;
+        if (SCANNER.hasNextLine())
+            input = SCANNER.nextLine().trim();
 
         System.out.print("\n");
         return input;
