@@ -269,7 +269,7 @@ public class Time implements Comparable<Time> {
      */
 
     /**
-     * Get this <code>Time</code>'s <b>attribute</b>.
+     * Get this <code>Time</code>'s <b>year</b>.
      * @return This <code>Time</code>'s <b>year</b> field as an integer.
      */
     public int getYear() {
@@ -277,7 +277,7 @@ public class Time implements Comparable<Time> {
     }
 
     /**
-     * Get this <code>Time</code>'s <b>attribute</b>.
+     * Get this <code>Time</code>'s <b>month</b>.
      * @return This <code>Time</code>'s <b>month</b> field as an integer.
      */
     public int getMonth() {
@@ -285,7 +285,7 @@ public class Time implements Comparable<Time> {
     }
 
     /**
-     * Get this <code>Time</code>'s <b>attribute</b>.
+     * Get this <code>Time</code>'s <b>day</b>.
      * @return This <code>Time</code>'s <b>day</b> field as an integer.
      */
     public int getDay() {
@@ -293,7 +293,7 @@ public class Time implements Comparable<Time> {
     }
 
     /**
-     * Get this <code>Time</code>'s <b>attribute</b>.
+     * Get this <code>Time</code>'s <b>hour</b>.
      * @return This <code>Time</code>'s <b>hour</b> field as an integer.
      */
     public int getHour() {
@@ -301,7 +301,7 @@ public class Time implements Comparable<Time> {
     }
 
     /**
-     * Get this <code>Time</code>'s <b>attribute</b>.
+     * Get this <code>Time</code>'s <b>minute</b>.
      * @return This <code>Time</code>'s <b>minute</b> field as an integer.
      */
     public int getMinute() {

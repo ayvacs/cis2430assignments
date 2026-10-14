@@ -73,28 +73,28 @@ public class Activity implements Comparable<Activity> {
      * ACCESSORS
      */
    
-    /** Get this <code>Activity</code>'s <b>field</b>.
+    /** Get this <code>Activity</code>'s <b>title</b>.
      * @return This <code>Activity</code>'s <b>title</b> field as a <code>String</code>.
      */
     public String getTitle() {
         return this.title;
     }
     
-    /** Get this <code>Activity</code>'s <b>field</b>.
+    /** Get this <code>Activity</code>'s <b>start time</b>.
      * @return This <code>Activity</code>'s <b>start time</b> field as a <code>Time</code>.
      */
     public Time getStartTime() {
         return this.startTime;
     }
     
-    /** Get this <code>Activity</code>'s <b>field</b>.
+    /** Get this <code>Activity</code>'s <b>end time</b>.
      * @return This <code>Activity</code>'s <b>end time</b> field as a <code>Time</code>.
      */
     public Time getEndTime() {
         return this.endTime;
     }
     
-    /** Get this <code>Activity</code>'s <b>field</b>.
+    /** Get this <code>Activity</code>'s <b>comment</b>.
      * @return This <code>Activity</code>'s <b>comment</b> field as a <code>String</code>. If no comment is defined, return <code>null</code>.
      */
     public String getComment() {
@@ -199,7 +199,7 @@ public class Activity implements Comparable<Activity> {
     }
 
     /**
-     * Determine of two <code>Activity</code> instances are equal.
+     * Determine if two <code>Activity</code> instances are equal.
      * @return Whether or not this <code>Activity</code> equals <code>other</code>.
      * @param other The other <code>Activity</code> to compare with.
      */
