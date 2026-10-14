@@ -139,7 +139,7 @@ public class Activity implements Comparable<Activity> {
      * @param comment The new comment. If it is <code>null</code> or blank, do nothing.
      */
     public void setComment(String comment) {
-        if (comment != null && !title.isBlank())
+        if (comment != null && !comment.isBlank())
             this.comment = comment;
     }
 
