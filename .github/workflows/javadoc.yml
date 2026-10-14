@@ -1,0 +1,34 @@
+name: Deploy Javadoc (Plain Java)
+
+on:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: write
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up JDK
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'microsoft'
+
+      - name: Generate Javadoc
+        run: |
+          mkdir -p docs/javadoc
+          # Find all .java files and run javadoc
+          find src -name "*.java" | xargs javadoc -d docs/javadoc -encoding UTF-8 -sourcepath src
+
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./docs/javadoc
