@@ -62,7 +62,11 @@ public class DayPlanner {
     private static boolean commandLoop() {
         System.out.println("\n\n\t\t===-=-==-=====-==-=-===\n\n");
         System.out.println("\t『 DAY PLANNER 』  Main Menu\n");
-        System.out.println("\t" + DayPlannerUtils.getGreeting(USERNAME));
+        System.out.println(DayPlannerUtils.getGreeting(
+            USERNAME,
+            HOME_ACTIVITIES.size(),
+            SCHOOL_ACTIVITIES.size(),
+            OTHER_ACTIVITIES.size()));
         System.out.println("\nPlease enter a command:");
         System.out.println("\t1. add    - Insert a new activity");
         System.out.println("\t2. search - Search for an activity");

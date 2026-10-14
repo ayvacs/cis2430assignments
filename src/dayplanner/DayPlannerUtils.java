@@ -106,9 +106,12 @@ public class DayPlannerUtils {
     /**
      * Get a greeting for the user.
      * @param username User's name
+     * @param numHomeActivities The current number of home activities
+     * @param numSchoolActivities The current number of school activities
+     * @param numOtherActivities The current number of other activities
      * @return Greeting (i.e. Good morning, John!)
      */
-    public static String getGreeting(String username) {
+    public static String getGreeting(String username, int numHomeActivities, int numSchoolActivities, int numOtherActivities) {
         int hour = LocalTime.now().getHour();
         String greeting;
 
@@ -119,8 +122,8 @@ public class DayPlannerUtils {
         else
             greeting = "Good evening";
 
-        String text = "%s, %s!";
-        return String.format(text, greeting, username);
+        String text = "\t%s, %s!\n\tYou have %d home activities, %d school activities,\n\tand %d other activities currently entered.";
+        return String.format(text, greeting, username, numHomeActivities, numSchoolActivities, numOtherActivities);
     }
 
 
