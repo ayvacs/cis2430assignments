@@ -218,7 +218,7 @@ public class Tester {
         if (homeList.isEmpty()) return false;
 
         Activity first = homeList.get(0);
-        boolean matches = DayPlanner.matchesCriteria(first, new String[] { "Co-Op" }, null, null);
+        boolean matches = DayPlannerUtils.matchesCriteria(first, new String[] { "Co-Op" }, null, null);
         return matches && first.getTitle().contains("Co-Op");
     }
 
@@ -231,7 +231,7 @@ public class Tester {
         if (homeList.size() <= 3) return false;
 
         Activity mid = homeList.get(3);
-        boolean matches = DayPlanner.matchesCriteria(mid, new String[] { "Cook", "Meal" }, null, null);
+        boolean matches = DayPlannerUtils.matchesCriteria(mid, new String[] { "Cook", "Meal" }, null, null);
         return matches && mid.getTitle().contains("Cook Meal");
     }
 
@@ -244,7 +244,7 @@ public class Tester {
         if (homeList.isEmpty()) return false;
 
         Activity last = homeList.get(homeList.size() - 1);
-        boolean matches = DayPlanner.matchesCriteria(last, new String[] { "Bike", "Ride" }, null, null);
+        boolean matches = DayPlannerUtils.matchesCriteria(last, new String[] { "Bike", "Ride" }, null, null);
         return matches && last.getTitle().contains("Bike Ride");
     }
 
@@ -256,7 +256,7 @@ public class Tester {
         ActivityList homeList = new ActivityList("dat", "home.ras");
         int matchCount = 0;
         for (Activity a : homeList) {
-            if (DayPlanner.matchesCriteria(a, new String[] { "Nonexistent", "Activity" }, null, null)) {
+            if (DayPlannerUtils.matchesCriteria(a, new String[] { "Nonexistent", "Activity" }, null, null)) {
                 matchCount++;
             }
         }
@@ -269,7 +269,7 @@ public class Tester {
      */
     private static boolean testCase14() {
         String title = "Buy Programming in Java";
-        return !DayPlanner.matchesKeywords(title, new String[] { "Program" });
+        return !DayPlannerUtils.matchesKeywords(title, new String[] { "Program" });
     }
 
     /**
@@ -278,7 +278,7 @@ public class Tester {
      */
     private static boolean testCase15() {
         String title = "Programming in Java";
-        return DayPlanner.matchesKeywords(title, new String[] { "java", "PROGRAMMING" });
+        return DayPlannerUtils.matchesKeywords(title, new String[] { "java", "PROGRAMMING" });
     }
 
     /**
@@ -292,7 +292,7 @@ public class Tester {
 
         int count = 0;
         for (Activity a : homeList) {
-            if (DayPlanner.matchesCriteria(a, null, start, end)) {
+            if (DayPlannerUtils.matchesCriteria(a, null, start, end)) {
                 count++;
             }
         }
@@ -309,7 +309,7 @@ public class Tester {
 
         int count = 0;
         for (Activity a : homeList) {
-            if (DayPlanner.matchesCriteria(a, null, start, null)) {
+            if (DayPlannerUtils.matchesCriteria(a, null, start, null)) {
                 count++;
             }
         }
@@ -326,7 +326,7 @@ public class Tester {
 
         int count = 0;
         for (Activity a : homeList) {
-            if (DayPlanner.matchesCriteria(a, null, null, end)) {
+            if (DayPlannerUtils.matchesCriteria(a, null, null, end)) {
                 count++;
             }
         }

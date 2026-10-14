@@ -10,6 +10,10 @@ public class OtherActivity extends Activity {
 
 
     /**
+     * CONSTRUCTORS
+     */
+    
+    /**
      * Instantiates a new <code>OtherActivity</code> with a title, start and end time, and location.
      * @param title The new <code>OtherActivity</code>'s title.
      * @param startTime The new <code>OtherActivity</code>'s start time.
@@ -20,8 +24,6 @@ public class OtherActivity extends Activity {
         super(title, startTime, endTime);
         this.location = location;
     }
-
-
 
     /**
      * Instantiates a new <code>OtherActivity</code> with a title, start and end time, comment, and location.
@@ -42,6 +44,7 @@ public class OtherActivity extends Activity {
      */
     public OtherActivity(String ras) {
         super(ras);
+
         // remove angle brackets and tokenize
         ras = ras.substring(1, ras.length() - 1);
         String[] tokens = ras.split(",");
@@ -52,6 +55,10 @@ public class OtherActivity extends Activity {
     }
 
 
+
+    /**
+     * ACCESSORS & MUTATORS
+     */
 
     /**
      * Get this <code>OtherActivity</code>'s <b>location</b> field
@@ -68,6 +75,12 @@ public class OtherActivity extends Activity {
     public void setLocation(String location) {
         this.location = location;
     }
+
+
+
+    /**
+     * OBJECT OVERRIDES
+     */
 
     /**
      * Compare two OtherActivities.
@@ -98,12 +111,11 @@ public class OtherActivity extends Activity {
         return equals((OtherActivity) other);
     }
 
-
-
     /**
      * Get a <code>String</code> representation.
      * @return A <code>String</code> representation of this <code>OtherActivity</code>.
      */
+    @Override
     public String toString() {
         String ret = String.format("%s (%s - %s at %s)",
             getTitle(),
@@ -117,6 +129,12 @@ public class OtherActivity extends Activity {
 
         return ret;
     }
+
+
+    
+    /**
+     * SERIALIZATION
+     */
 
     /**
      * Encodes this instance into <code>RAS</code> <b>(Readable Activity Serial)</b>, a text format that allows it to be written to text files.

@@ -6,6 +6,10 @@ package dayplanner;
  */
 public class SchoolActivity extends Activity {
     /**
+     * CONSTRUCTORS
+     */
+
+    /**
      * Instantiates a new <code>SchoolActivity</code> with a title and start and end time.
      * @param title The new <code>SchoolActivity</code>'s title.
      * @param startTime The new <code>SchoolActivity</code>'s start time.
@@ -14,8 +18,6 @@ public class SchoolActivity extends Activity {
     public SchoolActivity(String title, Time startTime, Time endTime) {
         super(title, startTime, endTime);
     }
-
-
 
     /**
      * Instantiates a new <code>SchoolActivity</code> with a title, start and end time, and comment.
@@ -35,6 +37,12 @@ public class SchoolActivity extends Activity {
     public SchoolActivity(String ras) {
         super(ras);
     }
+
+    
+
+    /**
+     * OBJECT OVERRIDES
+     */
 
     /**
      * @return Whether or not this <code>SchoolActivity</code> equals <code>other</code>.

@@ -16,19 +16,21 @@ import java.util.Iterator;
  * Represents a collection of Activities.
  * Implementation of standard arrays, with some helpful methods.
  */
-public class ActivityList
-extends AbstractList<Activity>
-{
+public class ActivityList extends AbstractList<Activity> {
     private static final int DEFAULT_CAPACITY = 256;
 
 
 
-    private int capacity;   // Maximum possible length of this list
-    private int length;     // Current length of this list
+    private int capacity;   // Maximum possible length of this list (the list COULD POSSIBLY hold this many elements)
+    private int length;     // Current length of this list (the list IS CURRENTLY holding this many elements)
     private Activity[] array;
 
 
 
+    /**
+     * CONSTRUCTORS
+     */
+    
     /**
      * Instantiate a new <code>ActivityList</code> with the default capacity.
      */
@@ -46,6 +48,7 @@ extends AbstractList<Activity>
             throw new IllegalArgumentException("Capacity cannot be negative");
 
         this.capacity = capacity;
+        this.length = 0;
         this.array = new Activity[capacity];
     }
 
@@ -73,9 +76,21 @@ extends AbstractList<Activity>
             br = new BufferedReader(fr);
 
             String line;
-            while ((line = br.readLine()) != null)
-                if (!line.trim().isEmpty())
-                    append(activityFromRAS(line));
+            while ((line = br.readLine()) != null) {
+                if (!line.trim().isEmpty()) {
+                    Activity a = activityFromRAS(line);
+
+                    if (isFull()) {
+                        br.close();
+                        throw new ArrayIndexOutOfBoundsException("Full ("+fileName+"),("+a.toString()+")");
+                    }
+                    else {
+                        append(a);
+                    }
+                }
+            }
+            
+            br.close();
 
         } catch (FileNotFoundException e) {
             // if the file is not found - thats fine
@@ -84,8 +99,69 @@ extends AbstractList<Activity>
             // with DEFAULT_CAPACITY
             System.out.println("There was no list found at " + dirName + "/" + fileName + "; starting with an empty list");
         } catch (Exception e) {
+            // if there was any other exception
+            // then something else went wrong
             e.printStackTrace();
         }
+    }
+
+
+
+    /**
+     * SERIALIZATION
+     */
+
+    /**
+     * Encodes this instance into <code>RAS</code> <b>(Readable Activity Serial)</b>, a text format that allows it to be written to text files.
+     * <code>RAS</code> lists follow the following format:
+     * <pre>&lt;entry...&gt;<br>&lt;entry...&gt;<br>&lt;entry...&gt;</pre>
+     * where <code>&lt;entry...&gt;</code> is one single RAS entry (which represents one activity).
+     * For more details, see <code>Activity.toRAS()</code> or <code>README.md</code>.
+     * @return A <code>RAS</code> representation of this <code>ActivityList</code>.
+     */
+    public String toRAS() {
+        String ret = "";
+        String tmp;
+
+        for (Activity a : this) {
+            try {
+                tmp = a.toRAS();
+            } catch (Exception e) {
+                tmp = e.toString();
+            }
+
+            ret += tmp + "\n";
+        }
+
+        return ret;
+    }
+
+    /**
+     * Attempt to save the <code>ActivityList</code> to the specified file in RAS format.
+     * Overwrites any existing content in the file.
+     * @param dirName Name of the directory where the file will be saved.
+     * @param fileName Name of the file where content will be saved.
+     * @return Boolean indicating if the operation succeeded. (<code>true</code> = success, <code>false</code> = failure)
+     */
+    public boolean saveToRAS(String dirName, String fileName) {
+        try {
+            // Get the File instance
+            File file = new File(dirName + "/" + fileName);
+
+            // Create the directory if it doesnt exist
+            File parent = file.getParentFile();
+            if (parent != null)
+                parent.mkdirs();
+
+            FileWriter writer = new FileWriter(file);
+            writer.write(toRAS());
+            writer.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+            return false;
+        }
+
+        return true;
     }
 
     /**
@@ -108,6 +184,10 @@ extends AbstractList<Activity>
     }
 
 
+
+    /**
+     * INSTANCE METHODS
+     */
 
     /**
      * Get the Activity at the specified index.
@@ -142,7 +222,7 @@ extends AbstractList<Activity>
     @Override
     public Activity set(int index, Activity activity) {
         if (index < 0 || index >= size())
-            throw new IndexOutOfBoundsException("Index " + index + ", Size" + size());
+            throw new IndexOutOfBoundsException("Index " + index + ", Size " + size());
 
         Activity old = get(index);
         array[index] = activity;
@@ -226,8 +306,6 @@ extends AbstractList<Activity>
         return activity;
     }
 
-
-
     /**
      * Return an <code>Iterator</code> that allows you to easily iterate through this <code>ActivityList</code>.
      * For example:
@@ -255,79 +333,38 @@ extends AbstractList<Activity>
         };
     }
 
+    /**
+     * Sort the ActivityList in-place in ascending order by starting time (activities that start earlier appear earlier).
+     */
+    public void sort() {
+        Arrays.sort(array, 0, length);
+    }
 
 
+
+    /**
+     * OBJECT OVERRIDES
+     */
+    
     /**
      * @return A <code>String</code> representation of this <code>ActivityList</code>.
      */
+    @Override
     public String toString() {
-        String ret = "---\n";
+        String str = "---\n";
 
         if (isEmpty()) {
-            ret += "(empty)\n";
+            str += "(empty)\n";
         } else {
             for (Activity a: this)
                 if (a == null)
-                    ret += "(null)\n";
+                    str += "(null)\n";
                 else
-                    ret += a.toString() + "\n";
+                    str += a.toString() + "\n";
         }
 
-        ret += "---";
-        return ret;
-    }
-
-    /**
-     * Encodes this instance into <code>RAS</code> <b>(Readable Activity Serial)</b>, a text format that allows it to be written to text files.
-     * <code>RAS</code> lists follow the following format:
-     * <pre>&lt;entry...&gt;<br>&lt;entry...&gt;<br>&lt;entry...&gt;</pre>
-     * where <code>&lt;entry...&gt;</code> is one single RAS entry (which represents one activity).
-     * For more details, see <code>Activity.toRAS()</code> or <code>README.md</code>.
-     * @return A <code>RAS</code> representation of this <code>ActivityList</code>.
-     */
-    public String toRAS() {
-        String ret = "";
-        String tmp;
-
-        for (Activity a : this) {
-            try {
-                tmp = a.toRAS();
-            } catch (Exception e) {
-                tmp = e.toString();
-            }
-
-            ret += tmp + "\n";
-        }
-
-        return ret;
-    }
-
-    /**
-     * Attempt to save the <code>ActivityList</code> to the specified file in RAS format.
-     * Overwrites any existing content in the file.
-     * @param dirName Name of the directory where the file will be saved.
-     * @param fileName Name of the file where content will be saved.
-     * @return Boolean indicating if the operation succeeded. (<code>true</code> = success, <code>false</code> = failure)
-     */
-    public boolean saveToRAS(String dirName, String fileName) {
-        try {
-            // Get the File instance
-            File file = new File(dirName + "/" + fileName);
-
-            // Create the directory if it doesnt exist
-            File parent = file.getParentFile();
-            if (parent != null)
-                parent.mkdirs();
-
-            FileWriter writer = new FileWriter(file);
-            writer.write(toRAS());
-            writer.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-            return false;
-        }
-
-        return true;
+        str += "---";
+        return str;
     }
 
     /**
@@ -359,12 +396,5 @@ extends AbstractList<Activity>
         if (other == null || getClass() != other.getClass())
             return false;
         return equals((ActivityList) other);
-    }
-
-    /**
-     * Sort the ActivityList in-place in ascending order by starting time (activities that start earlier appear earlier).
-     */
-    public void sort() {
-        Arrays.sort(array, 0, length);
     }
 }

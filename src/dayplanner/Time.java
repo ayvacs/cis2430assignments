@@ -13,6 +13,10 @@ package dayplanner;
  * </ul>
  */
 public class Time implements Comparable<Time> {
+    /**
+     * STATIC VARIABLES
+     */
+
     private static final int MIN_YEAR = 1;
     private static final int MIN_MONTH = 1;
     private static final int MIN_DAY = 1;
@@ -28,6 +32,10 @@ public class Time implements Comparable<Time> {
 
 
 
+    /**
+     * INSTANCE VARIABLES
+     */
+
     private int year;   // Required
     private int month;  // Required
     private int day;    // Required
@@ -36,6 +44,10 @@ public class Time implements Comparable<Time> {
 
 
 
+    /**
+     * STATIC METHODS
+     */
+    
     /**
      * Determines whether the given <code>year</code> is a leap year.
      * Code adapted from <a href="https://www.programiz.com/cpp-programming/examples/leap-year">Programiz</a>.
@@ -112,16 +124,20 @@ public class Time implements Comparable<Time> {
 
 
     /**
+     * CONSTRUCTORS
+     */
+
+    /**
      * Instantiates a new <code>Time</code> with no initial fields.
      * Each field defaults to the minimum allowed values.
      */
     public Time() {
         // Assume default values
-        this.year = MIN_YEAR;
-        this.month = MIN_MONTH;
-        this.day = MIN_DAY;
-        this.hour = MIN_HOUR;
-        this.minute = MIN_MINUTE;
+        setYear(MIN_YEAR);
+        setMonth(MIN_MONTH);
+        setDay(MIN_DAY);
+        setHour(MIN_HOUR);
+        setMinute(MIN_MINUTE);
     }
 
     /**
@@ -167,11 +183,11 @@ public class Time implements Comparable<Time> {
                 int min = Integer.parseInt(components[4]);
 
                 if (isValidTime(y, m, d, h, min)) {
-                    this.year = y;
-                    this.month = m;
-                    this.day = d;
-                    this.hour = h;
-                    this.minute = min;
+                    setYear(y);
+                    setMonth(m);
+                    setDay(d);
+                    setHour(h);
+                    setMinute(min);
                 } else {
                     System.out.println("One or more fields were not properly entered; defaulting to " + toString() + ".");
                 }
@@ -181,6 +197,11 @@ public class Time implements Comparable<Time> {
         }
     }
 
+
+
+    /**
+     * MUTATORS
+     */
 
     /**
      * Attempt to set the specified <code>year</code>.
@@ -244,6 +265,10 @@ public class Time implements Comparable<Time> {
 
 
     /**
+     * ACCESSORS
+     */
+
+    /**
      * Get this <code>Time</code>'s <b>attribute</b>.
      * @return This <code>Time</code>'s <b>year</b> field as an integer.
      */
@@ -286,8 +311,13 @@ public class Time implements Comparable<Time> {
 
 
     /**
+     * OBJECT OVERRIDES
+     */
+
+    /**
      * @return A <code>String</code> representation of this <code>Time</code> of the format <code>YYYY/MM/DD HH:MM</code>.
      */
+    @Override
     public String toString() {
         return String.format("%04d/%02d/%02d %02d:%02d",
             getYear(), getMonth(), getDay(),

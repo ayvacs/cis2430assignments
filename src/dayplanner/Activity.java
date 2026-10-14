@@ -15,15 +15,20 @@ public class Activity implements Comparable<Activity> {
 
 
     /**
+     * CONSTRUCTORS
+     */
+   
+    /**
      * Instantiates a new <code>Activity</code> with a title and start and end time.
      * @param title The new <code>Activity</code>'s title.
      * @param startTime The new <code>Activity</code>'s start time.
      * @param endTime The new <code>Activity</code>'s end time.
+     * @throws IllegalArgumentException when any one of the parameters is null or empty
      */
     public Activity(String title, Time startTime, Time endTime) {
-        this.title = title;
-        this.startTime = startTime;
-        this.endTime = endTime;
+        setTitle(title);
+        setStartTime(startTime);
+        setEndTime(endTime);
     }
 
     /**
@@ -32,12 +37,11 @@ public class Activity implements Comparable<Activity> {
      * @param startTime The new <code>Activity</code>'s start time.
      * @param endTime The new <code>Activity</code>'s end time.
      * @param comment The new <code>Activity</code>'s comment.
+     * @throws IllegalArgumentException when any one of the parameters is null or empty
      */
     public Activity(String title, Time startTime, Time endTime, String comment) {
         this(title, startTime, endTime);
-
-        if (comment != null)
-            this.comment = comment;
+        setComment(comment);
     }
 
     /**
@@ -45,7 +49,7 @@ public class Activity implements Comparable<Activity> {
      * @param ras String of valid RAS format from which to populate fields.
      */
     public Activity(String ras) {
-        // default values in case of ras error
+        // declare default values in case of ras error
         this("raserror", new Time(), new Time());
 
         // remove angle brackets and tokenize
@@ -54,17 +58,21 @@ public class Activity implements Comparable<Activity> {
         
         // tokens[0] is the type tag (e.g. "HomeActivity") — skip it here
         if (tokens.length >= 2 && tokens[1] != null && !tokens[1].isEmpty())
-            this.title = tokens[1];
+            setTitle(tokens[1]);
         if (tokens.length >= 3 && tokens[2] != null && !tokens[2].isEmpty())
-            this.startTime = new Time(tokens[2]);
+            setStartTime(new Time(tokens[2]));
         if (tokens.length >= 4 && tokens[3] != null && !tokens[3].isEmpty())
-            this.endTime = new Time(tokens[3]);
+            setEndTime(new Time(tokens[3]));
         if (tokens.length >= 5 && tokens[4] != null && !tokens[4].isEmpty() && !tokens[4].equals("NIL"))
-            this.comment = tokens[4];
+            setComment(tokens[4]);
     }
 
 
 
+    /**
+     * ACCESSORS
+     */
+   
     /** Get this <code>Activity</code>'s <b>field</b>.
      * @return This <code>Activity</code>'s <b>title</b> field as a <code>String</code>.
      */
@@ -96,11 +104,15 @@ public class Activity implements Comparable<Activity> {
 
 
     /**
+     * MUTATORS
+     */
+    
+    /**
      * Set this <code>Activity</code>'s <b>title</b>.
-     * @param title The new title. If it is <code>null</code>, do nothing.
+     * @param title The new title. If it is <code>null</code> or blank, do nothing.
      */
     public void setTitle(String title) {
-        if (title != null)
+        if (title != null && !title.isBlank())
             this.title = title;
     }
 
@@ -124,30 +136,18 @@ public class Activity implements Comparable<Activity> {
 
     /**
      * Set this <code>Activity</code>'s <b>comment</b>.
-     * @param comment The new comment. If it is <code>null</code>, do nothing.
+     * @param comment The new comment. If it is <code>null</code> or blank, do nothing.
      */
     public void setComment(String comment) {
-        if (comment != null)
+        if (comment != null && !title.isBlank())
             this.comment = comment;
     }
 
 
 
     /**
-     * @return A <code>String</code> representation of this <code>Activity</code>.
+     * SERIALIZATION
      */
-    public String toString() {
-        String ret = String.format("%s (%s - %s)",
-            getTitle(),
-            getStartTime().toString(),
-            getEndTime().toString());
-
-        String com = getComment();
-        if (com != null)
-            ret = ret + " (" + com + ")";
-
-        return ret;
-    }
 
     /**
      * Encodes this instance into <code>RAS</code> <b>(Readable Activity Serial)</b>, a text format that allows it to be written to text files.
@@ -175,6 +175,29 @@ public class Activity implements Comparable<Activity> {
             comment);
     }
 
+
+
+    /**
+     * OBJECT OVERRIDES
+     */
+
+    /**
+     * @return A <code>String</code> representation of this <code>Activity</code>.
+     */
+    @Override
+    public String toString() {
+        String str = String.format("%s (%s - %s)",
+            getTitle(),
+            getStartTime().toString(),
+            getEndTime().toString());
+
+        String comment = getComment();
+        if (comment != null && !comment.isBlank())
+            str = str + " (" + comment + ")";
+
+        return str;
+    }
+
     /**
      * Determine of two <code>Activity</code> instances are equal.
      * @return Whether or not this <code>Activity</code> equals <code>other</code>.
@@ -183,28 +206,34 @@ public class Activity implements Comparable<Activity> {
     public boolean equals(Activity other) {
         // compare the class first
         // this is necessary because HomeActivity etc. are subclasses of this one
-        // and comparing activities of different classes, i.e. HomeActivity and SchoolActivity
-        // they should always be treated as unequal
-        if (other == null || getClass() != other.getClass())
+        // and when comparing activities of different classes (i.e. HomeActivity and SchoolActivity),
+        // the two should always be treated as unequal
+        if (other == null || (getClass() != other.getClass()))
             return false;
 
         // compare title
-        if (getTitle() == null ? other.getTitle() != null : !getTitle().equals(other.getTitle()))
+        if (getTitle() == null
+            ? other.getTitle() != null
+            : !getTitle().equals(other.getTitle()))
             return false;
 
         // compare start time
-        if (getStartTime() == null ? other.getStartTime() != null : !getStartTime().equals(other.getStartTime()))
+        if (getStartTime() == null
+            ? other.getStartTime() != null
+            : !getStartTime().equals(other.getStartTime()))
             return false;
 
         // compare end time
-        if (getEndTime() == null ? other.getEndTime() != null : !getEndTime().equals(other.getEndTime()))
+        if (getEndTime() == null
+            ? other.getEndTime() != null
+            : !getEndTime().equals(other.getEndTime()))
             return false;
         
         // if we get here the only difference should be the comment
         String c1 = getComment();
         String c2 = other.getComment();
-        if (c1 == null)
-            return c2 == null;
+        if (c1 == null || c1.isBlank())
+            return c2 == null || c2.isBlank();
         else
             return c1.equals(c2);
     }
@@ -230,8 +259,9 @@ public class Activity implements Comparable<Activity> {
      */
     @Override
     public int compareTo(Activity other) {
-        // since we are comparing based on time, which has its own compareTo method
-        // we can just piggyback off of that method
+        // since we are comparing based on a Time,
+        // which has its own compareTo method,
+        // we can just piggyback off of that method :)
         return getStartTime().compareTo(other.getStartTime());
     }
 }

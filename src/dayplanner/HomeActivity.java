@@ -6,6 +6,10 @@ package dayplanner;
  */
 public class HomeActivity extends Activity {
     /**
+     * CONSTRUCTORS
+     */
+
+    /**
      * Instantiates a new <code>HomeActivity</code> with a title and start and end time.
      * @param title The new <code>HomeActivity</code>'s title.
      * @param startTime The new <code>HomeActivity</code>'s start time.
@@ -14,8 +18,6 @@ public class HomeActivity extends Activity {
     public HomeActivity(String title, Time startTime, Time endTime) {
         super(title, startTime, endTime);
     }
-
-
 
     /**
      * Instantiates a new <code>HomeActivity</code> with a title, start and end time, and comment.
@@ -36,6 +38,12 @@ public class HomeActivity extends Activity {
         super(ras);
     }
 
+
+    
+    /**
+     * OBJECT OVERRIDES
+     */
+    
     /**
      * @return Whether or not this <code>HomeActivity</code> equals <code>other</code>.
      * @param other The object to compare with.
