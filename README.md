@@ -8,7 +8,7 @@ The DayPlanner program is a schedule management tool that allows the user to tra
 * **School activities**: Anything done at university like attending lectures, scheduled labs, and ampus meetings.
 * **Other activities**: Anything done outside of home and school, like doctor visits, gym workouts, shopping, which additionally require a location attribute.
 
-Activities contain a title, starting time, ending time, an optional comment, and (for **Other activities**) a mandatory location. The system stores each category in a dedicated array of fixed capacity, supports sequential search queries across multiple optional filters (category, title keywords, and time periods), and saves data to the disk between runs so it can be loaded next time the program is ran.
+Activities contain a title, starting time, ending time, an optional comment, and (for **Other activities**) a mandatory location. The system stores each category in a dedicated array of fixed capacity, supports sequential search queries across multiple optional filters (category, title keywords, and time periods), and data persists between sessions in a custom text based format called `RAS`.
 
 This repository also consists of a Tester (`Tester.java`), which is an automatic tester, that executes all of the described test cases.
 
@@ -23,7 +23,7 @@ This repository also consists of a Tester (`Tester.java`), which is an automatic
 
 # User guide
 
-To compile, build documentation, or run the application, run the appropriate `make` target in the project root directory (the directory containing `Makefile` and `README.md`):
+All commands are automated via Makefile, so execute the proper command in the root directory (the directory that contains this `README.md`)
 
 ```shell
 make            # Build everything (compile classes,
@@ -38,6 +38,8 @@ make test       # Compile and run the Tester
 
 make clean      # Remove generated bin/ and docs/ folders
 ```
+
+## Executing
 
 After you compile, an executable JAR file named `DayPlanner.jar` will be generated, you can execute the JAR from the terminal:
 
@@ -82,7 +84,7 @@ A search query accepts up to three optional components (press Enter on any promp
 
 Saves all activity lists to disk in RAS format and exits.
 
-### Hidden functions
+### 4. Hidden functions
 
 There are hidden utility functions, which you can access by typing the full command name into the menu. These are not mentioned in the main command flow because they are only intended to be used while testing the program and there is no need for a regular user to use these commands.
 
@@ -114,25 +116,27 @@ My app assumes:
 * The user is comfortable executing Java code from a terminal.
 * The three activity categories (Home, School, Other) are sufficient to classify all scheduled items.
 * Time values follow the standard Gregorian calendar.
-* The fixed array capacity of 256 entries per list is adequate for single-user daily planning needs.
+* The fixed array capacity of 256 entries per list is adequate for the user's needs.
+* The user is fine with accessing their schedule on one device without syncing between devices
 
 ## Limitations
 
 My app has several limitations:
 
 * Does not offer all CRUD (create, remove, update, delete) operations which are standard for working with data.
-* Fixed-size arrays have an upper limit on the number of activities stored in each category before resizing or reallocation would be needed.
+* Fixed-size arrays have a limit on the number of activities stored in each category before resizing or reallocation would be needed.
 * The text-based interface does not visually represent events on a calendar grid or timetable which makes it more difficult to detect overlapping events.
-* No collision detection warning is given when two activities occupy the same time slot.
+* No warning is given when two activities overlap or occupy the same time slot.
+* The schedule doesn't sync between devices which is a very helpful feature in other scheduling apps.
 
 # Future Improvements
 
 If I had additional time to extend the project further, I would implement several features to resolve the downsides listed above:
 
-1. Replace standard arrays with `ArrayList` to eliminate the arbitrary capacity cap and support dynamic resizing and natural sorting.
-2. Add a JavaFX or Swing ui presenting a weekly/monthly timetable with drag-and-drop scheduling.
+1. Replace standard arrays with `ArrayList` to remove the capacity cap and support dynamic resizing and natural sorting.
+2. Add a gui with a weekly/monthly timetable with drag-and-drop scheduling.
 3. Warn the user when an activity's time range conflicts with an existing activity in any category.
-5. Support recurrence rules (e.g., weekly lectures or daily gym sessions) without manual repetition like Google Calendar.
+5. Support recurrence rules (e.g., weekly lectures or daily gym sessions) without manual repetition like other scheduling apps.
 
 # Serialization
 
@@ -153,7 +157,7 @@ where each `<entry...>` is enclosed in angle brackets with comma-separated field
 5. `String` denoting the comment (or `NIL` if no comment was provided).
 6. `String` denoting the location (only present for `OtherActivity`).
 
-File paths are configured via `src/dayplanner/ras.properties` which makes it easy to alter how the saving mechanism works without touching any code.
+File paths are configured via a properties file at `src/dayplanner/ras.properties` which makes it easy to alter how the saving mechanism works without touching any code.
 
 # Test Plan
 
