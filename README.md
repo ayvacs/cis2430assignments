@@ -41,7 +41,7 @@ make clean      # Remove generated bin/ and docs/ folders
 
 ## Executing
 
-After you compile, an executable JAR file named `DayPlanner.jar` will be generated, you can execute the JAR from the terminal:
+It is recommended to compile a JAR with `make jar`, then an executable JAR file named `DayPlanner.jar` will be generated, you can execute the JAR from the terminal:
 
 ```shell
 java -jar bin/DayPlanner.jar
