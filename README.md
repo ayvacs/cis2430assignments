@@ -26,17 +26,19 @@ This repository also consists of a Tester (`Tester.java`), which is an automatic
 All commands are automated via Makefile, so execute the proper command in the root directory (the directory that contains this `README.md`)
 
 ```shell
-make            # Build everything (compile classes,
-                # generate javadoc, build JAR)
+make               # Build everything (compile classes,
+                   # generate javadoc, build JAR)
 
-make compile    # Compile source files to bin/
-make run        # Compile and execute via JVM
-make jar        # Compile and package jar
-make docs       # Generate HTML javadoc in docs/
+make compile       # Compile source files to bin/
+make run           # Compile and execute via JVM
+make jar           # Compile and package jar
+make docs          # Generate HTML javadoc in docs/
 
-make test       # Compile and run the Tester
+make test          # Compile and run the Tester
+make zip NAME=foo  # Build everything and generate a
+                   # foo.tar.gz archive for submission
 
-make clean      # Remove generated bin/ and docs/ folders
+make clean         # Remove generated bin/ and docs/ folders
 ```
 
 ## Executing

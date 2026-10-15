@@ -7,3 +7,8 @@ docs/
 # User data
 dat/
 *.ras
+
+# Submission fiels
+*.tar
+*.gz
+*.tar.gz

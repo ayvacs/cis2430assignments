@@ -10,6 +10,7 @@ PACKAGE = dayplanner
 MAIN_CLASS = $(PACKAGE).DayPlanner
 TEST_CLASS = $(PACKAGE).Tester
 JAR = $(BIN_DIR)/DayPlanner.jar
+NAME ?=
 
 SOURCES := $(shell find $(SRC_DIR) -name "*.java")
 
@@ -44,6 +45,14 @@ jar: compile
 clean:
 	rm -rf $(BIN_DIR) $(DOC_DIR)
 
+# Tar and gzip a submission file
+zip: clean all
+	mkdir -p $(NAME)
+	cp -R dat docs src Makefile README.md $(NAME)/
+	tar -cvf $(NAME).tar $(NAME)
+	gzip $(NAME).tar
+	rm -rf $(NAME)
+
 
 # Phony rule
-.PHONY: all compile run test docs jar clean
+.PHONY: all compile run test docs jar clean zip
