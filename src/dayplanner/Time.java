@@ -7,7 +7,7 @@ package dayplanner;
  * <ul>
  *   <li><b>year</b>: 1–9999</li>
  *   <li><b>month</b>: 1–12</li>
- *   <li><b>day</b>: 1 to the maximum days in the given month (respects leap years for February; see {@link #maxDaysInMonth(int year, int month)}</code>)</li>
+ *   <li><b>day</b>: 1 to the maximum days in the given month (respects leap years for February; see {@link #maxDaysInMonth(int year, int month)})</li>
  *   <li><b>hour</b>: 0–23</li>
  *   <li><b>minute</b>: 0–59</li>
  * </ul>
