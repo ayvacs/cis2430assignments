@@ -9,8 +9,15 @@ import java.util.ArrayList;
 
 
 /**
+ * <p>
  * Handles the application's file reads, writes, and deletion to separate these
  * persistance details from the main code.
+ * </p>
+ * <p>
+ * The purpose of this class is to enable easy file operations based on a
+ * directory and file name, to cut down on boilerplate code in application
+ * classes.
+ * </p>
  */
 public class FileUtils {
     /**
