@@ -87,8 +87,11 @@ public class DayPlannerUtils {
         else
             greeting = "Good evening";
 
-        String text = "\t%s, %s!\n\tYou have %d home activities, %d school activities,\n\tand %d other activities currently entered.";
-        return String.format(text, greeting, username, numHomeActivities, numSchoolActivities, numOtherActivities);
+        String text = "\t%s, %s!\n\tYou have %d %s activities, %d %s activities,\n\tand %d %s activities currently entered.";
+        return String.format(text, greeting, username,
+            numHomeActivities, ActivityType.HOME.getDisplayName(),
+            numSchoolActivities, ActivityType.SCHOOL.getDisplayName(),
+            numOtherActivities, ActivityType.OTHER.getDisplayName());
     }
 
 
