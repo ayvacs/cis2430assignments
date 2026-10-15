@@ -2,11 +2,7 @@ package dayplanner;
 
 
 
-import java.io.BufferedReader;
-import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.FileWriter;
 import java.time.LocalTime;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -33,28 +29,16 @@ public class DayPlannerUtils {
      *         exists.
      */
     public static String getUsername(String dirName, String fileName) {
-        File file = new File(dirName, fileName);
-
         try {
-            FileReader fr = new FileReader(file);
-            BufferedReader br = new BufferedReader(fr);
-
-            String line = br.readLine().trim();
-
-            br.close();
-            return line;
+            return FileUtils.readFirstLine(dirName, fileName);
         } catch (FileNotFoundException e) {
 
             try {
-                if (!file.exists()) {
-                    file.createNewFile();
-                    FileWriter fw = new FileWriter(file);
-
+                if (!FileUtils.exists(dirName, fileName)) {
                     System.out.println("\n\nHello new user, please enter your name:");
                     String name = KEYBOARD.readString();
 
-                    fw.write(name);
-                    fw.close();
+                    FileUtils.writeText(dirName, fileName, name);
 
                     return name;
                 }
@@ -105,8 +89,7 @@ public class DayPlannerUtils {
      */
     public static void flushUsername(String dirName, String fileName) {
         try {
-            File file = new File(dirName, fileName);
-            file.delete();
+            FileUtils.delete(dirName, fileName);
         } catch (Exception e) {
             e.printStackTrace();
         }

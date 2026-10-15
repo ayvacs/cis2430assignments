@@ -3,7 +3,6 @@ package dayplanner;
 
 
 import java.io.ByteArrayInputStream;
-import java.io.File;
 
 
 /**
@@ -403,10 +402,8 @@ public class Tester {
                             inList.get(2).equals(oa);
 
         // Clean up test file
-        File f = new File(testDir + "/" + testFile);
-        if (f.exists()) {
-            f.delete();
-        }
+        if (FileUtils.exists(testDir, testFile))
+            FileUtils.delete(testDir, testFile);
 
         return sizeMatches && equalData;
     }

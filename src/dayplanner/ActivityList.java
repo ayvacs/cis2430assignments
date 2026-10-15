@@ -1,11 +1,7 @@
 package dayplanner;
 
 
-import java.io.BufferedReader;
-import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.util.AbstractList;
 import java.util.Arrays;
@@ -83,31 +79,18 @@ public class ActivityList extends AbstractList<Activity> {
                 + "(dirName=" + dirName + ")\n"
                 + "(dirName=" + fileName + ")");
 
-        BufferedReader br;
-        FileReader fr;
-        File file = new File(dirName + "/" + fileName);
-
         try {
-
-            fr = new FileReader(file);
-            br = new BufferedReader(fr);
-
-            String line;
-            while ((line = br.readLine()) != null) {
+            for (String line : FileUtils.readLines(dirName, fileName)) {
                 if (!line.trim().isEmpty()) {
                     Activity a = activityFromRAS(line);
 
-                    if (isFull()) {
-                        br.close();
+                    if (isFull())
                         throw new ArrayIndexOutOfBoundsException("Full ("+fileName+"),("+a.toString()+")");
-                    }
                     else {
                         append(a);
                     }
                 }
             }
-            
-            br.close();
 
         } catch (FileNotFoundException e) {
             // if the file is not found - thats fine
@@ -176,17 +159,7 @@ public class ActivityList extends AbstractList<Activity> {
      */
     public boolean saveToRAS(String dirName, String fileName) {
         try {
-            // Get the File instance
-            File file = new File(dirName + "/" + fileName);
-
-            // Create the directory if it doesnt exist
-            File parent = file.getParentFile();
-            if (parent != null)
-                parent.mkdirs();
-
-            FileWriter writer = new FileWriter(file);
-            writer.write(toRAS());
-            writer.close();
+            FileUtils.writeText(dirName, fileName, toRAS());
         } catch (IOException e) {
             e.printStackTrace();
             return false;
