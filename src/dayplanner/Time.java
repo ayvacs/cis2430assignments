@@ -2,19 +2,12 @@ package dayplanner;
 
 
 /**
- * Represents a specific instance in time, with minute precision.
- * In all methods of this class, the following representations are used:
- * <ul>
- * <li>A year is represented by an integer, i.e. <pre>1970.</pre></li>
- * <li>A month is represented by an integer, i.e. <pre>1 = January.</pre></li>
- * <li>A day is represented by an integer; i.e. <pre>1 = 1</pre> (the first day of the month).</li>
- * <li>An hour is represented by an integer; i.e. <pre>23 = 23:xx = 11:xx pm.</pre></li>
- * <li>A minute is represented by an integer; i.e. <pre>1 = xx:01.</pre></li>
- * </ul>
+ * Represents an instance in time with minute-level precision.
+ * Encapsulates year, month (1-12), day (1-31), hour (0-23), and minute (0-59).
  */
 public class Time implements Comparable<Time> {
-    /**
-     * STATIC VARIABLES
+    /*
+     * Static Constants
      */
 
     private static final int MIN_YEAR = 1;
@@ -32,8 +25,8 @@ public class Time implements Comparable<Time> {
 
 
 
-    /**
-     * INSTANCE VARIABLES
+    /*
+     * Instance Variables
      */
 
     private int year;   // Required
@@ -44,15 +37,15 @@ public class Time implements Comparable<Time> {
 
 
 
-    /**
-     * STATIC METHODS
+    /*
+     * Static Methods
      */
     
     /**
-     * Determines whether the given <code>year</code> is a leap year.
+     * Determines whether the specified year is a leap year.
      * Code adapted from <a href="https://www.programiz.com/cpp-programming/examples/leap-year">Programiz</a>.
-     * @return Whether or not <code>Year</code> is a leap year.
      * @param year The year to check.
+     * @return <code>true</code> if the year is a leap year, <code>false</code> otherwise.
      */
     public static boolean isLeapYear(int year) {
         if (year % 400 == 0)
@@ -123,13 +116,12 @@ public class Time implements Comparable<Time> {
 
 
 
-    /**
-     * CONSTRUCTORS
+    /*
+     * Constructors
      */
 
     /**
-     * Instantiates a new <code>Time</code> with no initial fields.
-     * Each field defaults to the minimum allowed values.
+     * Constructs a <code>Time</code> initialized to minimum allowed values (0001/01/01 00:00).
      */
     public Time() {
         // Assume default values
@@ -141,13 +133,13 @@ public class Time implements Comparable<Time> {
     }
 
     /**
-     * Instantiates a new <code>Time</code> with each required field specified.
-     * If any field is not valid, it defaults to its minimum allowed value.
-     * @param year The new <code>Time</code>'s year.
-     * @param month The new <code>Time</code>'s month.
-     * @param day The new <code>Time</code>'s day.
-     * @param hour The new <code>Time</code>'s hour.
-     * @param minute The new <code>Time</code>'s minute.
+     * Constructs a <code>Time</code> with specified components.
+     * Invalid components default to their minimum allowed values.
+     * @param year The year.
+     * @param month The month.
+     * @param day The day.
+     * @param hour The hour.
+     * @param minute The minute.
      */
     public Time(int year, int month, int day, int hour, int minute) {
         // Assume default values
@@ -161,8 +153,9 @@ public class Time implements Comparable<Time> {
     }
 
     /**
-     * Instantiates a new <code>Time</code> based on the given <code>formatString</code>.
-     * @param formatString Format <code>String</code> of the format <code>YYYY/MM/DD HH:MM</code>. Input is validated against specified minimum and maximum values; if any field is not valid, it defaults to its minimum allowed value. Note: This parameter's required format matches the return format of <code>toString()</code> exactly.
+     * Constructs a <code>Time</code> by parsing a string in YYYY/MM/DD HH:MM format.
+     * Invalid components default to their minimum allowed values.
+     * @param formatString String in YYYY/MM/DD HH:MM format.
      */
     public Time(String formatString) {
         // Assume default values
@@ -199,14 +192,12 @@ public class Time implements Comparable<Time> {
 
 
 
-    /**
-     * MUTATORS
+    /*
+     * Mutators
      */
 
     /**
-     * Attempt to set the specified <code>year</code>.
-     * Subject to input validation based on the allowed range of years. If the new field is not valid, the operation cancels without affecting the instance.
-     * Must be <code>1</code> through <code>9999</code> inclusive.
+     * Sets the year if within the valid range (1-9999).
      * @param year The new year.
      */
     public void setYear(int year) {
@@ -215,9 +206,7 @@ public class Time implements Comparable<Time> {
     }
 
     /**
-     * Attempt to set the specified <code>month</code>.
-     * Subject to input validation based on the allowed range of months. If the new field is not valid, the operation cancels without affecting the instance.
-     * Must be <code>1</code> through <code>12</code> inclusive.
+     * Sets the month if within the valid range (1-12).
      * @param month The new month.
      */
     public void setMonth(int month) {
@@ -226,9 +215,7 @@ public class Time implements Comparable<Time> {
     }
 
     /**
-     * Attempt to set the specified <code>day</code>.
-     * Subject to input validation based on the allowed range of days. If the new field is not valid, the operation cancels without affecting the instance.
-     * Must be <code>1</code> through <code>31</code> inclusive, depending on the month and leap year rules.
+     * Sets the day if within the valid range for the current month and year.
      * @param day The new day.
      */
     public void setDay(int day) {
@@ -240,9 +227,7 @@ public class Time implements Comparable<Time> {
     }
 
     /**
-     * Attempt to set the specified <code>hour</code>.
-     * Subject to input validation based on the allowed range of hours. If the new field is not valid, the operation cancels without affecting the instance.
-     * Must be <code>0</code> through <code>23</code> inclusive.
+     * Sets the hour if within the valid range (0-23).
      * @param hour The new hour.
      */
     public void setHour(int hour) {
@@ -251,10 +236,7 @@ public class Time implements Comparable<Time> {
     }
 
     /**
-     * Attempt to set the specified <code>minute</code>.
-     * Subject to input validation based on the allowed range of minutes.
-     * If the new field is not valid, the operation cancels without affecting the instance.
-     * Must be <code>0</code> through <code>59</code> inclusive.
+     * Sets the minute if within the valid range (0-59).
      * @param minute The new minute.
      */
     public void setMinute(int minute) {
@@ -264,45 +246,45 @@ public class Time implements Comparable<Time> {
 
 
 
-    /**
-     * ACCESSORS
+    /*
+     * Accessors
      */
 
     /**
-     * Get this <code>Time</code>'s <b>year</b>.
-     * @return This <code>Time</code>'s <b>year</b> field as an integer.
+     * Gets the year.
+     * @return The year.
      */
     public int getYear() {
         return this.year;
     }
 
     /**
-     * Get this <code>Time</code>'s <b>month</b>.
-     * @return This <code>Time</code>'s <b>month</b> field as an integer.
+     * Gets the month.
+     * @return The month (1-12).
      */
     public int getMonth() {
         return this.month;
     }
 
     /**
-     * Get this <code>Time</code>'s <b>day</b>.
-     * @return This <code>Time</code>'s <b>day</b> field as an integer.
+     * Gets the day.
+     * @return The day of the month.
      */
     public int getDay() {
         return this.day;
     }
 
     /**
-     * Get this <code>Time</code>'s <b>hour</b>.
-     * @return This <code>Time</code>'s <b>hour</b> field as an integer.
+     * Gets the hour.
+     * @return The hour (0-23).
      */
     public int getHour() {
         return this.hour;
     }
 
     /**
-     * Get this <code>Time</code>'s <b>minute</b>.
-     * @return This <code>Time</code>'s <b>minute</b> field as an integer.
+     * Gets the minute.
+     * @return The minute (0-59).
      */
     public int getMinute() {
         return this.minute;
@@ -310,12 +292,13 @@ public class Time implements Comparable<Time> {
 
 
 
-    /**
-     * OBJECT OVERRIDES
+    /*
+     * Object Overrides
      */
 
     /**
-     * @return A <code>String</code> representation of this <code>Time</code> of the format <code>YYYY/MM/DD HH:MM</code>.
+     * Returns a string representation of this time in YYYY/MM/DD HH:MM format.
+     * @return Formatted time string.
      */
     @Override
     public String toString() {
@@ -325,9 +308,9 @@ public class Time implements Comparable<Time> {
     }
 
     /**
-     * Compare two <code>Time</code> instances.
-     * @return An integer indicating the relationship between the two instances: A value of <code>0</code> indicates they are equal; a negative value indicates the calling <code>Time</code> <b>precedes</b> the argument; and a positive value indicates the calling <code>Time</code> <b>follows</b> the argument.
-     * @param other The other <code>Time</code> to compare with.
+     * Compares this time with another time.
+     * @param other The other time to compare with.
+     * @return A negative integer, zero, or a positive integer as this time precedes, equals, or follows the specified time.
      */
     @Override
     public int compareTo(Time other) {
@@ -350,9 +333,9 @@ public class Time implements Comparable<Time> {
     }
 
     /**
-     * Compare a Time instance with an Object.
-     * @return Whether or not this <code>Time</code> equals <code>other</code>.
-     * @param other The other <code>Time</code> to compare with.
+     * Determines whether this time is equal to another <code>Time</code>.
+     * @param other The other time to compare with.
+     * @return <code>true</code> if both times represent the same moment, <code>false</code> otherwise.
      */
     public boolean equals(Time other) {
         if (other == null)
@@ -361,8 +344,9 @@ public class Time implements Comparable<Time> {
     }
 
     /**
-     * @return Whether or not this <code>Time</code> equals <code>other</code>.
+     * Determines whether this time is equal to another object.
      * @param other The object to compare with.
+     * @return <code>true</code> if the objects are equal, <code>false</code> otherwise.
      */
     @Override
     public boolean equals(Object other) {

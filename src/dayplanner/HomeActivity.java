@@ -5,48 +5,49 @@ package dayplanner;
  * Represents an activity that takes place at home.
  */
 public class HomeActivity extends Activity {
-    /**
-     * CONSTRUCTORS
+    /*
+     * Constructors
      */
 
     /**
-     * Instantiates a new <code>HomeActivity</code> with a title and start and end time.
-     * @param title The new <code>HomeActivity</code>'s title.
-     * @param startTime The new <code>HomeActivity</code>'s start time.
-     * @param endTime The new <code>HomeActivity</code>'s end time.
+     * Constructs a <code>HomeActivity</code> with a title, start time, and end time.
+     * @param title The activity title.
+     * @param startTime The start time.
+     * @param endTime The end time.
      */
     public HomeActivity(String title, Time startTime, Time endTime) {
         super(title, startTime, endTime);
     }
 
     /**
-     * Instantiates a new <code>HomeActivity</code> with a title, start and end time, and comment.
-     * @param title The new <code>HomeActivity</code>'s title.
-     * @param startTime The new <code>HomeActivity</code>'s start time.
-     * @param endTime The new <code>HomeActivity</code>'s end time.
-     * @param comment The new <code>HomeActivity</code>'s comment.
+     * Constructs a <code>HomeActivity</code> with a title, start time, end time, and comment.
+     * @param title The activity title.
+     * @param startTime The start time.
+     * @param endTime The end time.
+     * @param comment The activity comment.
      */
     public HomeActivity(String title, Time startTime, Time endTime, String comment) {
         super(title, startTime, endTime, comment);
     }
 
     /**
-     * Instantiates a new <code>HomeActivity</code> from RAS format.
-     * @param ras String of valid RAS format from which to populate fields.
+     * Constructs a <code>HomeActivity</code> from a RAS (Readable Activity Serial) string.
+     * @param ras A valid RAS format string.
      */
     public HomeActivity(String ras) {
         super(ras);
     }
 
-
     
-    /**
-     * OBJECT OVERRIDES
+
+    /*
+     * Object Overrides
      */
     
     /**
-     * @return Whether or not this <code>HomeActivity</code> equals <code>other</code>.
+     * Determines whether this home activity is equal to another object.
      * @param other The object to compare with.
+     * @return <code>true</code> if the objects are equal, <code>false</code> otherwise.
      */
     @Override
     public boolean equals(Object other) {

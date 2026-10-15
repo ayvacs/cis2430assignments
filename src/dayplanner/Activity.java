@@ -2,9 +2,8 @@ package dayplanner;
 
 
 /**
- * Superclass for all types of Activities.
- * Contains all shared attributes and methods.
- * Activities must contain titles, start and end times. Optionally, activities can contain comments.
+ * Represents an activity with a title, start time, end time, and optional comment.
+ * Serves as the base class for specialized activity types.
  */
 public class Activity implements Comparable<Activity> {
     private String title;   // Required
@@ -14,16 +13,16 @@ public class Activity implements Comparable<Activity> {
 
 
 
-    /**
-     * CONSTRUCTORS
+    /*
+     * Constructors
      */
    
     /**
-     * Instantiates a new <code>Activity</code> with a title and start and end time.
-     * @param title The new <code>Activity</code>'s title.
-     * @param startTime The new <code>Activity</code>'s start time.
-     * @param endTime The new <code>Activity</code>'s end time.
-     * @throws IllegalArgumentException when any one of the parameters is null or empty
+     * Constructs an <code>Activity</code> with a title, start time, and end time.
+     * @param title The activity title.
+     * @param startTime The start time.
+     * @param endTime The end time.
+     * @throws IllegalArgumentException If any parameter is null or empty.
      */
     public Activity(String title, Time startTime, Time endTime) {
         setTitle(title);
@@ -32,12 +31,12 @@ public class Activity implements Comparable<Activity> {
     }
 
     /**
-     * Instantiates a new <code>Activity</code> with a title, start and end time, and comment.
-     * @param title The new <code>Activity</code>'s title.
-     * @param startTime The new <code>Activity</code>'s start time.
-     * @param endTime The new <code>Activity</code>'s end time.
-     * @param comment The new <code>Activity</code>'s comment.
-     * @throws IllegalArgumentException when any one of the parameters is null or empty
+     * Constructs an <code>Activity</code> with a title, start time, end time, and comment.
+     * @param title The activity title.
+     * @param startTime The start time.
+     * @param endTime The end time.
+     * @param comment The activity comment.
+     * @throws IllegalArgumentException If any parameter is null or empty.
      */
     public Activity(String title, Time startTime, Time endTime, String comment) {
         this(title, startTime, endTime);
@@ -45,8 +44,8 @@ public class Activity implements Comparable<Activity> {
     }
 
     /**
-     * Instantiates a new <code>Activity</code> from RAS format.
-     * @param ras String of valid RAS format from which to populate fields.
+     * Constructs an <code>Activity</code> from a RAS (Readable Activity Serial) string.
+     * @param ras A valid RAS format string.
      */
     public Activity(String ras) {
         // declare default values in case of ras error
@@ -69,33 +68,37 @@ public class Activity implements Comparable<Activity> {
 
 
 
-    /**
-     * ACCESSORS
+    /*
+     * Accessors
      */
    
-    /** Get this <code>Activity</code>'s <b>title</b>.
-     * @return This <code>Activity</code>'s <b>title</b> field as a <code>String</code>.
+    /**
+     * Gets the title of this activity.
+     * @return The activity title.
      */
     public String getTitle() {
         return this.title;
     }
     
-    /** Get this <code>Activity</code>'s <b>start time</b>.
-     * @return This <code>Activity</code>'s <b>start time</b> field as a <code>Time</code>.
+    /**
+     * Gets the start time of this activity.
+     * @return The activity start time.
      */
     public Time getStartTime() {
         return this.startTime;
     }
     
-    /** Get this <code>Activity</code>'s <b>end time</b>.
-     * @return This <code>Activity</code>'s <b>end time</b> field as a <code>Time</code>.
+    /**
+     * Gets the end time of this activity.
+     * @return The activity end time.
      */
     public Time getEndTime() {
         return this.endTime;
     }
     
-    /** Get this <code>Activity</code>'s <b>comment</b>.
-     * @return This <code>Activity</code>'s <b>comment</b> field as a <code>String</code>. If no comment is defined, return <code>null</code>.
+    /**
+     * Gets the comment for this activity.
+     * @return The activity comment, or <code>null</code> if none is defined.
      */
     public String getComment() {
         return this.comment;
@@ -103,13 +106,13 @@ public class Activity implements Comparable<Activity> {
 
 
 
-    /**
-     * MUTATORS
+    /*
+     * Mutators
      */
     
     /**
-     * Set this <code>Activity</code>'s <b>title</b>.
-     * @param title The new title. If it is <code>null</code> or blank, do nothing.
+     * Sets the title of this activity.
+     * @param title The new title; ignored if <code>null</code> or blank.
      */
     public void setTitle(String title) {
         if (title != null && !title.isBlank())
@@ -117,8 +120,8 @@ public class Activity implements Comparable<Activity> {
     }
 
     /**
-     * Set this <code>Activity</code>'s <b>start time</b>.
-     * @param startTime The new start time. If it is <code>null</code>, do nothing.
+     * Sets the start time of this activity.
+     * @param startTime The new start time; ignored if <code>null</code>.
      */
     public void setStartTime(Time startTime) {
         if (startTime != null)
@@ -126,8 +129,8 @@ public class Activity implements Comparable<Activity> {
     }
 
     /**
-     * Set this <code>Activity</code>'s <b>end time</b>.
-     * @param endTime The new end time. If it is <code>null</code>, do nothing.
+     * Sets the end time of this activity.
+     * @param endTime The new end time; ignored if <code>null</code>.
      */
     public void setEndTime(Time endTime) {
         if (endTime != null)
@@ -135,8 +138,8 @@ public class Activity implements Comparable<Activity> {
     }
 
     /**
-     * Set this <code>Activity</code>'s <b>comment</b>.
-     * @param comment The new comment. If it is <code>null</code> or blank, do nothing.
+     * Sets the comment for this activity.
+     * @param comment The new comment; ignored if <code>null</code> or blank.
      */
     public void setComment(String comment) {
         if (comment != null && !comment.isBlank())
@@ -145,22 +148,13 @@ public class Activity implements Comparable<Activity> {
 
 
 
-    /**
-     * SERIALIZATION
+    /*
+     * Serialization
      */
 
     /**
-     * Encodes this instance into <code>RAS</code> <b>(Readable Activity Serial)</b>, a text format that allows it to be written to text files.
-     * <code>RAS</code> entries are surrounded by angle brackets, and split into columns separated by commas:
-     * <ul>
-     * <li>A <code>String</code> denoting the activity type.</li>
-     * <li>A <code>String</code> denoting the activity title.</li>
-     * <li><code>String</code> representation of the start and end times.</li>
-     * <li>A <code>String</code> denoting the comment, or <code>NIL</code> if there is no comment.</li>
-     * <li>For OtherActivities, a <code>String</code> denoting the location.</li>
-     * </ul>
-     * For more details, see <code>ActivityList.toRAS()</code> or <code>README.md</code>.
-     * @return A <code>RAS</code> representation of this <code>Activity</code>.
+     * Encodes this activity into RAS (Readable Activity Serial) format.
+     * @return A RAS representation of this activity.
      */
     public String toRAS() {
         String comment = getComment();
@@ -177,12 +171,13 @@ public class Activity implements Comparable<Activity> {
 
 
 
-    /**
-     * OBJECT OVERRIDES
+    /*
+     * Object Overrides
      */
 
     /**
-     * @return A <code>String</code> representation of this <code>Activity</code>.
+     * Returns a string representation of this activity.
+     * @return A string representation of this activity.
      */
     @Override
     public String toString() {
@@ -199,9 +194,9 @@ public class Activity implements Comparable<Activity> {
     }
 
     /**
-     * Determine if two <code>Activity</code> instances are equal.
-     * @return Whether or not this <code>Activity</code> equals <code>other</code>.
-     * @param other The other <code>Activity</code> to compare with.
+     * Determines whether this activity is equal to another activity.
+     * @param other The other activity to compare with.
+     * @return <code>true</code> if both activities are equal, <code>false</code> otherwise.
      */
     public boolean equals(Activity other) {
         // compare the class first
@@ -239,9 +234,9 @@ public class Activity implements Comparable<Activity> {
     }
 
     /**
-     * Determine if the instance is equal to the other object.
-     * @return Whether or not this <code>Activity</code> equals <code>other</code>.
+     * Determines whether this activity is equal to another object.
      * @param other The object to compare with.
+     * @return <code>true</code> if the objects are equal, <code>false</code> otherwise.
      */
     @Override
     public boolean equals(Object other) {
@@ -253,9 +248,9 @@ public class Activity implements Comparable<Activity> {
     }
 
     /**
-     * Compare two <code>Activity</code> instances by starting time.
-     * @return An integer indicating the relationship between the two instances: A value of <code>0</code> indicates they start at the same time; a negative value indicates the calling <code>Activity</code> <b>precedes</b> the argument; and a positive value indicates the calling <code>Activity</code> <b>follows</b> the argument.
-     * @param other The other <code>Activity</code> to compare with.
+     * Compares this activity with another activity based on starting time.
+     * @param other The other activity to compare with.
+     * @return A negative integer, zero, or a positive integer as this activity's start time precedes, equals, or follows the specified activity.
      */
     @Override
     public int compareTo(Activity other) {

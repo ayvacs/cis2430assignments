@@ -7,8 +7,8 @@ import java.util.ResourceBundle;
 
 
 /**
- * Application execution point for DayPlanner.
- * Contains all code required for the main functions of the command loop.
+ * Main application class and execution entry point for DayPlanner.
+ * Manages the interactive command loop, activity persistence, and data-management operations.
  */
 public class DayPlanner {
     private static final Input KEYBOARD = new Input();
@@ -35,8 +35,8 @@ public class DayPlanner {
 
 
     /**
-     * Application execution point.
-     * @param args Execution arguments, if any.
+     * Main entry point for the DayPlanner application.
+     * @param args Command-line arguments.
      */
     public static void main(String[] args) {
         // Perform the command loop until the user quits
@@ -55,9 +55,8 @@ public class DayPlanner {
 
 
     /**
-     * Show the main menu one time and process user command.
-     * Accepts commands: add, search, quit (and reasonable aliases/abbreviations).
-     * @return Boolean indicating whether or not the user wants to continue with the command loop again.
+     * Displays the main menu and processes a single user command.
+     * @return <code>true</code> to continue running the command loop, <code>false</code> to exit.
      */
     private static boolean commandLoop() {
         System.out.println("\n\n\t\t===-=-==-=====-==-=-===\n\n");
@@ -109,7 +108,7 @@ public class DayPlanner {
 
 
     /**
-     * Returns the ActivityList matching the specified type code.
+     * Returns the activity list corresponding to the specified type code.
      * @param type Integer type code (1=Home, 2=School, 3=Other).
      * @return Corresponding <code>ActivityList</code>, or <code>null</code> if invalid.
      */
@@ -125,8 +124,8 @@ public class DayPlanner {
 
 
     /**
-     * Attempt to save the three lists to their corresponding text files.
-     * @return Boolean indicating if there were any errors. (<code>true</code> = success, <code>false</code> = failure)
+     * Saves all activity lists to their respective RAS files.
+     * @return <code>true</code> if one or more errors occurred while saving, <code>false</code> otherwise.
      */
     private static boolean saveToRAS() {
         int errors = 0;
@@ -141,7 +140,7 @@ public class DayPlanner {
 
 
     /**
-     * Function 1 of the command loop: Add a new activity.
+     * Prompts the user for details and adds a new activity to the appropriate list.
      */
     private static void addActivity() {
         System.out.println("Let's add a new activity to the DayPlanner.");
@@ -236,7 +235,7 @@ public class DayPlanner {
 
 
     /**
-     * Function 2 of the command loop: Search for activities.
+     * Prompts the user for search filters and displays matching activities across lists.
      */
     private static void searchForActivity() {
         System.out.println("Let's search for activities in the DayPlanner.");
@@ -300,13 +299,8 @@ public class DayPlanner {
 
 
 
-    
-
-    
-
     /**
-     * Default constructor (not used).
-     * This exists to suppress a Javadoc warning.
+     * Default constructor for DayPlanner.
      */
     public DayPlanner() {}
 }

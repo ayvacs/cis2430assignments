@@ -6,7 +6,6 @@ import java.io.ByteArrayInputStream;
 import java.io.File;
 
 
-
 /**
  * Automatic tester, that executes all 22 test cases in README.md.
  */
@@ -17,8 +16,8 @@ public class Tester {
 
 
     /**
-     * Execution point
-     * @param args Command-line arguments, if any
+     * Main entry point for executing all test cases.
+     * @param args Command-line arguments.
      */
     public static void main(String[] args) {
         System.out.println("Executing Tester.java");
@@ -53,8 +52,8 @@ public class Tester {
 
 
     /**
-     * Reports the outcome of a single test case.
-     * @param id The test case identifier (e.g. case01).
+     * Records and prints the outcome of a single test case.
+     * @param id The test case identifier.
      * @param description Short description of what was tested.
      * @param pass Whether the test passed.
      */
@@ -71,8 +70,8 @@ public class Tester {
 
 
     /**
-     * case01: Command Loop: Invalid Command.
-     * Verifies that irrelevant commands like "bye" or "exit" are rejected as invalid.
+     * Case 01: Verifies that unrecognized commands are rejected by the command loop.
+     * @return <code>true</code> if the test passes, <code>false</code> otherwise.
      */
     private static boolean testCase01() {
         java.io.PrintStream originalOut = System.out;
@@ -90,8 +89,8 @@ public class Tester {
     }
 
     /**
-     * case02: Command Loop: Case & Alias Recognition.
-     * Verifies aliases ("a", "ADD", "s", "q") are recognized.
+     * Case 02: Verifies that command aliases and case variations are recognized.
+     * @return <code>true</code> if the test passes, <code>false</code> otherwise.
      */
     private static boolean testCase02() {
         String[] addAliases = { "add", "ADD", "Add", "a", "A", "1" };
@@ -120,8 +119,8 @@ public class Tester {
     }
 
     /**
-     * case03: Time Validation: Non-leap February 29.
-     * Verifies 2026/02/29 is rejected since 2026 is not a leap year.
+     * Case 03: Verifies that February 29 is rejected in non-leap years.
+     * @return <code>true</code> if the test passes, <code>false</code> otherwise.
      */
     private static boolean testCase03() {
         boolean valid = Time.isValidTime(2026, 2, 29, 10, 0);
@@ -130,8 +129,8 @@ public class Tester {
     }
 
     /**
-     * case04: Time Validation: Leap Year February 29.
-     * Verifies 2024/02/29 is accepted as a valid leap year timestamp.
+     * Case 04: Verifies that February 29 is accepted in leap years.
+     * @return <code>true</code> if the test passes, <code>false</code> otherwise.
      */
     private static boolean testCase04() {
         boolean isLeap = Time.isLeapYear(2024);
@@ -140,8 +139,8 @@ public class Tester {
     }
 
     /**
-     * case05: Time Validation: Month Day Overflow.
-     * Verifies April 31 is rejected since April has 30 days.
+     * Case 05: Verifies that dates exceeding the maximum days in a month are rejected.
+     * @return <code>true</code> if the test passes, <code>false</code> otherwise.
      */
     private static boolean testCase05() {
         boolean valid = Time.isValidTime(2026, 4, 31, 9, 0);
@@ -150,8 +149,8 @@ public class Tester {
     }
 
     /**
-     * case06: Time Validation: Component Bounds.
-     * Verifies out-of-range months, hours, minutes, and non-positive years are rejected.
+     * Case 06: Verifies that out-of-bounds time components are rejected.
+     * @return <code>true</code> if the test passes, <code>false</code> otherwise.
      */
     private static boolean testCase06() {
         boolean badMonth = !Time.isValidTime(2026, 13, 1, 10, 0);
@@ -162,8 +161,8 @@ public class Tester {
     }
 
     /**
-     * case07: Chronological Validation: Start Before End.
-     * Verifies that start time must be strictly before end time.
+     * Case 07: Verifies that start time must be chronologically before end time.
+     * @return <code>true</code> if the test passes, <code>false</code> otherwise.
      */
     private static boolean testCase07() {
         Time start = new Time(2026, 10, 15, 14, 0);
@@ -173,8 +172,8 @@ public class Tester {
     }
 
     /**
-     * case08: Defensive Input: Blank Title & Blank Location.
-     * Verifies blank strings are detected for required fields.
+     * Case 08: Verifies that blank titles and blank locations are rejected.
+     * @return <code>true</code> if the test passes, <code>false</code> otherwise.
      */
     private static boolean testCase08() {
         String blankTitle = "   ";
@@ -190,8 +189,8 @@ public class Tester {
     }
 
     /**
-     * case09: Add Activity: Complete Flow.
-     * Verifies adding a SchoolActivity with all fields populated.
+     * Case 09: Verifies the creation and retrieval of an activity with all fields populated.
+     * @return <code>true</code> if the test passes, <code>false</code> otherwise.
      */
     private static boolean testCase09() {
         ActivityList list = new ActivityList(10);
@@ -210,8 +209,8 @@ public class Tester {
     }
 
     /**
-     * case10: Search: Element at Beginning of List.
-     * Searches dat/home.ras for "Co-Op" matching index 0.
+     * Case 10: Verifies search matching an activity at the beginning of the list.
+     * @return <code>true</code> if the test passes, <code>false</code> otherwise.
      */
     private static boolean testCase10() {
         ActivityList homeList = new ActivityList("dat", "home.ras");
@@ -223,8 +222,8 @@ public class Tester {
     }
 
     /**
-     * case11: Search: Element in Middle of List.
-     * Searches dat/home.ras for "Cook Meal" matching index 3.
+     * Case 11: Verifies search matching an activity in the middle of the list.
+     * @return <code>true</code> if the test passes, <code>false</code> otherwise.
      */
     private static boolean testCase11() {
         ActivityList homeList = new ActivityList("dat", "home.ras");
@@ -236,8 +235,8 @@ public class Tester {
     }
 
     /**
-     * case12: Search: Element at End of List.
-     * Searches dat/home.ras for "Bike Ride" matching the last element.
+     * Case 12: Verifies search matching an activity at the end of the list.
+     * @return <code>true</code> if the test passes, <code>false</code> otherwise.
      */
     private static boolean testCase12() {
         ActivityList homeList = new ActivityList("dat", "home.ras");
@@ -249,8 +248,8 @@ public class Tester {
     }
 
     /**
-     * case13: Search: Element Not on List.
-     * Verifies that searching for a nonexistent item yields 0 matches.
+     * Case 13: Verifies that searching for a nonexistent item yields zero matches.
+     * @return <code>true</code> if the test passes, <code>false</code> otherwise.
      */
     private static boolean testCase13() {
         ActivityList homeList = new ActivityList("dat", "home.ras");
@@ -264,8 +263,8 @@ public class Tester {
     }
 
     /**
-     * case14: Keyword Matching: Word-Level Exactness.
-     * Keyword "Program" must not match title "Buy Programming in Java".
+     * Case 14: Verifies that keyword matching requires whole-word matches.
+     * @return <code>true</code> if the test passes, <code>false</code> otherwise.
      */
     private static boolean testCase14() {
         String title = "Buy Programming in Java";
@@ -273,8 +272,8 @@ public class Tester {
     }
 
     /**
-     * case15: Keyword Matching: Case & Order Invariance.
-     * Keywords "java PROGRAMMING" must match "Programming in Java".
+     * Case 15: Verifies that keyword matching is case-insensitive and order-invariant.
+     * @return <code>true</code> if the test passes, <code>false</code> otherwise.
      */
     private static boolean testCase15() {
         String title = "Programming in Java";
@@ -282,8 +281,8 @@ public class Tester {
     }
 
     /**
-     * case16: Time Period: Bounded Range.
-     * Search range 2026/10/04 00:00 - 2026/10/06 12:00 in home list matches exactly 3 items.
+     * Case 16: Verifies bounded time range filtering.
+     * @return <code>true</code> if the test passes, <code>false</code> otherwise.
      */
     private static boolean testCase16() {
         ActivityList homeList = new ActivityList("dat", "home.ras");
@@ -300,8 +299,8 @@ public class Tester {
     }
 
     /**
-     * case17: Time Period: Open End Range.
-     * Search range 2026/10/08 00:00 - in home list matches exactly 3 items.
+     * Case 17: Verifies open-ended time range filtering.
+     * @return <code>true</code> if the test passes, <code>false</code> otherwise.
      */
     private static boolean testCase17() {
         ActivityList homeList = new ActivityList("dat", "home.ras");
@@ -317,8 +316,8 @@ public class Tester {
     }
 
     /**
-     * case18: Time Period: Open Start Range.
-     * Search range - 2026/10/05 12:00 in home list matches exactly 2 items.
+     * Case 18: Verifies open-start time range filtering.
+     * @return <code>true</code> if the test passes, <code>false</code> otherwise.
      */
     private static boolean testCase18() {
         ActivityList homeList = new ActivityList("dat", "home.ras");
@@ -334,8 +333,8 @@ public class Tester {
     }
 
     /**
-     * case19: Time Period: Invalid Inverted Range.
-     * Verifies that start after end is detected as an invalid period.
+     * Case 19: Verifies detection of invalid inverted time ranges where start is after end.
+     * @return <code>true</code> if the test passes, <code>false</code> otherwise.
      */
     private static boolean testCase19() {
         Time s = new Time(2026, 10, 20, 12, 0);
@@ -344,8 +343,8 @@ public class Tester {
     }
 
     /**
-     * case20: Search: No Filters (Match All).
-     * Unfiltered search across home (7), school (9), other (7) totals 23 activities.
+     * Case 20: Verifies that unfiltered search matches all activities across lists.
+     * @return <code>true</code> if the test passes, <code>false</code> otherwise.
      */
     private static boolean testCase20() {
         ActivityList home = new ActivityList("dat", "home.ras");
@@ -357,8 +356,8 @@ public class Tester {
     }
 
     /**
-     * case21: Array Capacity Boundary Check.
-     * Rejects addition when array capacity is reached.
+     * Case 21: Verifies that adding to an ActivityList at maximum capacity is rejected.
+     * @return <code>true</code> if the test passes, <code>false</code> otherwise.
      */
     private static boolean testCase21() {
         ActivityList smallList = new ActivityList(2);
@@ -375,8 +374,8 @@ public class Tester {
     }
 
     /**
-     * case22: Persistence Verification (RAS Read/Write).
-     * Verifies that newly added activities are serialized and cleanly read back.
+     * Case 22: Verifies serializing activities to RAS format and reading them back.
+     * @return <code>true</code> if the test passes, <code>false</code> otherwise.
      */
     private static boolean testCase22() {
         String testDir = "dat";
@@ -415,8 +414,7 @@ public class Tester {
     
 
     /**
-     * Default constructor (not used).
-     * This exists to suppress a Javadoc warning.
+     * Default constructor for Tester.
      */
     public Tester() {}
 }

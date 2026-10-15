@@ -2,23 +2,23 @@ package dayplanner;
 
 
 /**
- * Represents an activity that takes place at a miscellaneous, user-defined location.
+ * Represents an activity that takes place at a user-defined location.
  */
 public class OtherActivity extends Activity {
     private String location;    // Required
 
 
 
-    /**
-     * CONSTRUCTORS
+    /*
+     * Constructors
      */
     
     /**
-     * Instantiates a new <code>OtherActivity</code> with a title, start and end time, and location.
-     * @param title The new <code>OtherActivity</code>'s title.
-     * @param startTime The new <code>OtherActivity</code>'s start time.
-     * @param endTime The new <code>OtherActivity</code>'s end time.
-     * @param location The new <code>OtherActivity</code>'s location.
+     * Constructs an <code>OtherActivity</code> with a title, start time, end time, and location.
+     * @param title The activity title.
+     * @param startTime The start time.
+     * @param endTime The end time.
+     * @param location The activity location.
      */
     public OtherActivity(String title, Time startTime, Time endTime, String location) {
         super(title, startTime, endTime);
@@ -26,12 +26,12 @@ public class OtherActivity extends Activity {
     }
 
     /**
-     * Instantiates a new <code>OtherActivity</code> with a title, start and end time, comment, and location.
-     * @param title The new <code>OtherActivity</code>'s title.
-     * @param startTime The new <code>OtherActivity</code>'s start time.
-     * @param endTime The new <code>OtherActivity</code>'s end time.
-     * @param comment The new <code>OtherActivity</code>'s comment.
-     * @param location The new <code>OtherActivity</code>'s location.
+     * Constructs an <code>OtherActivity</code> with a title, start time, end time, comment, and location.
+     * @param title The activity title.
+     * @param startTime The start time.
+     * @param endTime The end time.
+     * @param comment The activity comment.
+     * @param location The activity location.
      */
     public OtherActivity(String title, Time startTime, Time endTime, String comment, String location) {
         super(title, startTime, endTime, comment);
@@ -39,8 +39,8 @@ public class OtherActivity extends Activity {
     }
 
     /**
-     * Instantiates a new <code>OtherActivity</code> from RAS format.
-     * @param ras String of valid RAS format from which to populate fields.
+     * Constructs an <code>OtherActivity</code> from a RAS (Readable Activity Serial) string.
+     * @param ras A valid RAS format string.
      */
     public OtherActivity(String ras) {
         super(ras);
@@ -56,20 +56,20 @@ public class OtherActivity extends Activity {
 
 
 
-    /**
-     * ACCESSORS & MUTATORS
+    /*
+     * Accessors and Mutators
      */
 
     /**
-     * Get this <code>OtherActivity</code>'s <b>location</b> field
-     * @return This <code>OtherActivity</code>'s <b>location</b> field as a <code>String</code>.
+     * Gets the location of this activity.
+     * @return The activity location.
      */
     public String getLocation() {
         return this.location;
     }
 
     /**
-     * Set this <code>OtherActivity</code>'s <b>location</b>.
+     * Sets the location of this activity.
      * @param location The new location.
      */
     public void setLocation(String location) {
@@ -78,14 +78,14 @@ public class OtherActivity extends Activity {
 
 
 
-    /**
-     * OBJECT OVERRIDES
+    /*
+     * Object Overrides
      */
 
     /**
-     * Compare two OtherActivities.
-     * @return Whether or not this <code>OtherActivity</code> equals <code>other</code>.
+     * Determines whether this activity is equal to another <code>OtherActivity</code>.
      * @param other The other <code>OtherActivity</code> to compare with.
+     * @return <code>true</code> if both activities are equal, <code>false</code> otherwise.
      */
     public boolean equals(OtherActivity other) {
         if (other == null)
@@ -98,9 +98,9 @@ public class OtherActivity extends Activity {
     }
 
     /**
-     * Compare this OtherActivity with another Object.
-     * @return Whether or not this <code>OtherActivity</code> equals <code>other</code>.
+     * Determines whether this activity is equal to another object.
      * @param other The object to compare with.
+     * @return <code>true</code> if the objects are equal, <code>false</code> otherwise.
      */
     @Override
     public boolean equals(Object other) {
@@ -112,8 +112,8 @@ public class OtherActivity extends Activity {
     }
 
     /**
-     * Get a <code>String</code> representation.
-     * @return A <code>String</code> representation of this <code>OtherActivity</code>.
+     * Returns a string representation of this activity.
+     * @return A string representation of this activity.
      */
     @Override
     public String toString() {
@@ -132,22 +132,13 @@ public class OtherActivity extends Activity {
 
 
     
-    /**
-     * SERIALIZATION
+    /*
+     * Serialization
      */
 
     /**
-     * Encodes this instance into <code>RAS</code> <b>(Readable Activity Serial)</b>, a text format that allows it to be written to text files.
-     * <code>RAS</code> entries are surrounded by angle brackets, and split into columns separated by commas:
-     * <ul>
-     * <li>A <code>String</code> denoting the activity type.</li>
-     * <li>A <code>String</code> denoting the activity title.</li>
-     * <li><code>String</code> representation of the start and end times.</li>
-     * <li>A <code>String</code> denoting the comment, or <code>NIL</code> if there is no comment.</li>
-     * <li>For OtherActivities, a <code>String</code> denoting the location.</li>
-     * </ul>
-     * For more details, see <code>ActivityList.toRAS()</code> or <code>README.md</code>.
-     * @return A <code>RAS</code> representation of this <code>Activity</code>.
+     * Encodes this activity into RAS (Readable Activity Serial) format.
+     * @return A RAS representation of this activity.
      */
     public String toRAS() {
         // super.toRAS() gives us <OtherActivity,title,start,end,comment>

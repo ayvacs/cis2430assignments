@@ -6,22 +6,22 @@ import java.io.InputStream;
 
 
 /**
- * Wrapper for the <code>Scanner</code> class that contains useful methods for input validation and working with the other classes in this package.
+ * Wrapper for <code>Scanner</code> providing input validation methods, as well as customized input methods for classes in this package.
  */
 public class Input {
     private final Scanner SCANNER;
 
 
     /**
-     * Instantiate a new <code>Input</code> instance from a given <code>InputStream</code>.
-     * @param stream The input stream this instance will read from.
+     * Constructs an <code>Input</code> instance that reads from the specified stream.
+     * @param stream The input stream to read from.
      */
     public Input(InputStream stream) {
         SCANNER = new Scanner(stream);
     }
 
     /**
-     * Instantiate a new <code>Input</code> instance for the keyboard input (<code>System.in</code>).
+     * Constructs an <code>Input</code> instance that reads from standard input (<code>System.in</code>).
      */
     public Input() {
         this(System.in);
@@ -30,9 +30,7 @@ public class Input {
 
 
     /**
-     * Read and return an integer value.
-     * Continues prompting the user until a valid integer is entered.
-     * Code inspired by <b>Defensive Programming Examples</b> from this course's notes.
+     * Reads and returns an integer from user input, prompting repeatedly until valid.
      * @return User input as an integer.
      */
     public int readInt() {
@@ -64,9 +62,8 @@ public class Input {
 
     
     /**
-     * Read and return a <code>String</code> value.
-     * Trims all whitespace from the beginning and end of the <code>String</code>.
-     * @return User input as a <code>String</code>.
+     * Reads and returns a trimmed string from user input.
+     * @return User input as a <code>String</code>, or <code>null</code> if end of input.
      */
     public String readString() {
         System.out.print("(string) > ");
@@ -82,9 +79,8 @@ public class Input {
 
 
     /**
-     * Read and return a boolean value.
-     * Continues prompting the user until a valid boolean is entered.
-     * Accepts any word that starts with <code>Y</code> as <code>true</code> and any word that starts with <code>N</code> as <code>false</code>.
+     * Reads and returns a boolean from user input, prompting repeatedly until valid.
+     * Accepts any response starting with 'Y' or 'y' as <code>true</code> and 'N' or 'n' as <code>false</code>.
      * @return User input as a boolean.
      */
     public boolean readBool() {
@@ -124,7 +120,7 @@ public class Input {
 
 
     /**
-     * Safely parse a Time from a string representation.
+     * Parses a string representation of time in YYYY/MM/DD HH:MM format.
      * @param str The string representing a time in YYYY/MM/DD HH:MM format.
      * @return A valid <code>Time</code> instance, or <code>null</code> if invalid or empty.
      */
@@ -153,9 +149,7 @@ public class Input {
     }
 
     /**
-     * Read and return a <code>Time</code> value of the format <code>YYYY/MM/DD HH:MM</code>.
-     * Defensively validates year, month, day, hour, and minute ranges.
-     * Continues prompting the user until a valid time is entered.
+     * Reads and returns a valid <code>Time</code> from user input, prompting repeatedly until valid.
      * @return User input as a valid <code>Time</code>.
      */
     public Time readTime() {
@@ -203,7 +197,7 @@ public class Input {
     }
 
     /**
-     * Read and return a command string from the user.
+     * Reads and returns a command string from user input.
      * @return User command input trimmed of whitespace.
      */
     public String readCommand() {
@@ -218,7 +212,7 @@ public class Input {
     }
 
     /**
-     * Prompts the user to click 'enter' to continue, then continues after the user presses 'enter'.
+     * Prompts the user to press Enter and blocks until input is received.
      */
     public void pressEnterToContinue() {
         System.out.println("\nPress enter to continue.");

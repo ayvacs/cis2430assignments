@@ -14,8 +14,8 @@ import java.util.HashSet;
 
 
 /**
- * Contains utility methods for the application class.
- * Contains extra code that is not required for the main functions of the command loop.
+ * Provides utility methods for the DayPlanner application.
+ * Methods include activity type parsing, greeting generation, username storage, and search filtering.
  */
 public class DayPlannerUtils {
     private static final Input KEYBOARD = new Input();
@@ -25,7 +25,7 @@ public class DayPlannerUtils {
     /**
      * Resolves an activity type input string to an integer representation (1=Home, 2=School, 3=Other).
      * @param input Raw user input string.
-     * @return Integer 1, 2, 3 if recognized, or -1 if invalid.
+     * @return Integer 1, 2, or 3 if recognized, or -1 if invalid.
      */
     public static int parseActivityType(String input) {
         if (input == null)
@@ -45,9 +45,9 @@ public class DayPlannerUtils {
 
 
     /**
-     * Returns the human-readable name of the activity category.
+     * Returns the human-readable name of an activity category.
      * @param type Integer type code (1=Home, 2=School, 3=Other).
-     * @return String name of the category.
+     * @return Name of the category, or "Unknown" if unrecognized.
      */
     public static String getActivityTypeName(int type) {
         return switch (type) {
@@ -61,12 +61,10 @@ public class DayPlannerUtils {
 
 
     /**
-     * Get the user's name.
-     * If not defined, prompt the user for a name.
-     * This persists between sessions.
-     * @param dirName Name of the data directory
-     * @param fileName Name of the username file
-     * @return User's username
+     * Retrieves the username from file, prompting the user (and storing the new name to file) if no name is currently stored.
+     * @param dirName Name of the data directory.
+     * @param fileName Name of the username file.
+     * @return The user's username.
      */
     public static String getUsername(String dirName, String fileName) {
         File file = new File(dirName, fileName);
@@ -104,12 +102,12 @@ public class DayPlannerUtils {
 
 
     /**
-     * Get a greeting for the user.
-     * @param username User's name
-     * @param numHomeActivities The current number of home activities
-     * @param numSchoolActivities The current number of school activities
-     * @param numOtherActivities The current number of other activities
-     * @return Greeting (i.e. Good morning, John!)
+     * Generates a time-appropriate greeting and activity summary for the user.
+     * @param username The user's name.
+     * @param numHomeActivities The current number of home activities.
+     * @param numSchoolActivities The current number of school activities.
+     * @param numOtherActivities The current number of other activities.
+     * @return Formatted greeting string.
      */
     public static String getGreeting(String username, int numHomeActivities, int numSchoolActivities, int numOtherActivities) {
         int hour = LocalTime.now().getHour();
@@ -129,9 +127,9 @@ public class DayPlannerUtils {
 
 
     /**
-     * Delete the user's name and the username file, without prompting for a new name
-     * @param dirName Name of the data directory
-     * @param fileName Name of the username file
+     * Deletes the stored username file.
+     * @param dirName Name of the data directory.
+     * @param fileName Name of the username file.
      */
     public static void flushUsername(String dirName, String fileName) {
         try {
@@ -175,7 +173,7 @@ public class DayPlannerUtils {
 
 
     /**
-     * Determines whether an activity satisfies the search criteria.
+     * Determines whether an activity satisfies the specified search criteria.
      * @param act The activity to test.
      * @param keywords Array of title keywords that must all match words in the title, or <code>null</code> to match all.
      * @param searchStart Minimum start time, or <code>null</code> for open start.
@@ -260,8 +258,7 @@ public class DayPlannerUtils {
 
 
     /**
-     * Default constructor (not used).
-     * This exists to suppress a Javadoc warning.
+     * Default constructor for DayPlannerUtils.
      */
     public DayPlannerUtils() {}
 }

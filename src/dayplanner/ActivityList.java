@@ -13,8 +13,8 @@ import java.util.Iterator;
 
 
 /**
- * Represents a collection of Activities.
- * Implementation of standard arrays, with some helpful methods.
+ * Represents a list of <code>Activity</code> objects.
+ * Extends <code>AbstractList</code> to provide standard collection operations.
  */
 public class ActivityList extends AbstractList<Activity> {
     private static final int DEFAULT_CAPACITY = 256;
@@ -27,21 +27,21 @@ public class ActivityList extends AbstractList<Activity> {
 
 
 
-    /**
-     * CONSTRUCTORS
+    /*
+     * Constructors
      */
     
     /**
-     * Instantiate a new <code>ActivityList</code> with the default capacity.
+     * Constructs an <code>ActivityList</code> with the default capacity (256).
      */
     public ActivityList() {
         this(DEFAULT_CAPACITY);
     }
 
     /**
-     * Instantiate a new <code>ActivityList</code> with the specified integer capacity.
-     * @param capacity The new <code>ActivityList</code>'s capacity.
-     * @throws IllegalArgumentException when <code>capacity</code> is negative.
+     * Constructs an <code>ActivityList</code> with the specified capacity.
+     * @param capacity The initial capacity.
+     * @throws IllegalArgumentException If capacity is negative.
      */
     public ActivityList(int capacity) {
         if (capacity < 0)
@@ -53,10 +53,10 @@ public class ActivityList extends AbstractList<Activity> {
     }
 
     /**
-     * Instantiate a new <code>ActivityList</code> from a RAS list saved to a file.
-     * @param dirName The name of the directory where the RAS file lives.
+     * Constructs an <code>ActivityList</code> by loading activities from a RAS file.
+     * @param dirName The directory containing the RAS file.
      * @param fileName The name of the RAS file.
-     * @throws IllegalArgumentException If either of the two arguments are null or empty
+     * @throws IllegalArgumentException If either argument is null or empty.
      */
     public ActivityList(String dirName, String fileName) {
         this();
@@ -107,17 +107,13 @@ public class ActivityList extends AbstractList<Activity> {
 
 
 
-    /**
-     * SERIALIZATION
+    /*
+     * Serialization
      */
 
     /**
-     * Encodes this instance into <code>RAS</code> <b>(Readable Activity Serial)</b>, a text format that allows it to be written to text files.
-     * <code>RAS</code> lists follow the following format:
-     * <pre>&lt;entry...&gt;<br>&lt;entry...&gt;<br>&lt;entry...&gt;</pre>
-     * where <code>&lt;entry...&gt;</code> is one single RAS entry (which represents one activity).
-     * For more details, see <code>Activity.toRAS()</code> or <code>README.md</code>.
-     * @return A <code>RAS</code> representation of this <code>ActivityList</code>.
+     * Encodes this activity list into RAS (Readable Activity Serial) format.
+     * @return A newline-separated RAS representation of all activities.
      */
     public String toRAS() {
         String ret = "";
@@ -137,11 +133,10 @@ public class ActivityList extends AbstractList<Activity> {
     }
 
     /**
-     * Attempt to save the <code>ActivityList</code> to the specified file in RAS format.
-     * Overwrites any existing content in the file.
-     * @param dirName Name of the directory where the file will be saved.
-     * @param fileName Name of the file where content will be saved.
-     * @return Boolean indicating if the operation succeeded. (<code>true</code> = success, <code>false</code> = failure)
+     * Saves the activity list to a file in RAS format.
+     * @param dirName Directory where the file will be saved.
+     * @param fileName Name of the target file.
+     * @return <code>true</code> if saved successfully, <code>false</code> otherwise.
      */
     public boolean saveToRAS(String dirName, String fileName) {
         try {
@@ -165,9 +160,9 @@ public class ActivityList extends AbstractList<Activity> {
     }
 
     /**
-     * Parse the type tag from a RAS string and instantiate the correct <code>Activity</code> subclass.
+     * Parses a RAS entry string and instantiates the appropriate <code>Activity</code> subclass.
      * @param ras A valid RAS entry string.
-     * @return The appropriate <code>Activity</code> subclass instance.
+     * @return The instantiated <code>Activity</code> subclass.
      */
     private static Activity activityFromRAS(String ras) {
         // remove the outer angled brackets
@@ -185,15 +180,15 @@ public class ActivityList extends AbstractList<Activity> {
 
 
 
-    /**
-     * INSTANCE METHODS
+    /*
+     * Instance Methods
      */
 
     /**
-     * Get the Activity at the specified index.
-     * @param index Index to look at.
-     * @return Activity at the specified index.
-     * @throws IndexOutOfBoundsException If <code>index</code> is negative or greater than the size.
+     * Gets the activity at the specified index.
+     * @param index The index of the activity to retrieve.
+     * @return The activity at the specified index.
+     * @throws IndexOutOfBoundsException If index is out of bounds.
      */
     @Override
     public Activity get(int index) {
@@ -204,8 +199,8 @@ public class ActivityList extends AbstractList<Activity> {
     }
     
     /**
-     * Return the current size (number of elements) of this <code>ActivityList</code>.
-     * @return Integer corresponding to the current number of elements
+     * Returns the number of activities in this list.
+     * @return The number of activities.
      */
     @Override
     public int size() {
@@ -213,11 +208,11 @@ public class ActivityList extends AbstractList<Activity> {
     }
 
     /**
-     * Replace the Activity at the specified index.
-     * @param index Index to put element.
-     * @param activity Activity to put there.
-     * @throws IndexOutOfBoundsException If <code>index</code> is negative or greater than the size.
-     * @return The old Activity located at <code>index</code>.
+     * Replaces the activity at the specified index.
+     * @param index Index of the activity to replace.
+     * @param activity The new activity to place at the index.
+     * @return The activity previously at the specified index.
+     * @throws IndexOutOfBoundsException If index is out of bounds.
      */
     @Override
     public Activity set(int index, Activity activity) {
@@ -230,10 +225,10 @@ public class ActivityList extends AbstractList<Activity> {
     }
 
     /**
-     * Insert the Activity to the specified index and shift all elements behind it, if any, back by one.
-     * @param index Index to insert element.
-     * @param activity Activity to put there.
-     * @throws IndexOutOfBoundsException If <code>index</code> is negative or greater than the size.
+     * Inserts the activity at the specified index, shifting subsequent elements right.
+     * @param index Index at which the activity is to be inserted.
+     * @param activity The activity to insert.
+     * @throws IndexOutOfBoundsException If index is out of bounds.
      */
     public void add(int index, Activity activity) {
         if (index < 0 || index > size())
@@ -251,10 +246,10 @@ public class ActivityList extends AbstractList<Activity> {
     }
 
     /**
-     * Remove the Activity at the specified index, shifting all elements behind it forward by one.
-     * @param index Index of the element to remove.
-     * @throws IndexOutOfBoundsException If <code>index</code> is negative or greater than or equal to the size.
-     * @return The removed Activity.
+     * Removes the activity at the specified index, shifting subsequent elements left.
+     * @param index Index of the activity to remove.
+     * @return The activity that was removed.
+     * @throws IndexOutOfBoundsException If index is out of bounds.
      */
     @Override
     public Activity remove(int index) {
@@ -275,26 +270,25 @@ public class ActivityList extends AbstractList<Activity> {
     }
 
     /**
-     * Determine whether this <code>ActivityList</code> is full.
-     * @return Boolean (if <code>true</code>, no more elements can be added).
+     * Determines whether this list has reached its maximum capacity.
+     * @return <code>true</code> if the list is full, <code>false</code> otherwise.
      */
     public boolean isFull() {
         return length == capacity;
     }
 
     /**
-     * Determine whether this <code>ActivityList</code> is empty.
-     * @return Boolean (if <code>true</code>, there are no elements in the list).
+     * Determines whether this list contains no activities.
+     * @return <code>true</code> if the list is empty, <code>false</code> otherwise.
      */
     public boolean isEmpty() {
         return length == 0;
     }
 
     /**
-     * Append a new <code>Activity</code> to the end of this list.
-     * If full, do nothing.
-     * @param activity The new <code>Activity</code> to append.
-     * @return The <code>Activity</code> that was just appended, or <code>null</code> when the list is full.
+     * Appends an activity to the end of this list.
+     * @param activity The activity to append.
+     * @return The appended activity, or <code>null</code> if the list is full.
      */
     public Activity append(Activity activity) {
         if (isFull())
@@ -307,15 +301,8 @@ public class ActivityList extends AbstractList<Activity> {
     }
 
     /**
-     * Return an <code>Iterator</code> that allows you to easily iterate through this <code>ActivityList</code>.
-     * For example:
-     * 
-     * <pre>
-     * for (Activity a : activityList) {
-     *     System.out.println(a.toString());
-     * }
-     * </pre>
-     * @return <code>Iterator</code> representation of this list.
+     * Returns an iterator over the activities in this list.
+     * @return An iterator over the elements in this list.
      */
     public Iterator<Activity> iterator() {
         return new Iterator<Activity>() {
@@ -334,7 +321,7 @@ public class ActivityList extends AbstractList<Activity> {
     }
 
     /**
-     * Sort the ActivityList in-place in ascending order by starting time (activities that start earlier appear earlier).
+     * Sorts the activities in-place in chronological order by start time.
      */
     public void sort() {
         Arrays.sort(array, 0, length);
@@ -342,12 +329,13 @@ public class ActivityList extends AbstractList<Activity> {
 
 
 
-    /**
-     * OBJECT OVERRIDES
+    /*
+     * Object Overrides
      */
     
     /**
-     * @return A <code>String</code> representation of this <code>ActivityList</code>.
+     * Returns a string representation of this activity list.
+     * @return A string representation of this activity list.
      */
     @Override
     public String toString() {
@@ -368,9 +356,9 @@ public class ActivityList extends AbstractList<Activity> {
     }
 
     /**
-     * Compare the two ActivityLists.
-     * @return Whether or not this <code>ActivityList</code> equals <code>other</code>.
+     * Determines whether this activity list is equal to another <code>ActivityList</code>.
      * @param other The other <code>ActivityList</code> to compare with.
+     * @return <code>true</code> if both lists contain equal activities in the same order, <code>false</code> otherwise.
      */
     public boolean equals(ActivityList other) {
         if (other == null || size() != other.size())
@@ -385,9 +373,9 @@ public class ActivityList extends AbstractList<Activity> {
     }
 
     /**
-     * Compare the ActivityList with another Object.
-     * @return Whether or not this <code>ActivityList</code> equals <code>other</code>.
+     * Determines whether this activity list is equal to another object.
      * @param other The object to compare with.
+     * @return <code>true</code> if the objects are equal, <code>false</code> otherwise.
      */
     @Override
     public boolean equals(Object other) {
