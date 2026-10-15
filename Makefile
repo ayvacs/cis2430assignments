@@ -50,7 +50,7 @@ zip: clean all
 	mkdir -p $(NAME)
 	cp -R dat docs src Makefile README.md $(NAME)/
 	tar -cvf $(NAME).tar $(NAME)
-	gzip $(NAME).tar
+	gzip -f $(NAME).tar
 	rm -rf $(NAME)
 
 
