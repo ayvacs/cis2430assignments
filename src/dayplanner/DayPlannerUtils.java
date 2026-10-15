@@ -24,48 +24,6 @@ public class DayPlannerUtils {
 
 
     /**
-     * Resolves an activity type input string to an integer representation (1=Home,
-     * 2=School, 3=Other).
-     * 
-     * @param input Raw category name, abbreviation, or numeric choice; matching is
-     *              case-insensitive and surrounding whitespace is ignored.
-     * @return Integer 1, 2, or 3 if recognized, or -1 if invalid.
-     */
-    public static int parseActivityType(String input) {
-        if (input == null)
-            return -1;
-
-        String s = input.trim().toLowerCase();
-        if (s.equals("1") || s.equals("home") || s.equals("h"))
-            return 1;
-        if (s.equals("2") || s.equals("school") || s.equals("s"))
-            return 2;
-        if (s.equals("3") || s.equals("other") || s.equals("o"))
-            return 3;
-
-        return -1;
-    }
-
-
-
-    /**
-     * Returns the human-readable name of an activity category.
-     * 
-     * @param type Integer type code (1=Home, 2=School, 3=Other).
-     * @return Name of the category, or "Unknown" if unrecognized.
-     */
-    public static String getActivityTypeName(int type) {
-        return switch (type) {
-            case 1 -> "Home";
-            case 2 -> "School";
-            case 3 -> "Other";
-            default -> "Unknown";
-        };
-    }
-
-
-
-    /**
      * Retrieves the username from file, prompting the user (and storing the new
      * name to file) if no name is currently stored.
      * 

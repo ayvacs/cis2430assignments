@@ -115,18 +115,19 @@ public class DayPlanner {
 
 
     /**
-     * Returns the activity list corresponding to the specified type code.
+     * Returns the activity list corresponding to a category.
      * 
-     * @param type Integer type code (1=Home, 2=School, 3=Other).
+     * @param type Category to look up.
      * @return Corresponding <code>ActivityList</code>, or <code>null</code> if
      *         invalid.
      */
-    private static ActivityList getActivityList(int type) {
+    private static ActivityList getActivityList(ActivityType type) {
+        if (type == null)
+            return null;
         return switch (type) {
-            case 1 -> HOME_ACTIVITIES;
-            case 2 -> SCHOOL_ACTIVITIES;
-            case 3 -> OTHER_ACTIVITIES;
-            default -> null;
+            case HOME -> HOME_ACTIVITIES;
+            case SCHOOL -> SCHOOL_ACTIVITIES;
+            case OTHER -> OTHER_ACTIVITIES;
         };
     }
 
@@ -157,15 +158,15 @@ public class DayPlanner {
         System.out.println("Let's add a new activity to the DayPlanner.");
 
         // 1. Activity type
-        int type;
+        ActivityType type;
         ActivityList arr;
 
         while (true) {
             System.out.println("Enter the type of this activity.");
             System.out.println("For Home, type 'home' or 1. For School, type 'school' or 2. For Other, type 'other' or 3:");
-            type = DayPlannerUtils.parseActivityType(KEYBOARD.readString());
+            type = ActivityType.parse(KEYBOARD.readString());
 
-            if (type == -1) {
+            if (type == null) {
                 System.out.println("Invalid activity type. Try again:");
                 continue;
             }
@@ -219,7 +220,7 @@ public class DayPlanner {
 
         // 6. Location (Other activities only)
         String location = null;
-        if (type == 3) {
+        if (type == ActivityType.OTHER) {
             while (true) {
                 System.out.println("Enter a location.");
                 location = KEYBOARD.readString();
@@ -231,10 +232,9 @@ public class DayPlanner {
 
         // 7. Instantiate and insert activity
         Activity act = switch (type) {
-            case 1 -> new HomeActivity(title, startTime, endTime, comment);
-            case 2 -> new SchoolActivity(title, startTime, endTime, comment);
-            case 3 -> new OtherActivity(title, startTime, endTime, comment, location);
-            default -> null;
+            case HOME -> new HomeActivity(title, startTime, endTime, comment);
+            case SCHOOL -> new SchoolActivity(title, startTime, endTime, comment);
+            case OTHER -> new OtherActivity(title, startTime, endTime, comment, location);
         };
 
         if (act != null) {
@@ -253,18 +253,17 @@ public class DayPlanner {
         System.out.println("Let's search for activities in the DayPlanner.");
 
         // 1. Activity type
-        int type = 0;
+        ActivityType type = null;
         while (true) {
             System.out.println("Enter activity type ('home', 'school', 'other'), or press Enter to search all types:");
             String input = KEYBOARD.readString();
 
             if (input.isEmpty()) {
-                type = 0;
                 break;
             }
 
-            type = DayPlannerUtils.parseActivityType(input);
-            if (type != -1)
+            type = ActivityType.parse(input);
+            if (type != null)
                 break;
 
             System.out.println("Invalid activity type: \"" + input + "\". Please enter 'home', 'school', 'other', or press Enter to skip:");
@@ -281,13 +280,13 @@ public class DayPlanner {
         Time searchEnd = period[1];
 
         // 4. Sequential search through target array(s)
-        ActivityList[] listsToSearch = (type == 0)
+        ActivityList[] listsToSearch = (type == null)
             ? new ActivityList[] { HOME_ACTIVITIES, SCHOOL_ACTIVITIES, OTHER_ACTIVITIES }
             : new ActivityList[] { getActivityList(type) };
 
-        String[] listNames = (type == 0)
+        String[] listNames = (type == null)
             ? new String[] { "Home", "School", "Other" }
-            : new String[] { DayPlannerUtils.getActivityTypeName(type) };
+            : new String[] { type.getDisplayName() };
 
         int totalMatches = 0;
         System.out.println("\nSearch results:");
