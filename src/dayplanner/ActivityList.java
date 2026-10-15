@@ -113,6 +113,13 @@ public class ActivityList extends AbstractList<Activity> {
 
     /**
      * Encodes this activity list into RAS (Readable Activity Serial) format.
+     * Each activity is serialized on its own line, making the output directly suitable for writing to a <code>.ras</code> file.
+     * <br>
+     * For example, a list containing one home and one school activity produces a String identical in format to the following:
+     * <pre>
+     * &lt;HomeActivity,Morning Run,2026/01/01 07:00,2026/01/01 08:00,NIL&gt;
+     * &lt;SchoolActivity,Study Session,2026/10/07 14:00,2026/10/07 17:00,Midterm prep - data structures&gt;
+     * </pre>
      * @return A newline-separated RAS representation of all activities.
      */
     public String toRAS() {
@@ -161,6 +168,10 @@ public class ActivityList extends AbstractList<Activity> {
 
     /**
      * Parses a RAS entry string and instantiates the appropriate <code>Activity</code> subclass.
+     * The first token (between the opening <code>&lt;</code> and the first comma) is used as the
+     * class discriminator: <code>HomeActivity</code>, <code>SchoolActivity</code>, or
+     * <code>OtherActivity</code> each map to their respective constructors.
+     * Any unrecognized type falls back to a plain <code>Activity</code> instance.
      * @param ras A valid RAS entry string.
      * @return The instantiated <code>Activity</code> subclass.
      */
@@ -301,7 +312,13 @@ public class ActivityList extends AbstractList<Activity> {
     }
 
     /**
-     * Returns an iterator over the activities in this list.
+     * Returns an iterator over the activities in this list, enabling for-each iteration.
+     * For example:
+     * <pre>
+     * for (Activity a : activityList) {
+     *     System.out.println(a.getTitle());
+     * }
+     * </pre>
      * @return An iterator over the elements in this list.
      */
     public Iterator<Activity> iterator() {

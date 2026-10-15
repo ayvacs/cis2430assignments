@@ -147,6 +147,8 @@ public class DayPlannerUtils {
 
     /**
      * Checks if all keywords appear as individual words in the title (case-insensitive, any order).
+     * <br>
+     * A keyword matches only if it appears as a complete word in the title; partial word matches are rejected. For example, keyword <code>"Cook"</code> matches title <code>"Cook Meal"</code> but does <em>not</em> match <code>"Cooking"</code> because <code>"cooking"</code> is a different word.  Multiple-word keywords are split on non-alphanumeric characters and each resulting token must appear as its own word in the title.
      * @param title The activity title.
      * @param keywords The search keywords.
      * @return <code>true</code> if all keywords match words in the title, <code>false</code> otherwise.
@@ -174,6 +176,13 @@ public class DayPlannerUtils {
 
     /**
      * Determines whether an activity satisfies the specified search criteria.
+     * All non-null criteria must be satisfied simultaneously:
+     * <ul>
+     *   <li><b>keywords</b>: every keyword must be a whole-word match in the title (see {@link #matchesKeywords}).</li>
+     *   <li><b>searchStart</b>: the activity's start time must be &gt;= <code>searchStart</code>.</li>
+     *   <li><b>searchEnd</b>: the activity's end time must be &lt;= <code>searchEnd</code>.</li>
+     * </ul>
+     * Passing <code>null</code> for any filter disables that filter entirely.
      * @param act The activity to test.
      * @param keywords Array of title keywords that must all match words in the title, or <code>null</code> to match all.
      * @param searchStart Minimum start time, or <code>null</code> for open start.

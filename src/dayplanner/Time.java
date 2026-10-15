@@ -2,8 +2,17 @@ package dayplanner;
 
 
 /**
- * Represents an instance in time with minute-level precision.
- * Encapsulates year, month (1-12), day (1-31), hour (0-23), and minute (0-59).
+ * Represents an instant in time with minute-level precision.
+ * Each component is stored as a plain integer and validated against the following ranges:
+ * <ul>
+ *   <li><b>year</b>: 1–9999</li>
+ *   <li><b>month</b>: 1–12</li>
+ *   <li><b>day</b>: 1 to the maximum days in the given month (respects leap years for February; see {@link #maxDaysInMonth(int year, int month)}</code>)</li>
+ *   <li><b>hour</b>: 0–23</li>
+ *   <li><b>minute</b>: 0–59</li>
+ * </ul>
+ * The string form produced by {@link #toString()} is <code>YYYY/MM/DD HH:MM</code>,
+ * e.g. <code>2026/09/15 14:30</code>.
  */
 public class Time implements Comparable<Time> {
     /*
@@ -297,7 +306,9 @@ public class Time implements Comparable<Time> {
      */
 
     /**
-     * Returns a string representation of this time in YYYY/MM/DD HH:MM format.
+     * Returns a string representation of this time in <code>YYYY/MM/DD HH:MM</code> format.
+     * Month, day, hour, and minute are zero-padded to two digits; year is zero-padded to four.
+     * For example, September 5, 2026 at 8:03 AM is formatted as <code>2026/09/05 08:03</code>.
      * @return Formatted time string.
      */
     @Override
@@ -308,7 +319,9 @@ public class Time implements Comparable<Time> {
     }
 
     /**
-     * Compares this time with another time.
+     * Compares this time with another time chronologically.
+     * Fields are compared in order: year, then month, then day, then hour, then minute.
+     * The first field that differs determines the result.
      * @param other The other time to compare with.
      * @return A negative integer, zero, or a positive integer as this time precedes, equals, or follows the specified time.
      */

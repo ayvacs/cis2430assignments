@@ -45,6 +45,15 @@ public class Activity implements Comparable<Activity> {
 
     /**
      * Constructs an <code>Activity</code> from a RAS (Readable Activity Serial) string.
+     * Tokens are parsed in the following order:
+     * <ol>
+     * <li>class name (ignored),</li>
+     * <li>title,</li>
+     * <li>start time,</li>
+     * <li>end time,</li>
+     * <li>comment (<code>NIL</code> is treated as no comment).</li>
+     * </ol>
+     * If the string is malformed or any token is missing, default values are used.
      * @param ras A valid RAS format string.
      */
     public Activity(String ras) {
@@ -154,6 +163,10 @@ public class Activity implements Comparable<Activity> {
 
     /**
      * Encodes this activity into RAS (Readable Activity Serial) format.
+     * The RAS format is a comma-separated list wrapped in angle brackets:
+     * <pre>&lt;ClassName,title,YYYY/MM/DD HH:MM,YYYY/MM/DD HH:MM,comment&gt;</pre>
+     * If no comment is set, <code>NIL</code> is used as a placeholder. For example, a <code>HomeActivity</code> titled "Morning Run" might produce:
+     * <pre>&lt;HomeActivity,Morning Run,2026/01/01 07:00,2026/01/01 08:00,NIL&gt;</pre>
      * @return A RAS representation of this activity.
      */
     public String toRAS() {
