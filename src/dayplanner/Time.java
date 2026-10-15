@@ -2,17 +2,29 @@ package dayplanner;
 
 
 /**
- * Represents an instant in time with minute-level precision.
- * Each component is stored as a plain integer and validated against the following ranges:
+ * <p>
+ * Represents an instant in time with minute-level precision. This is not a
+ * time-zone-aware instant and has no seconds or daylight-saving rules.
+ * </p>
+ * <p>
+ * Each component is stored as a plain integer and validated against the
+ * following ranges:
+ * </p>
  * <ul>
- *   <li><b>year</b>: 1–9999</li>
- *   <li><b>month</b>: 1–12</li>
- *   <li><b>day</b>: 1 to the maximum days in the given month (respects leap years for February; see {@link #maxDaysInMonth(int year, int month)})</li>
- *   <li><b>hour</b>: 0–23</li>
- *   <li><b>minute</b>: 0–59</li>
+ * <li><b>year</b>: 1–9999</li>
+ * <li><b>month</b>: 1–12</li>
+ * <li><b>day</b>: 1 to the maximum days in the given month (respects leap years
+ * for February; see {@link #maxDaysInMonth(int year, int month)})</li>
+ * <li><b>hour</b>: 0–23</li>
+ * <li><b>minute</b>: 0–59</li>
  * </ul>
- * The string form produced by {@link #toString()} is <code>YYYY/MM/DD HH:MM</code>,
- * e.g. <code>2026/09/15 14:30</code>.
+ * <p>
+ * The string form produced by {@link #toString()} is
+ * <code>YYYY/MM/DD HH:MM</code>, e.g. <code>2026/09/15 14:30</code>.
+ * </p>
+ * <p>
+ * There are also static methods for dealing with Time instances.
+ * </p>
  */
 public class Time implements Comparable<Time> {
     /*
@@ -52,9 +64,12 @@ public class Time implements Comparable<Time> {
     
     /**
      * Determines whether the specified year is a leap year.
-     * Code adapted from <a href="https://www.programiz.com/cpp-programming/examples/leap-year">Programiz</a>.
+     * Code adapted from <a href=
+     * "https://www.programiz.com/cpp-programming/examples/leap-year">Programiz</a>.
+     * 
      * @param year The year to check.
-     * @return <code>true</code> if the year is a leap year, <code>false</code> otherwise.
+     * @return <code>true</code> if the year is a leap year, <code>false</code>
+     *         otherwise.
      */
     public static boolean isLeapYear(int year) {
         if (year % 400 == 0)
@@ -69,9 +84,11 @@ public class Time implements Comparable<Time> {
 
     /**
      * Calculates the maximum number of days in the given month and year.
-     * @param year The year.
+     * 
+     * @param year  The year.
      * @param month The month (1-12).
-     * @return The maximum number of days in that month, or -1 if the month is invalid.
+     * @return The maximum number of days in that month, or -1 if the month is
+     *         invalid.
      */
     public static int maxDaysInMonth(int year, int month) {
         if (month < MIN_MONTH || month > MAX_MONTH)
@@ -87,13 +104,16 @@ public class Time implements Comparable<Time> {
     }
 
     /**
-     * Returns an informative error message if any time component is invalid, or <code>null</code> if valid.
-     * @param year The year.
-     * @param month The month.
-     * @param day The day.
-     * @param hour The hour.
+     * Returns an informative error message if any time component is invalid, or
+     * <code>null</code> if valid.
+     * 
+     * @param year   The year.
+     * @param month  The month.
+     * @param day    The day.
+     * @param hour   The hour.
      * @param minute The minute.
-     * @return Description of the error, or <code>null</code> if all values are valid.
+     * @return Description of the error, or <code>null</code> if all values are
+     *         valid.
      */
     public static String getValidationError(int year, int month, int day, int hour, int minute) {
         if (year < MIN_YEAR || year > MAX_YEAR)
@@ -112,12 +132,14 @@ public class Time implements Comparable<Time> {
 
     /**
      * Validates whether the specified date and time values represent a valid time.
-     * @param year The year (must be positive, starting from 1).
-     * @param month The month (1-12).
-     * @param day The day (1 to max days in month).
-     * @param hour The hour (0-23).
+     * 
+     * @param year   The year (must be positive, starting from 1).
+     * @param month  The month (1-12).
+     * @param day    The day (1 to max days in month).
+     * @param hour   The hour (0-23).
      * @param minute The minute (0-59).
-     * @return <code>true</code> if all values are valid, <code>false</code> otherwise.
+     * @return <code>true</code> if all values are valid, <code>false</code>
+     *         otherwise.
      */
     public static boolean isValidTime(int year, int month, int day, int hour, int minute) {
         return getValidationError(year, month, day, hour, minute) == null;
@@ -130,7 +152,8 @@ public class Time implements Comparable<Time> {
      */
 
     /**
-     * Constructs a <code>Time</code> initialized to minimum allowed values (0001/01/01 00:00).
+     * Constructs a <code>Time</code> initialized to minimum allowed values
+     * (0001/01/01 00:00).
      */
     public Time() {
         // Assume default values
@@ -142,12 +165,20 @@ public class Time implements Comparable<Time> {
     }
 
     /**
+     * <p>
      * Constructs a <code>Time</code> with specified components.
-     * Invalid components default to their minimum allowed values.
-     * @param year The year.
-     * @param month The month.
-     * @param day The day.
-     * @param hour The hour.
+     * </p>
+     * <p>
+     * Invalid components are ignored by individual setters, leaving the current or
+     * default component unchanged. Use
+     * {@link #isValidTime(int, int, int, int, int)} when all components must be
+     * accepted together.
+     * </p>
+     * 
+     * @param year   The year.
+     * @param month  The month.
+     * @param day    The day.
+     * @param hour   The hour.
      * @param minute The minute.
      */
     public Time(int year, int month, int day, int hour, int minute) {
@@ -162,9 +193,12 @@ public class Time implements Comparable<Time> {
     }
 
     /**
-     * Constructs a <code>Time</code> by parsing a string in YYYY/MM/DD HH:MM format.
-     * Invalid components default to their minimum allowed values.
-     * @param formatString String in YYYY/MM/DD HH:MM format.
+     * Constructs a <code>Time</code> by parsing a string in YYYY/MM/DD HH:MM
+     * format. Invalid components default to their minimum allowed values.
+     * 
+     * @param formatString String containing at least five numeric components, such
+     *                     as {@code 2026/09/15 14:30}; separators may be slash,
+     *                     colon, comma, or whitespace.
      */
     public Time(String formatString) {
         // Assume default values
@@ -207,6 +241,7 @@ public class Time implements Comparable<Time> {
 
     /**
      * Sets the year if within the valid range (1-9999).
+     * 
      * @param year The new year.
      */
     public void setYear(int year) {
@@ -216,6 +251,7 @@ public class Time implements Comparable<Time> {
 
     /**
      * Sets the month if within the valid range (1-12).
+     * 
      * @param month The new month.
      */
     public void setMonth(int month) {
@@ -224,7 +260,9 @@ public class Time implements Comparable<Time> {
     }
 
     /**
-     * Sets the day if within the valid range for the current month and year.
+     * Sets the day if within the valid range for the current month and year. Set
+     * year and month first when changing to a date with a different month length.
+     * 
      * @param day The new day.
      */
     public void setDay(int day) {
@@ -237,6 +275,7 @@ public class Time implements Comparable<Time> {
 
     /**
      * Sets the hour if within the valid range (0-23).
+     * 
      * @param hour The new hour.
      */
     public void setHour(int hour) {
@@ -246,6 +285,7 @@ public class Time implements Comparable<Time> {
 
     /**
      * Sets the minute if within the valid range (0-59).
+     * 
      * @param minute The new minute.
      */
     public void setMinute(int minute) {
@@ -261,6 +301,7 @@ public class Time implements Comparable<Time> {
 
     /**
      * Gets the year.
+     * 
      * @return The year.
      */
     public int getYear() {
@@ -269,6 +310,7 @@ public class Time implements Comparable<Time> {
 
     /**
      * Gets the month.
+     * 
      * @return The month (1-12).
      */
     public int getMonth() {
@@ -277,6 +319,7 @@ public class Time implements Comparable<Time> {
 
     /**
      * Gets the day.
+     * 
      * @return The day of the month.
      */
     public int getDay() {
@@ -285,6 +328,7 @@ public class Time implements Comparable<Time> {
 
     /**
      * Gets the hour.
+     * 
      * @return The hour (0-23).
      */
     public int getHour() {
@@ -293,6 +337,7 @@ public class Time implements Comparable<Time> {
 
     /**
      * Gets the minute.
+     * 
      * @return The minute (0-59).
      */
     public int getMinute() {
@@ -306,9 +351,16 @@ public class Time implements Comparable<Time> {
      */
 
     /**
-     * Returns a string representation of this time in <code>YYYY/MM/DD HH:MM</code> format.
-     * Month, day, hour, and minute are zero-padded to two digits; year is zero-padded to four.
-     * For example, September 5, 2026 at 8:03 AM is formatted as <code>2026/09/05 08:03</code>.
+     * <p>
+     * Returns a string representation of this time in <code>YYYY/MM/DD HH:MM</code>
+     * format.
+     * </p>
+     * <p>
+     * Month, day, hour, and minute are zero-padded to two digits; year is
+     * zero-padded to four. For example, September 5, 2026 at 8:03 AM is formatted
+     * as <code>2026/09/05 08:03</code>.
+     * </p>
+     * 
      * @return Formatted time string.
      */
     @Override
@@ -319,11 +371,18 @@ public class Time implements Comparable<Time> {
     }
 
     /**
+     * <p>
      * Compares this time with another time chronologically.
-     * Fields are compared in order: year, then month, then day, then hour, then minute.
-     * The first field that differs determines the result.
+     * </p>
+     * <p>
+     * Fields are compared in order: year, then month, then day, then hour, then
+     * minute. The first field that differs determines the result.
+     * </p>
+     * 
      * @param other The other time to compare with.
-     * @return A negative integer, zero, or a positive integer as this time precedes, equals, or follows the specified time.
+     * @return A negative integer, zero, or a positive integer as this time
+     *         precedes, equals, or follows {@code other}.
+     * @throws NullPointerException If {@code other} is {@code null}.
      */
     @Override
     public int compareTo(Time other) {
@@ -347,8 +406,10 @@ public class Time implements Comparable<Time> {
 
     /**
      * Determines whether this time is equal to another <code>Time</code>.
+     * 
      * @param other The other time to compare with.
-     * @return <code>true</code> if both times represent the same moment, <code>false</code> otherwise.
+     * @return <code>true</code> if both times represent the same moment,
+     *         <code>false</code> otherwise.
      */
     public boolean equals(Time other) {
         if (other == null)
@@ -358,8 +419,10 @@ public class Time implements Comparable<Time> {
 
     /**
      * Determines whether this time is equal to another object.
+     * 
      * @param other The object to compare with.
-     * @return <code>true</code> if the objects are equal, <code>false</code> otherwise.
+     * @return <code>true</code> if the objects are equal, <code>false</code>
+     *         otherwise.
      */
     @Override
     public boolean equals(Object other) {

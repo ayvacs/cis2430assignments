@@ -2,7 +2,15 @@ package dayplanner;
 
 
 /**
- * Represents an activity that takes place at school.
+ * <p>
+ * Represents an activity categorized as taking place at school, such as a
+ * lecture or lab. Common fields and behavior are inherited from
+ * {@link Activity}.
+ * </p>
+ * <p>
+ * Example:
+ * </p>
+ * <code>new SchoolActivity("CIS 2430 Lecture", start, end)</code>
  */
 public class SchoolActivity extends Activity {
     /*
@@ -10,29 +18,36 @@ public class SchoolActivity extends Activity {
      */
 
     /**
-     * Constructs a <code>SchoolActivity</code> with a title, start time, and end time.
-     * @param title The activity title.
+     * Constructs a <code>SchoolActivity</code> with a title, start time, and end
+     * time.
+     * 
+     * @param title     The activity title.
      * @param startTime The start time.
-     * @param endTime The end time.
+     * @param endTime   The end time.
      */
     public SchoolActivity(String title, Time startTime, Time endTime) {
         super(title, startTime, endTime);
     }
 
     /**
-     * Constructs a <code>SchoolActivity</code> with a title, start time, end time, and comment.
-     * @param title The activity title.
+     * Constructs a <code>SchoolActivity</code> with a title, start time, end time,
+     * and comment.
+     * 
+     * @param title     The activity title.
      * @param startTime The start time.
-     * @param endTime The end time.
-     * @param comment The activity comment.
+     * @param endTime   The end time.
+     * @param comment   Optional note; null or blank values are treated as no
+     *                  comment.
      */
     public SchoolActivity(String title, Time startTime, Time endTime, String comment) {
         super(title, startTime, endTime, comment);
     }
 
     /**
-     * Constructs a <code>SchoolActivity</code> from a RAS (Readable Activity Serial) string.
-     * @param ras A valid RAS format string.
+     * Constructs a <code>SchoolActivity</code> from a RAS (Readable Activity
+     * Serial) string.
+     * 
+     * @param ras Serialized activity entry, normally produced by {@link #toRAS()}.
      */
     public SchoolActivity(String ras) {
         super(ras);
@@ -46,8 +61,10 @@ public class SchoolActivity extends Activity {
 
     /**
      * Determines whether this school activity is equal to another object.
+     * 
      * @param other The object to compare with.
-     * @return <code>true</code> if the objects are equal, <code>false</code> otherwise.
+     * @return <code>true</code> if the objects are equal, <code>false</code>
+     *         otherwise.
      */
     @Override
     public boolean equals(Object other) {

@@ -14,8 +14,9 @@ import java.util.HashSet;
 
 
 /**
- * Provides utility methods for the DayPlanner application.
- * Methods include activity type parsing, greeting generation, username storage, and search filtering.
+ * Provides shared helpers for activity category parsing, greeting generation,
+ * username storage, and search filtering. Methods are static so callers can use
+ * them without creating a utility instance.
  */
 public class DayPlannerUtils {
     private static final Input KEYBOARD = new Input();
@@ -23,8 +24,11 @@ public class DayPlannerUtils {
 
 
     /**
-     * Resolves an activity type input string to an integer representation (1=Home, 2=School, 3=Other).
-     * @param input Raw user input string.
+     * Resolves an activity type input string to an integer representation (1=Home,
+     * 2=School, 3=Other).
+     * 
+     * @param input Raw category name, abbreviation, or numeric choice; matching is
+     *              case-insensitive and surrounding whitespace is ignored.
      * @return Integer 1, 2, or 3 if recognized, or -1 if invalid.
      */
     public static int parseActivityType(String input) {
@@ -46,6 +50,7 @@ public class DayPlannerUtils {
 
     /**
      * Returns the human-readable name of an activity category.
+     * 
      * @param type Integer type code (1=Home, 2=School, 3=Other).
      * @return Name of the category, or "Unknown" if unrecognized.
      */
@@ -61,10 +66,13 @@ public class DayPlannerUtils {
 
 
     /**
-     * Retrieves the username from file, prompting the user (and storing the new name to file) if no name is currently stored.
-     * @param dirName Name of the data directory.
+     * Retrieves the username from file, prompting the user (and storing the new
+     * name to file) if no name is currently stored.
+     * 
+     * @param dirName  Name of the data directory.
      * @param fileName Name of the username file.
-     * @return The user's username.
+     * @return The stored name, or a newly entered name when no usable file value
+     *         exists.
      */
     public static String getUsername(String dirName, String fileName) {
         File file = new File(dirName, fileName);
@@ -103,10 +111,11 @@ public class DayPlannerUtils {
 
     /**
      * Generates a time-appropriate greeting and activity summary for the user.
-     * @param username The user's name.
-     * @param numHomeActivities The current number of home activities.
+     * 
+     * @param username            The user's name.
+     * @param numHomeActivities   The current number of home activities.
      * @param numSchoolActivities The current number of school activities.
-     * @param numOtherActivities The current number of other activities.
+     * @param numOtherActivities  The current number of other activities.
      * @return Formatted greeting string.
      */
     public static String getGreeting(String username, int numHomeActivities, int numSchoolActivities, int numOtherActivities) {
@@ -127,8 +136,10 @@ public class DayPlannerUtils {
 
 
     /**
-     * Deletes the stored username file.
-     * @param dirName Name of the data directory.
+     * Deletes the stored username file if it exists. This is used by the hidden
+     * maintenance command; it does not prompt for or create a replacement name.
+     * 
+     * @param dirName  Name of the data directory.
      * @param fileName Name of the username file.
      */
     public static void flushUsername(String dirName, String fileName) {
@@ -146,12 +157,25 @@ public class DayPlannerUtils {
 
 
     /**
-     * Checks if all keywords appear as individual words in the title (case-insensitive, any order).
-     * <br>
-     * A keyword matches only if it appears as a complete word in the title; partial word matches are rejected. For example, keyword <code>"Cook"</code> matches title <code>"Cook Meal"</code> but does <em>not</em> match <code>"Cooking"</code> because <code>"cooking"</code> is a different word.  Multiple-word keywords are split on non-alphanumeric characters and each resulting token must appear as its own word in the title.
-     * @param title The activity title.
-     * @param keywords The search keywords.
-     * @return <code>true</code> if all keywords match words in the title, <code>false</code> otherwise.
+     * <p>
+     * Checks if all keywords appear as individual words in the title
+     * (case-insensitive, any order).
+     * </p>
+     * <p>
+     * A keyword matches only if it appears as a complete word in the title; partial
+     * word matches are rejected. For example, keyword <code>"Cook"</code> matches
+     * title <code>"Cook Meal"</code> but does <em>not</em> match
+     * <code>"Cooking"</code> because <code>"cooking"</code> is a different word.
+     * Multiple-word keywords are split on non-alphanumeric characters and each
+     * resulting token must appear as its own word in the title.
+     * </p>
+     * 
+     * @param title    The activity title.
+     * @param keywords Search terms; every non-empty term must match a whole title
+     *                 word, with case ignored. An empty or null keyword array
+     *                 imposes no filter.
+     * @return <code>true</code> if all keywords match words in the title,
+     *         <code>false</code> otherwise.
      */
     public static boolean matchesKeywords(String title, String[] keywords) {
         if (keywords == null || keywords.length == 0)
@@ -175,19 +199,31 @@ public class DayPlannerUtils {
 
 
     /**
+     * <p>
      * Determines whether an activity satisfies the specified search criteria.
+     * </p>
+     * <p>
      * All non-null criteria must be satisfied simultaneously:
+     * </p>
      * <ul>
-     *   <li><b>keywords</b>: every keyword must be a whole-word match in the title (see {@link #matchesKeywords}).</li>
-     *   <li><b>searchStart</b>: the activity's start time must be &gt;= <code>searchStart</code>.</li>
-     *   <li><b>searchEnd</b>: the activity's end time must be &lt;= <code>searchEnd</code>.</li>
+     * <li><b>keywords</b>: every keyword must be a whole-word match in the title
+     * (see {@link #matchesKeywords}).</li>
+     * <li><b>searchStart</b>: the activity's start time must be &gt;=
+     * <code>searchStart</code>.</li>
+     * <li><b>searchEnd</b>: the activity's end time must be &lt;=
+     * <code>searchEnd</code>.</li>
      * </ul>
+     * <p>
      * Passing <code>null</code> for any filter disables that filter entirely.
-     * @param act The activity to test.
-     * @param keywords Array of title keywords that must all match words in the title, or <code>null</code> to match all.
+     * </p>
+     * 
+     * @param act         The activity to test.
+     * @param keywords    Array of title keywords that must all match words in the
+     *                    title, or <code>null</code> to match all.
      * @param searchStart Minimum start time, or <code>null</code> for open start.
-     * @param searchEnd Maximum end time, or <code>null</code> for open end.
-     * @return <code>true</code> if the activity satisfies all given criteria, <code>false</code> otherwise.
+     * @param searchEnd   Maximum end time, or <code>null</code> for open end.
+     * @return <code>true</code> if the activity satisfies all given criteria,
+     *         <code>false</code> otherwise.
      */
     public static boolean matchesCriteria(Activity act, String[] keywords, Time searchStart, Time searchEnd) {
         if (act == null)
@@ -213,7 +249,11 @@ public class DayPlannerUtils {
     
     /**
      * Prompts the user for a time period filter and parses the start and end times.
-     * @return A two-element array containing <code>{ searchStart, searchEnd }</code>.
+     * A blank response means both bounds are open; a single hyphen may introduce
+     * either one-sided range, for example {@code 2026/09/12 06:00 -}.
+     * 
+     * @return A two-element array {@code {searchStart, searchEnd}}; either element
+     *         may be null to represent an open bound.
      */
     public static Time[] readTimePeriod() {
         while (true) {

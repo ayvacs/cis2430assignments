@@ -57,7 +57,7 @@ public class Tester {
      * @param description Short description of what was tested.
      * @param pass Whether the test passed.
      */
-    private static void runTestCase(String id, String description, boolean pass) {
+    public static void runTestCase(String id, String description, boolean pass) {
         if (pass) {
             passedCount++;
             System.out.printf("[pass] %s: %s\n", id, description);
@@ -73,7 +73,7 @@ public class Tester {
      * Case 01: Verifies that unrecognized commands are rejected by the command loop.
      * @return <code>true</code> if the test passes, <code>false</code> otherwise.
      */
-    private static boolean testCase01() {
+    public static boolean testCase01() {
         java.io.PrintStream originalOut = System.out;
         System.setOut(new java.io.PrintStream(new java.io.ByteArrayOutputStream()));
         try {
@@ -92,7 +92,7 @@ public class Tester {
      * Case 02: Verifies that command aliases and case variations are recognized.
      * @return <code>true</code> if the test passes, <code>false</code> otherwise.
      */
-    private static boolean testCase02() {
+    public static boolean testCase02() {
         String[] addAliases = { "add", "ADD", "Add", "a", "A", "1" };
         String[] searchAliases = { "search", "SEARCH", "Search", "s", "S", "2" };
         String[] quitAliases = { "quit", "QUIT", "Quit", "q", "Q", "3" };
@@ -122,7 +122,7 @@ public class Tester {
      * Case 03: Verifies that February 29 is rejected in non-leap years.
      * @return <code>true</code> if the test passes, <code>false</code> otherwise.
      */
-    private static boolean testCase03() {
+    public static boolean testCase03() {
         boolean valid = Time.isValidTime(2026, 2, 29, 10, 0);
         String err = Time.getValidationError(2026, 2, 29, 10, 0);
         return !valid && err != null && err.contains("max 28 days");
@@ -132,7 +132,7 @@ public class Tester {
      * Case 04: Verifies that February 29 is accepted in leap years.
      * @return <code>true</code> if the test passes, <code>false</code> otherwise.
      */
-    private static boolean testCase04() {
+    public static boolean testCase04() {
         boolean isLeap = Time.isLeapYear(2024);
         boolean valid = Time.isValidTime(2024, 2, 29, 10, 0);
         return isLeap && valid;
@@ -142,7 +142,7 @@ public class Tester {
      * Case 05: Verifies that dates exceeding the maximum days in a month are rejected.
      * @return <code>true</code> if the test passes, <code>false</code> otherwise.
      */
-    private static boolean testCase05() {
+    public static boolean testCase05() {
         boolean valid = Time.isValidTime(2026, 4, 31, 9, 0);
         String err = Time.getValidationError(2026, 4, 31, 9, 0);
         return !valid && err != null && err.contains("max 30 days");
@@ -152,7 +152,7 @@ public class Tester {
      * Case 06: Verifies that out-of-bounds time components are rejected.
      * @return <code>true</code> if the test passes, <code>false</code> otherwise.
      */
-    private static boolean testCase06() {
+    public static boolean testCase06() {
         boolean badMonth = !Time.isValidTime(2026, 13, 1, 10, 0);
         boolean badHour = !Time.isValidTime(2026, 5, 10, 24, 0);
         boolean badMinute = !Time.isValidTime(2026, 5, 10, 12, 60);
@@ -164,7 +164,7 @@ public class Tester {
      * Case 07: Verifies that start time must be chronologically before end time.
      * @return <code>true</code> if the test passes, <code>false</code> otherwise.
      */
-    private static boolean testCase07() {
+    public static boolean testCase07() {
         Time start = new Time(2026, 10, 15, 14, 0);
         Time end = new Time(2026, 10, 15, 12, 0);
         Time equalTime = new Time(2026, 10, 15, 14, 0);
@@ -175,7 +175,7 @@ public class Tester {
      * Case 08: Verifies that blank titles and blank locations are rejected.
      * @return <code>true</code> if the test passes, <code>false</code> otherwise.
      */
-    private static boolean testCase08() {
+    public static boolean testCase08() {
         String blankTitle = "   ";
         String blankLocation = "";
         OtherActivity oa = new OtherActivity("Valid Title",
@@ -192,7 +192,7 @@ public class Tester {
      * Case 09: Verifies the creation and retrieval of an activity with all fields populated.
      * @return <code>true</code> if the test passes, <code>false</code> otherwise.
      */
-    private static boolean testCase09() {
+    public static boolean testCase09() {
         ActivityList list = new ActivityList(10);
         Time start = new Time(2026, 10, 20, 14, 30);
         Time end = new Time(2026, 10, 20, 16, 30);
@@ -212,7 +212,7 @@ public class Tester {
      * Case 10: Verifies search matching an activity at the beginning of the list.
      * @return <code>true</code> if the test passes, <code>false</code> otherwise.
      */
-    private static boolean testCase10() {
+    public static boolean testCase10() {
         ActivityList homeList = new ActivityList("dat", "home.ras");
         if (homeList.isEmpty()) return false;
 
@@ -225,7 +225,7 @@ public class Tester {
      * Case 11: Verifies search matching an activity in the middle of the list.
      * @return <code>true</code> if the test passes, <code>false</code> otherwise.
      */
-    private static boolean testCase11() {
+    public static boolean testCase11() {
         ActivityList homeList = new ActivityList("dat", "home.ras");
         if (homeList.size() <= 3) return false;
 
@@ -238,7 +238,7 @@ public class Tester {
      * Case 12: Verifies search matching an activity at the end of the list.
      * @return <code>true</code> if the test passes, <code>false</code> otherwise.
      */
-    private static boolean testCase12() {
+    public static boolean testCase12() {
         ActivityList homeList = new ActivityList("dat", "home.ras");
         if (homeList.isEmpty()) return false;
 
@@ -251,7 +251,7 @@ public class Tester {
      * Case 13: Verifies that searching for a nonexistent item yields zero matches.
      * @return <code>true</code> if the test passes, <code>false</code> otherwise.
      */
-    private static boolean testCase13() {
+    public static boolean testCase13() {
         ActivityList homeList = new ActivityList("dat", "home.ras");
         int matchCount = 0;
         for (Activity a : homeList) {
@@ -266,7 +266,7 @@ public class Tester {
      * Case 14: Verifies that keyword matching requires whole-word matches.
      * @return <code>true</code> if the test passes, <code>false</code> otherwise.
      */
-    private static boolean testCase14() {
+    public static boolean testCase14() {
         String title = "Buy Programming in Java";
         return !DayPlannerUtils.matchesKeywords(title, new String[] { "Program" });
     }
@@ -275,7 +275,7 @@ public class Tester {
      * Case 15: Verifies that keyword matching is case-insensitive and order-invariant.
      * @return <code>true</code> if the test passes, <code>false</code> otherwise.
      */
-    private static boolean testCase15() {
+    public static boolean testCase15() {
         String title = "Programming in Java";
         return DayPlannerUtils.matchesKeywords(title, new String[] { "java", "PROGRAMMING" });
     }
@@ -284,7 +284,7 @@ public class Tester {
      * Case 16: Verifies bounded time range filtering.
      * @return <code>true</code> if the test passes, <code>false</code> otherwise.
      */
-    private static boolean testCase16() {
+    public static boolean testCase16() {
         ActivityList homeList = new ActivityList("dat", "home.ras");
         Time start = new Time(2026, 10, 4, 0, 0);
         Time end = new Time(2026, 10, 6, 12, 0);
@@ -302,7 +302,7 @@ public class Tester {
      * Case 17: Verifies open-ended time range filtering.
      * @return <code>true</code> if the test passes, <code>false</code> otherwise.
      */
-    private static boolean testCase17() {
+    public static boolean testCase17() {
         ActivityList homeList = new ActivityList("dat", "home.ras");
         Time start = new Time(2026, 10, 8, 0, 0);
 
@@ -319,7 +319,7 @@ public class Tester {
      * Case 18: Verifies open-start time range filtering.
      * @return <code>true</code> if the test passes, <code>false</code> otherwise.
      */
-    private static boolean testCase18() {
+    public static boolean testCase18() {
         ActivityList homeList = new ActivityList("dat", "home.ras");
         Time end = new Time(2026, 10, 5, 12, 0);
 
@@ -336,7 +336,7 @@ public class Tester {
      * Case 19: Verifies detection of invalid inverted time ranges where start is after end.
      * @return <code>true</code> if the test passes, <code>false</code> otherwise.
      */
-    private static boolean testCase19() {
+    public static boolean testCase19() {
         Time s = new Time(2026, 10, 20, 12, 0);
         Time e = new Time(2026, 10, 10, 12, 0);
         return s.compareTo(e) > 0;
@@ -346,7 +346,7 @@ public class Tester {
      * Case 20: Verifies that unfiltered search matches all activities across lists.
      * @return <code>true</code> if the test passes, <code>false</code> otherwise.
      */
-    private static boolean testCase20() {
+    public static boolean testCase20() {
         ActivityList home = new ActivityList("dat", "home.ras");
         ActivityList school = new ActivityList("dat", "school.ras");
         ActivityList other = new ActivityList("dat", "other.ras");
@@ -359,7 +359,7 @@ public class Tester {
      * Case 21: Verifies that adding to an ActivityList at maximum capacity is rejected.
      * @return <code>true</code> if the test passes, <code>false</code> otherwise.
      */
-    private static boolean testCase21() {
+    public static boolean testCase21() {
         ActivityList smallList = new ActivityList(2);
         Time t1 = new Time(2026, 10, 1, 10, 0);
         Time t2 = new Time(2026, 10, 1, 11, 0);
@@ -377,7 +377,7 @@ public class Tester {
      * Case 22: Verifies serializing activities to RAS format and reading them back.
      * @return <code>true</code> if the test passes, <code>false</code> otherwise.
      */
-    private static boolean testCase22() {
+    public static boolean testCase22() {
         String testDir = "dat";
         String testFile = "test_persistence.ras";
 

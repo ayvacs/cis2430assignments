@@ -2,7 +2,15 @@ package dayplanner;
 
 
 /**
- * Represents an activity that takes place at a user-defined location.
+ * <p>
+ * Represents an activity outside the home and school categories, with an
+ * associated location such as a clinic or gym. Common fields and behavior are
+ * inherited from {@link Activity}.
+ * </p>
+ * <p>
+ * Example:
+ * </p>
+ * <code>new OtherActivity("Appointment", start, end, "Clinic")</code>
  */
 public class OtherActivity extends Activity {
     private String location;    // Required
@@ -14,11 +22,15 @@ public class OtherActivity extends Activity {
      */
     
     /**
-     * Constructs an <code>OtherActivity</code> with a title, start time, end time, and location.
-     * @param title The activity title.
+     * Constructs an <code>OtherActivity</code> with a title, start time, end time,
+     * and location.
+     * 
+     * @param title     The activity title.
      * @param startTime The start time.
-     * @param endTime The end time.
-     * @param location The activity location.
+     * @param endTime   The end time.
+     * @param location  The activity location; this constructor does not reject null
+     *                  or blank values, although the app requires a nonblank
+     *                  location.
      */
     public OtherActivity(String title, Time startTime, Time endTime, String location) {
         super(title, startTime, endTime);
@@ -26,12 +38,16 @@ public class OtherActivity extends Activity {
     }
 
     /**
-     * Constructs an <code>OtherActivity</code> with a title, start time, end time, comment, and location.
-     * @param title The activity title.
+     * Constructs an <code>OtherActivity</code> with a title, start time, end time,
+     * comment, and location.
+     * 
+     * @param title     The activity title.
      * @param startTime The start time.
-     * @param endTime The end time.
-     * @param comment The activity comment.
-     * @param location The activity location.
+     * @param endTime   The end time.
+     * @param comment   The activity comment.
+     * @param location  The activity location; this constructor does not reject null
+     *                  or blank values, although the app requires a nonblank
+     *                  location.
      */
     public OtherActivity(String title, Time startTime, Time endTime, String comment, String location) {
         super(title, startTime, endTime, comment);
@@ -39,8 +55,10 @@ public class OtherActivity extends Activity {
     }
 
     /**
-     * Constructs an <code>OtherActivity</code> from a RAS (Readable Activity Serial) string.
-     * @param ras A valid RAS format string.
+     * Constructs an <code>OtherActivity</code> from a RAS (Readable Activity
+     * Serial) string.
+     * 
+     * @param ras Serialized entry.
      */
     public OtherActivity(String ras) {
         super(ras);
@@ -62,6 +80,7 @@ public class OtherActivity extends Activity {
 
     /**
      * Gets the location of this activity.
+     * 
      * @return The activity location.
      */
     public String getLocation() {
@@ -70,6 +89,7 @@ public class OtherActivity extends Activity {
 
     /**
      * Sets the location of this activity.
+     * 
      * @param location The new location.
      */
     public void setLocation(String location) {
@@ -83,9 +103,12 @@ public class OtherActivity extends Activity {
      */
 
     /**
-     * Determines whether this activity is equal to another <code>OtherActivity</code>.
+     * Determines whether this activity is equal to another
+     * <code>OtherActivity</code>.
+     * 
      * @param other The other <code>OtherActivity</code> to compare with.
-     * @return <code>true</code> if both activities are equal, <code>false</code> otherwise.
+     * @return <code>true</code> if both activities are equal, <code>false</code>
+     *         otherwise.
      */
     public boolean equals(OtherActivity other) {
         if (other == null)
@@ -99,8 +122,10 @@ public class OtherActivity extends Activity {
 
     /**
      * Determines whether this activity is equal to another object.
+     * 
      * @param other The object to compare with.
-     * @return <code>true</code> if the objects are equal, <code>false</code> otherwise.
+     * @return <code>true</code> if the objects are equal, <code>false</code>
+     *         otherwise.
      */
     @Override
     public boolean equals(Object other) {
@@ -113,6 +138,7 @@ public class OtherActivity extends Activity {
 
     /**
      * Returns a string representation of this activity.
+     * 
      * @return A string representation of this activity.
      */
     @Override
@@ -138,7 +164,8 @@ public class OtherActivity extends Activity {
 
     /**
      * Encodes this activity into RAS (Readable Activity Serial) format.
-     * @return A RAS representation of this activity.
+     * 
+     * @return One-line RAS entry including the location after the inherited fields.
      */
     public String toRAS() {
         // super.toRAS() gives us <OtherActivity,title,start,end,comment>

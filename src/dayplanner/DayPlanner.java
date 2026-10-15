@@ -7,8 +7,13 @@ import java.util.ResourceBundle;
 
 
 /**
+ * <p>
  * Main application class and execution entry point for DayPlanner.
- * Manages the interactive command loop, activity persistence, and data-management operations.
+ * </p>
+ * <p>
+ * Loads the configured activity files, runs the interactive menu, and saves
+ * changes when the user quits.
+ * </p>
  */
 public class DayPlanner {
     private static final Input KEYBOARD = new Input();
@@ -33,10 +38,10 @@ public class DayPlanner {
     private static final String USERNAME = DayPlannerUtils.getUsername(DATA_DIRECTORY, USERNAME_FILENAME);
 
 
-
     /**
      * Main entry point for the DayPlanner application.
-     * @param args Command-line arguments.
+     * 
+     * @param args command-line arguments (currently unused).
      */
     public static void main(String[] args) {
         // Perform the command loop until the user quits
@@ -56,9 +61,11 @@ public class DayPlanner {
 
     /**
      * Displays the main menu and processes a single user command.
-     * @return <code>true</code> to continue running the command loop, <code>false</code> to exit.
+     * 
+     * @return {@code true} to show the menu again, or {@code false} after
+     *         processing quit.
      */
-    private static boolean commandLoop() {
+    public static boolean commandLoop() {
         System.out.println("\n\n\t\t===-=-==-=====-==-=-===\n\n");
         System.out.println("\t『 DAY PLANNER 』  Main Menu\n");
         System.out.println(DayPlannerUtils.getGreeting(
@@ -109,8 +116,10 @@ public class DayPlanner {
 
     /**
      * Returns the activity list corresponding to the specified type code.
+     * 
      * @param type Integer type code (1=Home, 2=School, 3=Other).
-     * @return Corresponding <code>ActivityList</code>, or <code>null</code> if invalid.
+     * @return Corresponding <code>ActivityList</code>, or <code>null</code> if
+     *         invalid.
      */
     private static ActivityList getActivityList(int type) {
         return switch (type) {
@@ -125,9 +134,11 @@ public class DayPlanner {
 
     /**
      * Saves all activity lists to their respective RAS files.
-     * @return <code>true</code> if one or more errors occurred while saving, <code>false</code> otherwise.
+     * 
+     * @return {@code true} if one or more lists could not be saved; {@code false}
+     *         if every configured list was written successfully.
      */
-    private static boolean saveToRAS() {
+    public static boolean saveToRAS() {
         int errors = 0;
 
         errors += HOME_ACTIVITIES.saveToRAS(DATA_DIRECTORY, HOME_ACTIVITIES_FILENAME) ? 0 : 1;
@@ -142,7 +153,7 @@ public class DayPlanner {
     /**
      * Prompts the user for details and adds a new activity to the appropriate list.
      */
-    private static void addActivity() {
+    public static void addActivity() {
         System.out.println("Let's add a new activity to the DayPlanner.");
 
         // 1. Activity type
@@ -235,9 +246,10 @@ public class DayPlanner {
 
 
     /**
-     * Prompts the user for search filters and displays matching activities across lists.
+     * Prompts the user for search filters and displays matching activities across
+     * lists.
      */
-    private static void searchForActivity() {
+    public static void searchForActivity() {
         System.out.println("Let's search for activities in the DayPlanner.");
 
         // 1. Activity type

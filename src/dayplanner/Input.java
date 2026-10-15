@@ -6,22 +6,38 @@ import java.io.InputStream;
 
 
 /**
- * Wrapper for <code>Scanner</code> providing input validation methods, as well as customized input methods for classes in this package.
+ * <p>
+ * Console input helper backed by a {@link Scanner}.
+ * </p>
+ * <p>
+ * Read methods display prompts and generally retry invalid input. The stream
+ * constructor also supports scripted input, such as a
+ * {@code ByteArrayInputStream} in a small example program, which is actually
+ * used in {@link Tester} for scripted input.
+ * </p>
+ * <p>
+ * The goal of this class is to make user input as easy as possible to deal with
+ * in application classes. So, this class does a lot of the heavy lifting for
+ * you.
+ * </p>
  */
 public class Input {
     private final Scanner SCANNER;
 
 
     /**
-     * Constructs an <code>Input</code> instance that reads from the specified stream.
-     * @param stream The input stream to read from.
+     * Constructs an <code>Input</code> instance that reads from the specified
+     * stream.
+     * 
+     * @param stream Source of input.
      */
     public Input(InputStream stream) {
         SCANNER = new Scanner(stream);
     }
 
     /**
-     * Constructs an <code>Input</code> instance that reads from standard input (<code>System.in</code>).
+     * Constructs an <code>Input</code> instance that reads from standard input
+     * (<code>System.in</code>).
      */
     public Input() {
         this(System.in);
@@ -30,8 +46,11 @@ public class Input {
 
 
     /**
-     * Reads and returns an integer from user input, prompting repeatedly until valid.
-     * @return User input as an integer.
+     * Reads and returns an integer from user input, prompting repeatedly until
+     * valid.
+     * 
+     * @return The next parseable integer. Invalid lines are rejected and requested
+     *         again.
      */
     public int readInt() {
         int input = 0;
@@ -63,7 +82,9 @@ public class Input {
     
     /**
      * Reads and returns a trimmed string from user input.
-     * @return User input as a <code>String</code>, or <code>null</code> if end of input.
+     * 
+     * @return User input as a <code>String</code>, or <code>null</code> if end of
+     *         input.
      */
     public String readString() {
         System.out.print("(string) > ");
@@ -79,8 +100,15 @@ public class Input {
 
 
     /**
-     * Reads and returns a boolean from user input, prompting repeatedly until valid.
-     * Accepts any response starting with 'Y' or 'y' as <code>true</code> and 'N' or 'n' as <code>false</code>.
+     * <p>
+     * Reads and returns a boolean from user input, prompting repeatedly until
+     * valid.
+     * </p>
+     * <p>
+     * Accepts responses beginning with {@code Y}/{@code y} or {@code N}/{@code n};
+     * characters after the first non-space character do not affect the answer.
+     * </p>
+     * 
      * @return User input as a boolean.
      */
     public boolean readBool() {
@@ -121,8 +149,10 @@ public class Input {
 
     /**
      * Parses a string representation of time in YYYY/MM/DD HH:MM format.
+     * 
      * @param str The string representing a time in YYYY/MM/DD HH:MM format.
-     * @return A valid <code>Time</code> instance, or <code>null</code> if invalid or empty.
+     * @return A valid {@link Time}, or {@code null} for empty or invalid input. For
+     *         example, {@code 2026/09/15 14:30} produces a time value.
      */
     public static Time parseTime(String str) {
         if (str == null || str.trim().isEmpty())
@@ -149,8 +179,11 @@ public class Input {
     }
 
     /**
-     * Reads and returns a valid <code>Time</code> from user input, prompting repeatedly until valid.
-     * @return User input as a valid <code>Time</code>.
+     * Reads and returns a valid <code>Time</code> from user input, prompting
+     * repeatedly until valid.
+     * 
+     * @return A valid {@link Time}; malformed values are explained and requested
+     *         again.
      */
     public Time readTime() {
         do {
@@ -198,7 +231,8 @@ public class Input {
 
     /**
      * Reads and returns a command string from user input.
-     * @return User command input trimmed of whitespace.
+     * 
+     * @return The next line with leading and trailing whitespace removed.
      */
     public String readCommand() {
         System.out.print("(command) > ");
@@ -212,7 +246,7 @@ public class Input {
     }
 
     /**
-     * Prompts the user to press Enter and blocks until input is received.
+     * Prompts the user to press Enter and halts until input is received.
      */
     public void pressEnterToContinue() {
         System.out.println("\nPress enter to continue.");
