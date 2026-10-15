@@ -222,7 +222,11 @@ The tester will automatically run all test cases, and report results.
 
 ## 3. Test Cases
 
-**NOTE:** Some test cases will report "failure" if data files do not exist. Failure in these cases does not indicate that an aspect of the program does not work properly. Rather, it indicates that the persistance methods failed because no data files exist yet. So be aware that "failure" does not always mean true failure and it depends on the context in which the tester is being run.
+**Notes:**
+
+* Some test cases define "success" based on expected output given the provided data files. Altering the provided data files might change the output of the tester, indicating failure.
+* Some test cases will report "failure" if data files do not exist. Failure in these cases does not indicate that an aspect of the program does not work properly. Rather, it indicates that the persistance methods failed because no data files exist yet.
+* "Failure" does not always mean true failure and it depends on the context in which the tester is being run.
 
 | Case ID | Feature / Condition | Input Data / Steps | Expected Output | Status |
 | --- | --- | --- | --- | --- |
