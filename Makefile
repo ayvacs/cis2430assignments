@@ -49,8 +49,7 @@ clean:
 zip: clean all
 	mkdir -p $(NAME)
 	cp -R dat docs src Makefile README.md $(NAME)/ #generate tarball
-	rm -f $(NAME)/dat/username.txt #start this zip with a blank username
-	tar -cvf $(NAME).tar $(NAME)
+	tar -cvf --exclude='.DS_Store' --exclude='username.txt' -f $(NAME).tar $(NAME)
 	gzip -f $(NAME).tar
 	rm -rf $(NAME)
 
