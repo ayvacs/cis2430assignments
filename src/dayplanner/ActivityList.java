@@ -52,7 +52,8 @@ public class ActivityList extends AbstractList<Activity> {
      * @param capacity Maximum number of activities this list can hold.
      * @throws IllegalArgumentException If capacity is negative.
      */
-    public ActivityList(int capacity) throws IllegalArgumentException {
+    public ActivityList(int capacity)
+    throws IllegalArgumentException {
         if (capacity < 0)
             throw new IllegalArgumentException("Capacity cannot be negative");
 
@@ -71,7 +72,8 @@ public class ActivityList extends AbstractList<Activity> {
      *                                  file does not exist, construction succeeds
      *                                  with an empty list.
      */
-    public ActivityList(String dirName, String fileName) throws IllegalArgumentException {
+    public ActivityList(String dirName, String fileName)
+    throws IllegalArgumentException {
         this();
 
         if (dirName == null   || fileName == null
@@ -241,7 +243,8 @@ public class ActivityList extends AbstractList<Activity> {
      *                                   {@code index >= size()}.
      */
     @Override
-    public Activity get(int index) throws IndexOutOfBoundsException {
+    public Activity get(int index)
+    throws IndexOutOfBoundsException {
         if (index < 0 || index >= size())
             throw new IndexOutOfBoundsException("Index " + index + ", Size" + size());
 
@@ -267,7 +270,8 @@ public class ActivityList extends AbstractList<Activity> {
      * @throws IndexOutOfBoundsException If index is out of bounds.
      */
     @Override
-    public Activity set(int index, Activity activity) throws IndexOutOfBoundsException {
+    public Activity set(int index, Activity activity)
+    throws IndexOutOfBoundsException {
         if (index < 0 || index >= size())
             throw new IndexOutOfBoundsException("Index " + index + ", Size " + size());
 
@@ -290,7 +294,8 @@ public class ActivityList extends AbstractList<Activity> {
      * @param activity The activity to insert.
      * @throws IndexOutOfBoundsException If index is out of bounds.
      */
-    public void add(int index, Activity activity) throws IndexOutOfBoundsException {
+    public void add(int index, Activity activity)
+    throws IndexOutOfBoundsException {
         if (index < 0 || index > size())
             throw new IndexOutOfBoundsException("Index " + index + ", Size " + size());
 
@@ -314,7 +319,8 @@ public class ActivityList extends AbstractList<Activity> {
      * @throws IndexOutOfBoundsException If index is out of bounds.
      */
     @Override
-    public Activity remove(int index) throws IndexOutOfBoundsException {
+    public Activity remove(int index)
+    throws IndexOutOfBoundsException {
         if (index < 0 || index >= size())
             throw new IndexOutOfBoundsException("Index " + index + ", Size " + size());
 

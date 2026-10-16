@@ -385,7 +385,8 @@ public class Time implements Comparable<Time> {
      * @throws NullPointerException If {@code other} is {@code null}.
      */
     @Override
-    public int compareTo(Time other) throws NullPointerException {
+    public int compareTo(Time other)
+    throws NullPointerException {
         if (other == null)
             throw new NullPointerException("Cannot compare Time to null");
 
