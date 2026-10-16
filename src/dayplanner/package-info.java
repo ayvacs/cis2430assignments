@@ -3,19 +3,18 @@
  * This is where all the classes for the DayPlanner app live.
  * </p>
  * <p>
- * Full documentation is available in the <code>README.md</code> file and it is
- * necessary that you read it entirely.
+ * Full documentation is available in the <code>README.md</code> file and it
+ * isnecessary that you read it entirely.
  * </p>
  * <p>
- * To build and execute the program, run the following terminal commands in
- * order in the root directory:
+ * To build and execute the program, run the following terminal commands inorder
+ * in the root directory:
  * </p>
  * 
  * <pre>
  * make jar
  * java -jar bin/DayPlanner.jar
  * </pre>
- *
  * <p>
  * The package models scheduled activities, collects them into lists by
  * category, accepts menu input, searches activities, and persists the lists
@@ -27,13 +26,11 @@
  * {@link dayplanner.ActivityList} stores and orders activities, while
  * {@link dayplanner.DayPlannerUtils} provides utility methods.
  * </p>
- *
  * <p>
  * {@link dayplanner.Time} represents a date and time to minute precision in
  * {@code YYYY/MM/DD HH:MM} form. It validates calendar fields, including month
  * lengths and leap years, and supports comparison.
  * </p>
- *
  * <p>
  * Activity data is persisted in custom text format called RAS (Readable
  * Activity Serial). The full RAS specialization is avaialble in the
@@ -57,6 +54,7 @@
  * <li>Every method in the program is fully documented regardless of being
  * public or private</li>
  * </ul>
+ * 
  * @see dayplanner.DayPlanner
  * @see dayplanner.Tester
  */
