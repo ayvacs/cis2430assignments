@@ -52,7 +52,7 @@ public class ActivityList extends AbstractList<Activity> {
      * @param capacity Maximum number of activities this list can hold.
      * @throws IllegalArgumentException If capacity is negative.
      */
-    public ActivityList(int capacity) {
+    public ActivityList(int capacity) throws IllegalArgumentException {
         if (capacity < 0)
             throw new IllegalArgumentException("Capacity cannot be negative");
 
@@ -71,37 +71,59 @@ public class ActivityList extends AbstractList<Activity> {
      *                                  file does not exist, construction succeeds
      *                                  with an empty list.
      */
-    public ActivityList(String dirName, String fileName) {
+    public ActivityList(String dirName, String fileName) throws IllegalArgumentException {
         this();
 
-        if (dirName == null || fileName == null || dirName.isEmpty() || fileName.isEmpty())
-            throw new IllegalArgumentException("One or more of the two arguments was null or empty:\n"
-                + "(dirName=" + dirName + ")\n"
-                + "(dirName=" + fileName + ")");
+        if (dirName == null   || fileName == null
+         || dirName.isEmpty() || fileName.isEmpty())
+            throw new IllegalArgumentException("Directory or file name was null or empty.");
 
         try {
-            for (String line : FileUtils.readLines(dirName, fileName)) {
-                if (!line.trim().isEmpty()) {
-                    Activity a = activityFromRAS(line);
 
-                    if (isFull())
-                        throw new ArrayIndexOutOfBoundsException("Full ("+fileName+"),("+a.toString()+")");
-                    else {
-                        append(a);
-                    }
-                }
-            }
+            appendActivitiesFromFile(dirName, fileName);
 
         } catch (FileNotFoundException e) {
-            // if the file is not found - thats fine
-            // that just means the user never saved data before.
-            // doing nothing starts this list as one
-            // with DEFAULT_CAPACITY
+
+            /**
+             * If the file is not found that means the user never saved data before. We
+             * don't need to do anything here, just start this list as one with the default
+             * capacity (which was the first line in this method anyways)
+             */
             System.out.println("There was no list found at " + dirName + "/" + fileName + "; starting with an empty list");
+
         } catch (Exception e) {
-            // if there was any other exception
-            // then something else went wrong
+
+            System.out.println(e.toString());
             e.printStackTrace();
+
+        }
+    }
+
+
+
+    /**
+     * Utility method for the constructor {@link #ActivityList(String, String)} that
+     * reads through a RAS file, instantiates all the activities in it, and appends
+     * them to this list.
+     * 
+     * @param dirName  The directory containing the RAS file.
+     * @param fileName The name of the RAS file.
+     * @throws FileNotFoundException          if the file does not exist.
+     * @throws ArrayIndexOutOfBoundsException if the file is greater than the
+     *                                        allotted array size.
+     * @throws IOException                    if there was an error reading to the
+     *                                        file.
+     */
+    public void appendActivitiesFromFile(String dirName, String fileName)
+    throws FileNotFoundException, ArrayIndexOutOfBoundsException, IOException {
+        if (!FileUtils.exists(dirName, fileName))
+            throw new FileNotFoundException(dirName + ", " + fileName);
+
+        for (String line : FileUtils.readLines(dirName, fileName)) {
+            if (isFull())
+                throw new ArrayIndexOutOfBoundsException("Cannot continue, file greater than allotted aray size");
+            else if (line != null && !line.isEmpty())
+                append(activityFromRAS(line));
         }
     }
 
@@ -149,18 +171,19 @@ public class ActivityList extends AbstractList<Activity> {
     }
 
     /**
-     * Saves the activity list to a file in RAS format.
+     * Saves the activity list to a file in RAS format. Parent directories are
+     * created when needed.
      * 
      * @param dirName  Directory where the file will be saved.
      * @param fileName Name of the target file.
      * @return {@code true} if the write succeeds, or {@code false} if an I/O error
      *         occurs.
-     *         Parent directories are created when needed.
      */
     public boolean saveToRAS(String dirName, String fileName) {
         try {
             FileUtils.writeText(dirName, fileName, toRAS());
         } catch (IOException e) {
+            System.out.println("Error writing to " + dirName + "/" + fileName);
             e.printStackTrace();
             return false;
         }
@@ -218,7 +241,7 @@ public class ActivityList extends AbstractList<Activity> {
      *                                   {@code index >= size()}.
      */
     @Override
-    public Activity get(int index) {
+    public Activity get(int index) throws IndexOutOfBoundsException {
         if (index < 0 || index >= size())
             throw new IndexOutOfBoundsException("Index " + index + ", Size" + size());
 
@@ -244,7 +267,7 @@ public class ActivityList extends AbstractList<Activity> {
      * @throws IndexOutOfBoundsException If index is out of bounds.
      */
     @Override
-    public Activity set(int index, Activity activity) {
+    public Activity set(int index, Activity activity) throws IndexOutOfBoundsException {
         if (index < 0 || index >= size())
             throw new IndexOutOfBoundsException("Index " + index + ", Size " + size());
 
@@ -267,7 +290,7 @@ public class ActivityList extends AbstractList<Activity> {
      * @param activity The activity to insert.
      * @throws IndexOutOfBoundsException If index is out of bounds.
      */
-    public void add(int index, Activity activity) {
+    public void add(int index, Activity activity) throws IndexOutOfBoundsException {
         if (index < 0 || index > size())
             throw new IndexOutOfBoundsException("Index " + index + ", Size " + size());
 
@@ -291,7 +314,7 @@ public class ActivityList extends AbstractList<Activity> {
      * @throws IndexOutOfBoundsException If index is out of bounds.
      */
     @Override
-    public Activity remove(int index) {
+    public Activity remove(int index) throws IndexOutOfBoundsException {
         if (index < 0 || index >= size())
             throw new IndexOutOfBoundsException("Index " + index + ", Size " + size());
 
@@ -305,6 +328,7 @@ public class ActivityList extends AbstractList<Activity> {
 
         array[length - 1] = null;
         length--;
+
         return old;
     }
 
@@ -399,7 +423,7 @@ public class ActivityList extends AbstractList<Activity> {
             str += "(empty)\n";
         } else {
             for (Activity a: this)
-                if (a == null)
+                if (a == null || a.toString().isBlank())
                     str += "(null)\n";
                 else
                     str += a.toString() + "\n";

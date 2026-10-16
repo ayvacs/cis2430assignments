@@ -1,11 +1,14 @@
 package dayplanner;
 
+
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+
 
 
 /**
@@ -26,6 +29,7 @@ public class FileUtils {
     private FileUtils() {}
 
 
+
     /**
      * Reads every line from the named file.
      *
@@ -34,7 +38,8 @@ public class FileUtils {
      * @return The file's lines in order.
      * @throws IOException If the file cannot be read.
      */
-    public static ArrayList<String> readLines(String dirName, String fileName) throws IOException {
+    public static ArrayList<String> readLines(String dirName, String fileName)
+    throws IOException {
         ArrayList<String> lines = new ArrayList<>();
         File file = new File(dirName, fileName);
 
@@ -48,6 +53,7 @@ public class FileUtils {
     }
 
 
+
     /**
      * Reads and trims the first line of the named file.
      *
@@ -56,17 +62,17 @@ public class FileUtils {
      * @return The trimmed first line.
      * @throws IOException If the file cannot be read.
      */
-    public static String readFirstLine(String dirName, String fileName) throws IOException {
-        // i hate how java makes you use
-        // 10 trillion classes for everything
-        File f = new File(dirName, fileName);
-        FileReader fr = new FileReader(f);
-        BufferedReader br = new BufferedReader(fr);
+    public static String readFirstLine(String dirName, String fileName)
+    throws IOException {
+        BufferedReader br = new BufferedReader(
+            new FileReader(
+                new File(dirName, fileName)));
 
         String str = br.readLine().trim();
         br.close();
         return str;
     }
+
 
 
     /**
@@ -77,7 +83,8 @@ public class FileUtils {
      * @param contents Text to write.
      * @throws IOException If the file cannot be written.
      */
-    public static void writeText(String dirName, String fileName, String contents) throws IOException {
+    public static void writeText(String dirName, String fileName, String contents)
+    throws IOException {
         File file = new File(dirName, fileName);
         File parent = file.getParentFile();
 
@@ -90,6 +97,7 @@ public class FileUtils {
     }
 
 
+
     /**
      * Checks whether the named file exists.
      * 
@@ -100,6 +108,7 @@ public class FileUtils {
     public static boolean exists(String dirName, String fileName) {
         return new File(dirName, fileName).exists();
     }
+    
 
 
     /**

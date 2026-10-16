@@ -34,7 +34,7 @@ public class OtherActivity extends Activity {
      */
     public OtherActivity(String title, Time startTime, Time endTime, String location) {
         super(title, startTime, endTime);
-        this.location = location;
+        setLocation(location);
     }
 
     /**
@@ -51,7 +51,7 @@ public class OtherActivity extends Activity {
      */
     public OtherActivity(String title, Time startTime, Time endTime, String comment, String location) {
         super(title, startTime, endTime, comment);
-        this.location = location;
+        setLocation(location);
     }
 
     /**
@@ -69,7 +69,7 @@ public class OtherActivity extends Activity {
 
         // tokens[0]=type, [1]=title, [2]=start, [3]=end, [4]=comment, [5]=location
         if (tokens.length >= 6 && tokens[5] != null && !tokens[5].isEmpty() && !tokens[5].equals("NIL"))
-            this.location = tokens[5];
+            setLocation(tokens[5]);
     }
 
 

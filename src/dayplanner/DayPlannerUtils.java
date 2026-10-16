@@ -2,7 +2,7 @@ package dayplanner;
 
 
 
-import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.time.LocalTime;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -29,30 +29,35 @@ public class DayPlannerUtils {
      *         exists.
      */
     public static String getUsername(String dirName, String fileName) {
-        try {
-            return FileUtils.readFirstLine(dirName, fileName);
-        } catch (FileNotFoundException e) {
+        String name = "exception"; //fall back name in case of error
+
+        // Case 1: file doesn't exist
+        if (!FileUtils.exists(dirName, fileName)) {
+            System.out.println("\n\nHello new user, please enter your name:");
+            name = KEYBOARD.readString();
 
             try {
-                if (!FileUtils.exists(dirName, fileName)) {
-                    System.out.println("\n\nHello new user, please enter your name:");
-                    String name = KEYBOARD.readString();
+                FileUtils.writeText(dirName, fileName, name);
+            } catch (IOException e) {
+                System.out.println("Couldn't write name to file.");
+            }
 
-                    FileUtils.writeText(dirName, fileName, name);
+            return name;
+        }
 
-                    return name;
-                }
-            } catch (Exception f) {}
-
+        // Case 2: File exists
+        try {
+            name = FileUtils.readFirstLine(dirName, fileName);
         } catch (Exception e) {}
-        
-        return "exception";
+
+        return name;
     }
 
 
 
     /**
-     * Generates a time-appropriate greeting and activity summary for the user.
+     * Generates a multi-line time-appropriate greeting and activity summary for the
+     * user where each line is indented by 1 tab.
      * 
      * @param username            The user's name.
      * @param numHomeActivities   The current number of home activities.
@@ -90,12 +95,11 @@ public class DayPlannerUtils {
     public static void flushUsername(String dirName, String fileName) {
         try {
             FileUtils.delete(dirName, fileName);
+            System.out.println("Done, although username isn't refreshed until program is relaunched");
+            KEYBOARD.pressEnterToContinue();
         } catch (Exception e) {
             e.printStackTrace();
         }
-
-        System.out.println("Done, although username isn't refreshed until program is relaunched");
-        KEYBOARD.pressEnterToContinue();
     }
 
 

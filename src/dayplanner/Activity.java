@@ -100,7 +100,7 @@ public class Activity implements Comparable<Activity> {
         ras = ras.substring(1, ras.length() - 1);
         String[] tokens = ras.split(",");
         
-        // tokens[0] is the type tag (e.g. "HomeActivity") — skip it here
+        // tokens[0] is the type tag (e.g. "HomeActivity"), skip it here
         if (tokens.length >= 2 && tokens[1] != null && !tokens[1].isEmpty())
             setTitle(tokens[1]);
         if (tokens.length >= 3 && tokens[2] != null && !tokens[2].isEmpty())
@@ -236,7 +236,7 @@ public class Activity implements Comparable<Activity> {
      */
     public String toRAS() {
         String comment = getComment();
-        if (comment == null)
+        if (comment == null || comment.isBlank())
             comment = "NIL";
 
         return String.format("<%s,%s,%s,%s,%s>",

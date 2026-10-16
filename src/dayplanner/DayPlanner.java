@@ -121,7 +121,7 @@ public class DayPlanner {
      * @return Corresponding <code>ActivityList</code>, or <code>null</code> if
      *         invalid.
      */
-    private static ActivityList getActivityList(ActivityType type) {
+    public static ActivityList getActivityList(ActivityType type) {
         if (type == null)
             return null;
         return switch (type) {
