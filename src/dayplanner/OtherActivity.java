@@ -62,14 +62,7 @@ public class OtherActivity extends Activity {
      */
     public OtherActivity(String ras) {
         super(ras);
-
-        // remove angle brackets and tokenize
-        ras = ras.substring(1, ras.length() - 1);
-        String[] tokens = ras.split(",");
-
-        // tokens[0]=type, [1]=title, [2]=start, [3]=end, [4]=comment, [5]=location
-        if (tokens.length >= 6 && tokens[5] != null && !tokens[5].isEmpty() && !tokens[5].equals("NIL"))
-            setLocation(tokens[5]);
+        setLocation(RasParser.location(ras));
     }
 
 
@@ -168,12 +161,6 @@ public class OtherActivity extends Activity {
      * @return One-line RAS entry including the location after the inherited fields.
      */
     public String toRAS() {
-        // super.toRAS() gives us <OtherActivity,title,start,end,comment>
-        // strip the brackets and append the location field then re-close the brackets.
-        String ret = super.toRAS();
-        ret = ret.substring(0, ret.length() - 1);
-
-        ret += "," + getLocation() + ">";
-        return ret;
+        return RasParser.serialize(this);
     }
 }

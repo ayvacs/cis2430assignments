@@ -157,16 +157,9 @@ public class ActivityList extends AbstractList<Activity> {
      */
     public String toRAS() {
         String ret = "";
-        String tmp;
 
         for (Activity a : this) {
-            try {
-                tmp = a.toRAS();
-            } catch (Exception e) {
-                tmp = e.toString();
-            }
-
-            ret += tmp + "\n";
+            ret += RasParser.serialize(a) + "\n";
         }
 
         return ret;
@@ -215,17 +208,7 @@ public class ActivityList extends AbstractList<Activity> {
      * @return The instantiated <code>Activity</code> subclass.
      */
     public static Activity activityFromRAS(String ras) {
-        // remove the outer angled brackets
-        String inner = ras.substring(1, ras.length() - 1);
-        // tokenize and grab token 0 (classname)
-        String type = inner.split(",")[0];
-
-        switch (type) {
-            case "HomeActivity":   return new HomeActivity(ras);
-            case "SchoolActivity": return new SchoolActivity(ras);
-            case "OtherActivity":  return new OtherActivity(ras);
-            default:               return new Activity(ras);
-        }
+        return RasParser.parse(ras);
     }
 
 

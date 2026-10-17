@@ -95,20 +95,7 @@ public class Activity implements Comparable<Activity> {
     public Activity(String ras) {
         // declare default values in case of ras error
         this("raserror", new Time(), new Time());
-
-        // remove angle brackets and tokenize
-        ras = ras.substring(1, ras.length() - 1);
-        String[] tokens = ras.split(",");
-        
-        // tokens[0] is the type tag (e.g. "HomeActivity"), skip it here
-        if (tokens.length >= 2 && tokens[1] != null && !tokens[1].isEmpty())
-            setTitle(tokens[1]);
-        if (tokens.length >= 3 && tokens[2] != null && !tokens[2].isEmpty())
-            setStartTime(new Time(tokens[2]));
-        if (tokens.length >= 4 && tokens[3] != null && !tokens[3].isEmpty())
-            setEndTime(new Time(tokens[3]));
-        if (tokens.length >= 5 && tokens[4] != null && !tokens[4].isEmpty() && !tokens[4].equals("NIL"))
-            setComment(tokens[4]);
+        RasParser.populate(this, ras);
     }
 
 
@@ -235,16 +222,7 @@ public class Activity implements Comparable<Activity> {
      *         escaped.
      */
     public String toRAS() {
-        String comment = getComment();
-        if (comment == null || comment.isBlank())
-            comment = "NIL";
-
-        return String.format("<%s,%s,%s,%s,%s>",
-            getClass().getSimpleName(),
-            getTitle(),
-            getStartTime().toString(),
-            getEndTime().toString(),
-            comment);
+        return RasParser.serialize(this);
     }
 
 
