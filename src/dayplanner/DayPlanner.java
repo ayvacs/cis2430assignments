@@ -94,13 +94,10 @@ public class DayPlanner {
         }
 
         switch (option) {
-            case ADD:
-                addActivity();
-            case SEARCH:
-                searchForActivity();
-            case QUIT:
-                return false;
-            case FLUSH_USERNAME:
+            case ADD    -> addActivity();
+            case SEARCH -> searchForActivity();
+            case QUIT   -> { return false; }
+            case FLUSH_USERNAME ->
                 DayPlannerUtils.flushUsername(DATA_DIRECTORY, USERNAME_FILENAME);
         }
 
