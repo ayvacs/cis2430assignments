@@ -78,34 +78,33 @@ public class DayPlanner {
         System.out.println("\t2. search - Search for an activity");
         System.out.println("\t3. quit   - Exit DayPlanner\n");
 
+        String cmd;
+        MenuOption option;
         while (true) {
-            String cmd = KEYBOARD.readCommand();
-            MenuOption option = MenuOption.parse(cmd);
+            cmd = KEYBOARD.readCommand();
+            option = MenuOption.parse(cmd);
 
             if (option == null) {
                 System.out.println("Invalid command: \"" + cmd + "\".");
                 System.out.println("Please enter 'add' (or 'a'), 'search' (or 's'), or 'quit' (or 'q'):");
                 continue;
-            }
-
-            switch (option) {
-                case ADD -> {
-                    addActivity();
-                    return true;
-                }
-                case SEARCH -> {
-                    searchForActivity();
-                    return true;
-                }
-                case QUIT -> {
-                    return false;
-                }
-                case FLUSH_USERNAME -> {
-                    DayPlannerUtils.flushUsername(DATA_DIRECTORY, USERNAME_FILENAME);
-                    return true;
-                }
+            } else {
+                break;
             }
         }
+
+        switch (option) {
+            case ADD:
+                addActivity();
+            case SEARCH:
+                searchForActivity();
+            case QUIT:
+                return false;
+            case FLUSH_USERNAME:
+                DayPlannerUtils.flushUsername(DATA_DIRECTORY, USERNAME_FILENAME);
+        }
+
+        return true;
     }
 
 
