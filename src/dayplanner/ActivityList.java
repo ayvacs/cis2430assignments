@@ -123,7 +123,7 @@ public class ActivityList extends AbstractList<Activity> {
 
         for (String line : FileUtils.readLines(dirName, fileName)) {
             if (isFull())
-                throw new ArrayIndexOutOfBoundsException("Cannot continue, file greater than allotted aray size");
+                throw new ArrayIndexOutOfBoundsException("Cannot continue, file greater than allotted array size");
             else if (line != null && !line.isEmpty())
                 append(activityFromRAS(line));
         }

@@ -4,10 +4,10 @@
  * </p>
  * <p>
  * Full documentation is available in the <code>README.md</code> file and it
- * isnecessary that you read it entirely.
+ * is necessary that you read it entirely.
  * </p>
  * <p>
- * To build and execute the program, run the following terminal commands inorder
+ * To build and execute the program, run the following terminal commands in order
  * in the root directory:
  * </p>
  * 
@@ -33,7 +33,7 @@
  * </p>
  * <p>
  * Activity data is persisted in custom text format called RAS (Readable
- * Activity Serial). The full RAS specialization is avaialble in the
+ * Activity Serial). The full RAS specialization is available in the
  * <code>README.md</code>. In a RAS list, each activity is encoded on one line
  * with its category, title, start time, end time, optional comment, and any
  * category-specific fields. {@link dayplanner.FileUtils} and

@@ -5,7 +5,7 @@
 The DayPlanner program is a schedule management tool that allows the user to track, schedule, and search for three categories of daily activities:
 
 * **Home activities**: Anything done at home like chores, grocery runs, and studying at home.
-* **School activities**: Anything done at university like attending lectures, scheduled labs, and ampus meetings.
+* **School activities**: Anything done at university like attending lectures, scheduled labs, and campus meetings.
 * **Other activities**: Anything done outside of home and school, like doctor visits, gym workouts, shopping, which additionally require a location attribute.
 
 Activities contain a title, starting time, ending time, an optional comment, and (for **Other activities**) a mandatory location. The system stores each category in a dedicated array of fixed capacity, supports sequential search queries across multiple optional filters (category, title keywords, and time periods), and data persists between sessions in a custom text based format called `RAS`.
