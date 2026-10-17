@@ -7,7 +7,8 @@
  * is necessary that you read it entirely.
  * </p>
  * <p>
- * To build and execute the program, run the following terminal commands in order
+ * To build and execute the program, run the following terminal commands in
+ * order
  * in the root directory:
  * </p>
  * 
@@ -40,6 +41,11 @@
  * {@link dayplanner.Input} are wrapper classes to handle text file access, and
  * console input respectively. The {@link dayplanner.Tester} class provides the
  * project's automated test cases.
+ * </p>
+ * <p>
+ * Enums are implemented for concepts with strict options.
+ * {@link dayplanner.ActivityType} denotes all possible types of Activities, and
+ * {@link dayplanner.MenuOption} denotes all main menu operations.
  * </p>
  * <p>
  * Some cool special features of the program include:

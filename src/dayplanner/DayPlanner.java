@@ -79,35 +79,31 @@ public class DayPlanner {
         System.out.println("\t3. quit   - Exit DayPlanner\n");
 
         while (true) {
-            String cmd = KEYBOARD.readCommand().toLowerCase();
+            String cmd = KEYBOARD.readCommand();
+            MenuOption option = MenuOption.parse(cmd);
 
-            // Function 1
-            if (cmd.equals("add") || cmd.equals("a") || cmd.equals("1") || cmd.equals("insert")) {
-                addActivity();
-                return true;
-            }
-            
-            // Function 2
-            else if (cmd.equals("search") || cmd.equals("s") || cmd.equals("2") || cmd.equals("find")) {
-                searchForActivity();
-                return true;
-            }
-            
-            // Function 3
-            else if (cmd.equals("quit") || cmd.equals("q") || cmd.equals("3")) {
-                return false;
-            }
-            
-            // Hidden function 1
-            else if (cmd.equals("flush_username")) {
-                DayPlannerUtils.flushUsername(DATA_DIRECTORY, USERNAME_FILENAME);
-                return true;
-            }
-            
-            // Invalid input
-            else {
+            if (option == null) {
                 System.out.println("Invalid command: \"" + cmd + "\".");
                 System.out.println("Please enter 'add' (or 'a'), 'search' (or 's'), or 'quit' (or 'q'):");
+                continue;
+            }
+
+            switch (option) {
+                case ADD -> {
+                    addActivity();
+                    return true;
+                }
+                case SEARCH -> {
+                    searchForActivity();
+                    return true;
+                }
+                case QUIT -> {
+                    return false;
+                }
+                case FLUSH_USERNAME -> {
+                    DayPlannerUtils.flushUsername(DATA_DIRECTORY, USERNAME_FILENAME);
+                    return true;
+                }
             }
         }
     }

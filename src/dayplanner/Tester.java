@@ -77,11 +77,8 @@ public class Tester {
         System.setOut(new java.io.PrintStream(new java.io.ByteArrayOutputStream()));
         try {
             Input input = new Input(new ByteArrayInputStream("bye\n".getBytes()));
-            String cmd = input.readCommand().toLowerCase();
-            boolean isAdd = cmd.equals("add") || cmd.equals("a") || cmd.equals("1") || cmd.equals("insert");
-            boolean isSearch = cmd.equals("search") || cmd.equals("s") || cmd.equals("2") || cmd.equals("find");
-            boolean isQuit = cmd.equals("quit") || cmd.equals("q") || cmd.equals("3");
-            return !isAdd && !isSearch && !isQuit;
+            String cmd = input.readCommand();
+            return MenuOption.parse(cmd) == null;
         } finally {
             System.setOut(originalOut);
         }
@@ -92,25 +89,22 @@ public class Tester {
      * @return <code>true</code> if the test passes, <code>false</code> otherwise.
      */
     public static boolean testCase02() {
-        String[] addAliases = { "add", "ADD", "Add", "a", "A", "1" };
-        String[] searchAliases = { "search", "SEARCH", "Search", "s", "S", "2" };
+        String[] addAliases = { "add", "ADD", "Add", "a", "A", "1", "insert" };
+        String[] searchAliases = { "search", "SEARCH", "Search", "s", "S", "2", "find" };
         String[] quitAliases = { "quit", "QUIT", "Quit", "q", "Q", "3" };
 
         for (String a : addAliases) {
-            String c = a.toLowerCase();
-            if (!(c.equals("add") || c.equals("a") || c.equals("1") || c.equals("insert")))
+            if (MenuOption.parse(a) != MenuOption.ADD)
                 return false;
         }
 
         for (String s : searchAliases) {
-            String c = s.toLowerCase();
-            if (!(c.equals("search") || c.equals("s") || c.equals("2") || c.equals("find")))
+            if (MenuOption.parse(s) != MenuOption.SEARCH)
                 return false;
         }
 
         for (String q : quitAliases) {
-            String c = q.toLowerCase();
-            if (!(c.equals("quit") || c.equals("q") || c.equals("3")))
+            if (MenuOption.parse(q) != MenuOption.QUIT)
                 return false;
         }
 
