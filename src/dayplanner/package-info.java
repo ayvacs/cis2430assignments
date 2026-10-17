@@ -37,10 +37,10 @@
  * Activity Serial). The full RAS specialization is available in the
  * <code>README.md</code>. In a RAS list, each activity is encoded on one line
  * with its category, title, start time, end time, optional comment, and any
- * category-specific fields. {@link dayplanner.FileUtils} and
- * {@link dayplanner.Input} are wrapper classes to handle text file access, and
- * console input respectively. The {@link dayplanner.Tester} class provides the
- * project's automated test cases.
+ * category-specific fields. {@link dayplanner.RasParser} handles serialization.
+ * {@link dayplanner.FileUtils} and {@link dayplanner.Input} are wrapper classes
+ * to handle text file access, and console input respectively. The
+ * {@link dayplanner.Tester} class provides the project's automated test cases.
  * </p>
  * <p>
  * Enums are implemented for concepts with strict options.

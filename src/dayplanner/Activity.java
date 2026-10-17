@@ -95,6 +95,7 @@ public class Activity implements Comparable<Activity> {
     public Activity(String ras) {
         // declare default values in case of ras error
         this("raserror", new Time(), new Time());
+
         RasParser.populate(this, ras);
     }
 

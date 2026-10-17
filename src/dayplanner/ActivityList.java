@@ -158,9 +158,8 @@ public class ActivityList extends AbstractList<Activity> {
     public String toRAS() {
         String ret = "";
 
-        for (Activity a : this) {
+        for (Activity a : this)
             ret += RasParser.serialize(a) + "\n";
-        }
 
         return ret;
     }
