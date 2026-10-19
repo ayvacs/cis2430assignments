@@ -142,7 +142,12 @@ If I had additional time to extend the project further, I would implement severa
 
 # Serialization
 
-RAS (**Readable Activity Serial**) is a custom human-readable text format used to persist Activities and ActivityLists between program executions. RAS files follow the format:
+RAS (**Readable Activity Serial**) is a custom human-readable text format used to persist Activities and ActivityLists between program executions. There are several aspects to the RAS format:
+
+<ul>
+<li>Methods in each instance class (Activities, Time, etc.) that convert the class into a RAS representation string.</li>
+<li>Methods in each instance class that construct a new instance from a RAS representation string.</li>
+<li><code>.RAS</code> files, which follow the format:
 
 ```
 <entry...>
@@ -157,9 +162,9 @@ where each `<entry...>` is enclosed in angle brackets with comma-separated field
 3. `String` denoting the starting time (`YYYY/MM/DD HH:MM`).
 4. `String` denoting the ending time (`YYYY/MM/DD HH:MM`).
 5. `String` denoting the comment (or `NIL` if no comment was provided).
-6. `String` denoting the location (only present for `OtherActivity`).
-
-File paths are configured via a properties file at `src/dayplanner/ras.properties` which makes it easy to alter how the saving mechanism works without touching any code.
+6. `String` denoting the location (only present for `OtherActivity`).</li>
+<li>Configuration file at <code>src/dayplanner/ras.properties</code> which makes it easy to alter how the saving mechanism works without touching any code.</li>
+</ul>
 
 # Test Plan
 

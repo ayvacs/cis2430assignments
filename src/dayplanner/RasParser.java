@@ -4,14 +4,21 @@ package dayplanner;
 
 /**
  * <p>
- * Parses and writes RAS (Readable Activity Serial) activity records.
+ * This class contains methods that parse and write RAS (Readable Activity
+ * Serial) activity records. RAS is the custom text format that allows data to
+ * be persisted to disk.
+ * </p>
+ * <p>
+ * All methods of this class are static, so it is not necessary to instantiate
+ * this class.
  * </p>
  * <p>
  * RAS records are comma-delimited and wrapped in angle brackets. Commas in
  * field values are not escaped.
  * </p>
  * <p>
- * For more information, read the <code>README.md</code> documentation.
+ * For the full RAS specification, read the <code>README.md</code>
+ * documentation.
  * </p>
  */
 public final class RasParser {
