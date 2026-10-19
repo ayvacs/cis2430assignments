@@ -303,7 +303,7 @@ public class DayPlanner {
 
 
     /**
-     * Default constructor for DayPlanner.
+     * Default constructor for DayPlanner, not used
      */
-    public DayPlanner() {}
+    private DayPlanner() {}
 }

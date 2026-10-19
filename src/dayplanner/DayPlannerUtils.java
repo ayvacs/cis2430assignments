@@ -257,5 +257,5 @@ public class DayPlannerUtils {
     /**
      * Default constructor for DayPlannerUtils.
      */
-    public DayPlannerUtils() {}
+    private DayPlannerUtils() {}
 }

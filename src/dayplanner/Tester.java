@@ -405,7 +405,7 @@ public class Tester {
     
 
     /**
-     * Default constructor for Tester.
+     * Default constructor (not used)
      */
-    public Tester() {}
+    private Tester() {}
 }
