@@ -1,6 +1,7 @@
 JC = javac
-JVM = java
 JCFLAGS = -d $(BIN_DIR) -cp $(SRC_DIR)
+JVM = java
+JVMFLAGS = -cp
 
 SRC_DIR = src
 BIN_DIR = bin
@@ -10,9 +11,10 @@ PACKAGE = dayplanner
 MAIN_CLASS = $(PACKAGE).DayPlanner
 TEST_CLASS = $(PACKAGE).Tester
 JAR = $(BIN_DIR)/DayPlanner.jar
-NAME ?=
+NAME ?= $(PACKAGE)
 
-SOURCES := $(shell find $(SRC_DIR) -name "*.java")
+SRCFILES = $(SRC_DIR)/**/*.java
+PRPFILES = $(SRC_DIR)/**/*.properties
 
 
 # Set default target
@@ -21,21 +23,20 @@ all: compile docs jar
 
 # Compile the program
 compile:
-	$(JC) $(JCFLAGS) $(SOURCES)
-	mkdir -p $(BIN_DIR)/$(PACKAGE)
-	cp $(SRC_DIR)/$(PACKAGE)/*.properties $(BIN_DIR)/
+	$(JC) $(JCFLAGS) $(SRCFILES)
+	cp $(PRPFILES) $(BIN_DIR)/
 
-# Compile and execute the program
+# Compile and execute the main program
 run: compile
-	$(JVM) -cp $(BIN_DIR) $(MAIN_CLASS)
+	$(JVM) $(JVMFLAGS) $(BIN_DIR) $(MAIN_CLASS)
 
-# Compile and run the automated test suite
+# Compile and execute the tester
 test: compile
-	$(JVM) -cp $(BIN_DIR) $(TEST_CLASS)
+	$(JVM) $(JVMFLAGS) $(BIN_DIR) $(TEST_CLASS)
 
 # Build javadocs
 docs:
-	javadoc -quiet $(SRC_DIR)/**/*.java -d $(DOC_DIR)
+	javadoc -quiet $(SRCFILES) -d $(DOC_DIR)
 
 # Compile and build executable
 jar: compile
@@ -48,7 +49,7 @@ clean:
 # Tar and gzip a submission file
 zip: clean all
 	mkdir -p $(NAME)
-	cp -R dat docs src Makefile README.md $(NAME)/ #generate tarball
+	cp -R dat docs src Makefile README.md $(NAME)/
 	tar -cvf --exclude='.DS_Store' --exclude='username.txt' -f $(NAME).tar $(NAME)
 	gzip -f $(NAME).tar
 	rm -rf $(NAME)
