@@ -126,16 +126,21 @@ public class DayPlannerUtils {
      *         <code>false</code> otherwise.
      */
     public static boolean matchesKeywords(String title, String[] keywords) {
-        if (keywords == null || keywords.length == 0)
+        // no keywords means the caller did not ask to filter by title
+        if (keywords == null || keywords.length == 0) {
             return true;
-        if (title == null)
+        }
+        if (title == null) {
             return false;
+        }
 
+        // i used a hashset so that the order doesnt matter and so partial words dont match
         HashSet<String> titleWords = new HashSet<>(
             Arrays.asList(title.toLowerCase().split("[^a-zA-Z0-9]+")));
 
-        for (String kw : keywords) {
-            String[] tokens = kw.toLowerCase().split("[^a-zA-Z0-9]+");
+        // just check if the keywords match!
+        for (String keyword : keywords) {
+            String[] tokens = keyword.toLowerCase().split("[^a-zA-Z0-9]+");
             for (String token : tokens)
                 if (!token.isEmpty() && !titleWords.contains(token))
                     return false;
@@ -177,16 +182,18 @@ public class DayPlannerUtils {
         if (act == null)
             return false;
 
-        // Check keywords: every keyword must match a word in the activity title (case-insensitive)
-        if (keywords != null && keywords.length > 0) {
-            if (!DayPlannerUtils.matchesKeywords(act.getTitle(), keywords))
+        // check title
+        if (keywords != null && keywords.length > 0)
+            if (!matchesKeywords(act.getTitle(), keywords))
                 return false;
-        }
 
-        // Check time period
+        // check start time
+        // a must start on or after the lower bound
         if (searchStart != null && act.getStartTime().compareTo(searchStart) < 0)
             return false;
 
+        // check end time
+        // a must end on or before the upper bound
         if (searchEnd != null && act.getEndTime().compareTo(searchEnd) > 0)
             return false;
 
@@ -208,10 +215,12 @@ public class DayPlannerUtils {
             System.out.println("Enter a time period (e.g. '2026/9/12, 6:00 - 2026/9/22, 11:59', '2026/9/12, 6:00 -', '- 2026/9/22, 11:59'), or press Enter for any time:");
             String line = KEYBOARD.readString();
 
+            // if the user typed nothing, both sides of the range should be unrestricted
             if (line.isEmpty())
                 return new Time[] { null, null };
 
-            // Find dash delimiter (hyphen, en-dash, em-dash)
+            // find at what index the dash is typed
+            // all common dash characters are accepted
             int dashIndex = -1;
             char[] dashes = { '-', '–', '—' };
             for (char d : dashes) {
@@ -220,13 +229,15 @@ public class DayPlannerUtils {
                     break;
             }
 
+            // if the user actually did type a dash...
             if (dashIndex != -1) {
+                // convert the input into two time instances
                 String part1 = line.substring(0, dashIndex).trim();
                 String part2 = line.substring(dashIndex + 1).trim();
-
                 Time start = part1.isEmpty() ? null : Input.parseTime(part1);
                 Time end = part2.isEmpty() ? null : Input.parseTime(part2);
 
+                // and only parse a boundary if the user typed one properly
                 if (!part1.isEmpty() && start == null) {
                     System.out.println("Invalid starting time. Use format YYYY/MM/DD HH:MM. Try again:");
                     continue;
@@ -235,6 +246,8 @@ public class DayPlannerUtils {
                     System.out.println("Invalid ending time. Use format YYYY/MM/DD HH:MM. Try again:");
                     continue;
                 }
+
+                // ensure that start comes first
                 if (start != null && end != null && start.compareTo(end) >= 0) {
                     System.out.println("Starting time must be before ending time. Try again:");
                     continue;
@@ -243,11 +256,13 @@ public class DayPlannerUtils {
                 return new Time[] { start, end };
             }
 
-            // Single time entered without dash
+            // if the user didn't input a dash...
+            // then a single valid time is treated as the lower bound with no upper bound
             Time single = Input.parseTime(line);
             if (single != null)
                 return new Time[] { single, null };
 
+            // if we got here then nothing else worked
             System.out.println("Invalid time period. Expected 'start - end', 'start -', '- end', or press Enter to skip. Try again:");
         }
     }

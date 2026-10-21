@@ -35,7 +35,9 @@ public class DayPlanner {
         OTHER_ACTIVITIES_FILENAME);
 
     private static final String USERNAME_FILENAME = RESOURCES.getString("filename_username");
-    private static final String USERNAME = DayPlannerUtils.getUsername(DATA_DIRECTORY, USERNAME_FILENAME);
+    private static final String USERNAME = DayPlannerUtils.getUsername(
+        DATA_DIRECTORY,
+        USERNAME_FILENAME);
 
 
     /**
@@ -49,6 +51,7 @@ public class DayPlanner {
         while (doLoop)
             doLoop = commandLoop();
 
+        // The above loop only finishes when the user wants to quit
         // Attempt to save the list in RAS format
         boolean errors = saveToRAS();
         if (errors)    System.out.println("\nError saving one or more lists.");
@@ -66,6 +69,7 @@ public class DayPlanner {
      *         processing quit.
      */
     public static boolean commandLoop() {
+        // Print a big greeting message
         System.out.println("\n\n\t\t===-=-==-=====-==-=-===\n\n");
         System.out.println("\t『 DAY PLANNER 』  Main Menu\n");
         System.out.println(DayPlannerUtils.getGreeting(
@@ -114,12 +118,11 @@ public class DayPlanner {
      *         invalid.
      */
     public static ActivityList getActivityList(ActivityType type) {
-        if (type == null)
-            return null;
         return switch (type) {
-            case HOME -> HOME_ACTIVITIES;
+            case HOME   -> HOME_ACTIVITIES;
             case SCHOOL -> SCHOOL_ACTIVITIES;
-            case OTHER -> OTHER_ACTIVITIES;
+            case OTHER  -> OTHER_ACTIVITIES;
+            default     -> null;
         };
     }
 
@@ -151,7 +154,7 @@ public class DayPlanner {
 
         // 1. Activity type
         ActivityType type;
-        ActivityList arr;
+        ActivityList list;
 
         while (true) {
             System.out.println("Enter the type of this activity.");
@@ -163,11 +166,11 @@ public class DayPlanner {
                 continue;
             }
 
-            arr = getActivityList(type);
+            list = getActivityList(type);
 
             // Check first if room is available per Requirement (2)
-            if (arr.isFull()) {
-                System.out.println("You're pretty busy... the specified array is full, sorry!");
+            if (list.isFull()) {
+                System.out.println("You're pretty busy... the specified list is full, sorry!");
                 return;
             }
 
@@ -224,13 +227,13 @@ public class DayPlanner {
 
         // 7. Instantiate and insert activity
         Activity act = switch (type) {
-            case HOME -> new HomeActivity(title, startTime, endTime, comment);
+            case HOME   -> new HomeActivity(title, startTime, endTime, comment);
             case SCHOOL -> new SchoolActivity(title, startTime, endTime, comment);
-            case OTHER -> new OtherActivity(title, startTime, endTime, comment, location);
+            case OTHER  -> new OtherActivity(title, startTime, endTime, comment, location);
         };
 
         if (act != null) {
-            arr.append(act);
+            list.append(act);
             System.out.println("Successfully created the new activity:\n\t" + act.toString());
         }
     }
@@ -238,21 +241,19 @@ public class DayPlanner {
 
 
     /**
-     * Prompts the user for search filters and displays matching activities across
-     * lists.
+     * Asks which activities to look for, then displays every activity that
+     * matches the filters.
      */
     public static void searchForActivity() {
         System.out.println("Let's search for activities in the DayPlanner.");
 
-        // 1. Activity type
+        // an empty type means the search should include all three lists
         ActivityType type = null;
         while (true) {
             System.out.println("Enter activity type ('home', 'school', 'other'), or press Enter to search all types:");
             String input = KEYBOARD.readString();
-
-            if (input.isEmpty()) {
+            if (input.isEmpty())
                 break;
-            }
 
             type = ActivityType.parse(input);
             if (type != null)
@@ -261,43 +262,54 @@ public class DayPlanner {
             System.out.println("Invalid activity type: \"" + input + "\". Please enter 'home', 'school', 'other', or press Enter to skip:");
         }
 
-        // 2. Title keywords
+        // FILTER BY KEYWORD
+        // if input is blank, do not restrict titles
+        // otherwise, treat each word as its own filter
         System.out.println("Enter title keywords (separated by spaces), or press Enter to match any title:");
         String keywordInput = KEYBOARD.readString();
-        String[] keywords = keywordInput.isEmpty() ? null : keywordInput.trim().split("\\s+");
+        String[] keywords = keywordInput.isEmpty()
+            ? null
+            : keywordInput.trim().split("\\s+");
 
-        // 3. Time period
+        // FILTER BY TIME
+        // null = unbound
         Time[] period = DayPlannerUtils.readTimePeriod();
         Time searchStart = period[0];
         Time searchEnd = period[1];
 
-        // 4. Sequential search through target array(s)
-        ActivityList[] listsToSearch = (type == null)
-            ? new ActivityList[] { HOME_ACTIVITIES, SCHOOL_ACTIVITIES, OTHER_ACTIVITIES }
-            : new ActivityList[] { getActivityList(type) };
-
-        String[] listNames = (type == null)
-            ? new String[] { "Home", "School", "Other" }
-            : new String[] { type.getDisplayName() };
+        // if a type is defined search only that list
+        // otherwise search all 3
+        ActivityList[] listsToSearch;
+        if (type == null)
+            listsToSearch = new ActivityList[] { HOME_ACTIVITIES, SCHOOL_ACTIVITIES, OTHER_ACTIVITIES };
+        else
+            listsToSearch = new ActivityList[] { getActivityList(type) };
 
         int totalMatches = 0;
         System.out.println("\nSearch results:");
 
-        for (int l = 0; l < listsToSearch.length; l++) {
-            ActivityList currentList = listsToSearch[l];
-            for (int i = 0; i < currentList.size(); i++) {
-                Activity act = currentList.get(i);
-                if (DayPlannerUtils.matchesCriteria(act, keywords, searchStart, searchEnd)) {
+        // visit each activity once and only print it and update the counter if all filters match
+        for (ActivityList list : listsToSearch) {
+            for (Activity activity : list) {
+                if (DayPlannerUtils.matchesCriteria(activity, keywords, searchStart, searchEnd)) {
                     totalMatches++;
-                    System.out.println("\t" + totalMatches + ". [" + listNames[l] + "] " + act.toString());
+                    System.out.println(String.format(
+                        "\t%d. %s",
+                        totalMatches,
+                        activity.toString()
+                    ));
                 }
             }
         }
 
+        // how many activities matched?
         if (totalMatches == 0)
             System.out.println("\tNo activities matched your search request.");
         else
             System.out.println("\nTotal matched activities: " + totalMatches);
+
+        // press enter to continue
+        KEYBOARD.pressEnterToContinue();
     }
 
 
