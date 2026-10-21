@@ -37,7 +37,8 @@ public class DayPlanner {
     private static final String USERNAME_FILENAME = RESOURCES.getString("filename_username");
     private static final String USERNAME = DayPlannerUtils.getUsername(
         DATA_DIRECTORY,
-        USERNAME_FILENAME);
+        USERNAME_FILENAME,
+        KEYBOARD);
 
 
     /**
@@ -273,7 +274,7 @@ public class DayPlanner {
 
         // FILTER BY TIME
         // null = unbound
-        Time[] period = DayPlannerUtils.readTimePeriod();
+        Time[] period = DayPlannerUtils.readTimePeriod(KEYBOARD);
         Time searchStart = period[0];
         Time searchEnd = period[1];
 

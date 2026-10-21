@@ -15,26 +15,23 @@ import java.util.HashSet;
  * them without creating a utility instance.
  */
 public class DayPlannerUtils {
-    private static final Input KEYBOARD = new Input();
-
-
-
     /**
      * Retrieves the username from file, prompting the user (and storing the new
      * name to file) if no name is currently stored.
      * 
      * @param dirName  Name of the data directory.
      * @param fileName Name of the username file.
+     * @param keyboard Input instance to use to enter new username if necessary.
      * @return The stored name, or a newly entered name when no usable file value
      *         exists.
      */
-    public static String getUsername(String dirName, String fileName) {
+    public static String getUsername(String dirName, String fileName, Input keyboard) {
         String name = "exception"; //fall back name in case of error
 
         // Case 1: file doesn't exist
         if (!FileUtils.exists(dirName, fileName)) {
             System.out.println("\n\nHello new user, please enter your name:");
-            name = KEYBOARD.readString();
+            name = keyboard.readString();
 
             try {
                 FileUtils.writeText(dirName, fileName, name);
@@ -96,7 +93,6 @@ public class DayPlannerUtils {
         try {
             FileUtils.delete(dirName, fileName);
             System.out.println("Done, although username isn't refreshed until program is relaunched");
-            KEYBOARD.pressEnterToContinue();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -207,13 +203,14 @@ public class DayPlannerUtils {
      * A blank response means both bounds are open; a single hyphen may introduce
      * either one-sided range, for example {@code 2026/09/12 06:00 -}.
      * 
+     * @param keyboard Input instance to use to prompt the user
      * @return A two-element array {@code {searchStart, searchEnd}}; either element
      *         may be null to represent an open bound.
      */
-    public static Time[] readTimePeriod() {
+    public static Time[] readTimePeriod(Input keyboard) {
         while (true) {
             System.out.println("Enter a time period (e.g. '2026/9/12, 6:00 - 2026/9/22, 11:59', '2026/9/12, 6:00 -', '- 2026/9/22, 11:59'), or press Enter for any time:");
-            String line = KEYBOARD.readString();
+            String line = keyboard.readString();
 
             // if the user typed nothing, both sides of the range should be unrestricted
             if (line.isEmpty())
