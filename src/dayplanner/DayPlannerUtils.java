@@ -2,7 +2,6 @@ package dayplanner;
 
 
 
-import java.io.IOException;
 import java.time.LocalTime;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -26,7 +25,7 @@ public class DayPlannerUtils {
      *         exists.
      */
     public static String getUsername(String dirName, String fileName, Input keyboard) {
-        String name = "exception"; //fall back name in case of error
+        String name = "exception"; // fall back name in case of error
 
         // Case 1: file doesn't exist
         if (!FileUtils.exists(dirName, fileName)) {
@@ -35,7 +34,7 @@ public class DayPlannerUtils {
 
             try {
                 FileUtils.writeText(dirName, fileName, name);
-            } catch (IOException e) {
+            } catch (Exception e) {
                 System.out.println("Couldn't write name to file.");
             }
 
@@ -45,7 +44,9 @@ public class DayPlannerUtils {
         // Case 2: File exists
         try {
             name = FileUtils.readFirstLine(dirName, fileName);
-        } catch (Exception e) {}
+        } catch (Exception e) {
+            System.out.println("Couldn't read name from file.");
+        }
 
         return name;
     }
@@ -54,24 +55,21 @@ public class DayPlannerUtils {
 
     /**
      * Generates a multi-line time-appropriate greeting and activity summary for the
-     * user where each line is indented by 1 tab.
+     * user. Each line of the greeting is indented by 1 tab.
      * 
      * @param username            The user's name.
      * @param numHomeActivities   The current number of home activities.
      * @param numSchoolActivities The current number of school activities.
      * @param numOtherActivities  The current number of other activities.
-     * @return Formatted greeting string.
+     * @return Formatted greeting string indented by 1 tab.
      */
     public static String getGreeting(String username, int numHomeActivities, int numSchoolActivities, int numOtherActivities) {
         int hour = LocalTime.now().getHour();
         String greeting;
 
-        if (hour < 12)
-            greeting = "Good morning";
-        else if (hour < 17)
-            greeting = "Good afternoon";
-        else
-            greeting = "Good evening";
+        if (hour < 12)      greeting = "Good morning";
+        else if (hour < 17) greeting = "Good afternoon";
+        else                greeting = "Good evening";
 
         String text = "\t%s, %s!\n\tYou have %d %s activities, %d %s activities,\n\tand %d %s activities currently entered.";
         return String.format(text, greeting, username,
@@ -123,24 +121,22 @@ public class DayPlannerUtils {
      */
     public static boolean matchesKeywords(String title, String[] keywords) {
         // no keywords means the caller did not ask to filter by title
-        if (keywords == null || keywords.length == 0) {
+        if (keywords == null || keywords.length == 0)
             return true;
-        }
-        if (title == null) {
+
+        // if title doesnt exist, reject
+        if (title == null)
             return false;
-        }
 
         // i used a hashset so that the order doesnt matter and so partial words dont match
         HashSet<String> titleWords = new HashSet<>(
             Arrays.asList(title.toLowerCase().split("[^a-zA-Z0-9]+")));
 
         // just check if the keywords match!
-        for (String keyword : keywords) {
-            String[] tokens = keyword.toLowerCase().split("[^a-zA-Z0-9]+");
-            for (String token : tokens)
+        for (String keyword : keywords)
+            for (String token : keyword.toLowerCase().split("[^a-zA-Z0-9]+"))
                 if (!token.isEmpty() && !titleWords.contains(token))
                     return false;
-        }
 
         return true;
     }
@@ -175,6 +171,7 @@ public class DayPlannerUtils {
      *         <code>false</code> otherwise.
      */
     public static boolean matchesCriteria(Activity act, String[] keywords, Time searchStart, Time searchEnd) {
+        // if no activity was given, there is nothing to check
         if (act == null)
             return false;
 
