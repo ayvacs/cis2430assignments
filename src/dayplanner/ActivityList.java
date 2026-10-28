@@ -4,7 +4,7 @@ package dayplanner;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.AbstractList;
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.Iterator;
 
 
@@ -25,13 +25,7 @@ import java.util.Iterator;
  * </pre>
  */
 public class ActivityList extends AbstractList<Activity> {
-    private static final int DEFAULT_CAPACITY = 256;
-
-
-
-    private int capacity;   // Maximum possible length of this list (the list COULD POSSIBLY hold this many elements)
-    private int length;     // Current length of this list (the list IS CURRENTLY holding this many elements)
-    private Activity[] array;
+    private ArrayList<Activity> array;
 
 
 
@@ -40,26 +34,10 @@ public class ActivityList extends AbstractList<Activity> {
      */
     
     /**
-     * Constructs an <code>ActivityList</code> with the default capacity (256).
+     * Constructs an empty <code>ActivityList</code>.
      */
     public ActivityList() {
-        this(DEFAULT_CAPACITY);
-    }
-
-    /**
-     * Constructs an <code>ActivityList</code> with the specified capacity.
-     * 
-     * @param capacity Maximum number of activities this list can hold.
-     * @throws IllegalArgumentException If capacity is negative.
-     */
-    public ActivityList(int capacity)
-    throws IllegalArgumentException {
-        if (capacity < 0)
-            throw new IllegalArgumentException("Capacity cannot be negative");
-
-        this.capacity = capacity;
-        this.length = 0;
-        this.array = new Activity[capacity];
+        array = new ArrayList<Activity>();
     }
 
     /**
@@ -122,10 +100,8 @@ public class ActivityList extends AbstractList<Activity> {
             throw new FileNotFoundException(dirName + ", " + fileName);
 
         for (String line : FileUtils.readLines(dirName, fileName)) {
-            if (isFull())
-                throw new ArrayIndexOutOfBoundsException("Cannot continue, file greater than allotted array size");
-            else if (line != null && !line.isEmpty())
-                append(activityFromRAS(line));
+            if (line != null && !line.isEmpty())
+                add(activityFromRAS(line));
         }
     }
 
@@ -232,7 +208,7 @@ public class ActivityList extends AbstractList<Activity> {
         if (index < 0 || index >= size())
             throw new IndexOutOfBoundsException("Index " + index + ", Size" + size());
 
-        return array[index];
+        return array.get(index);
     }
     
     /**
@@ -242,7 +218,7 @@ public class ActivityList extends AbstractList<Activity> {
      */
     @Override
     public int size() {
-        return length;
+        return array.size();
     }
 
     /**
@@ -259,9 +235,7 @@ public class ActivityList extends AbstractList<Activity> {
         if (index < 0 || index >= size())
             throw new IndexOutOfBoundsException("Index " + index + ", Size " + size());
 
-        Activity old = get(index);
-        array[index] = activity;
-        return old;
+        return set(index, activity);
     }
 
     /**
@@ -283,15 +257,7 @@ public class ActivityList extends AbstractList<Activity> {
         if (index < 0 || index > size())
             throw new IndexOutOfBoundsException("Index " + index + ", Size " + size());
 
-        // If the array is full then we don't need to shift any elements
-        if (size() != capacity)
-            System.arraycopy(
-                array, index,
-                array, index + 1,
-                size() - index);
-
-        array[index] = activity;
-        length++;
+        array.add(index, activity);
     }
 
     /**
@@ -308,27 +274,7 @@ public class ActivityList extends AbstractList<Activity> {
         if (index < 0 || index >= size())
             throw new IndexOutOfBoundsException("Index " + index + ", Size " + size());
 
-        Activity old = get(index);
-
-        // Shift all elements after index forward by one
-        System.arraycopy(
-            array, index + 1,
-            array, index,
-            size() - index - 1);
-
-        array[length - 1] = null;
-        length--;
-
-        return old;
-    }
-
-    /**
-     * Determines whether this list has reached its maximum capacity.
-     * 
-     * @return <code>true</code> if the list is full, <code>false</code> otherwise.
-     */
-    public boolean isFull() {
-        return length == capacity;
+        return array.remove(index);
     }
 
     /**
@@ -337,24 +283,17 @@ public class ActivityList extends AbstractList<Activity> {
      * @return <code>true</code> if the list is empty, <code>false</code> otherwise.
      */
     public boolean isEmpty() {
-        return length == 0;
+        return array.isEmpty();
     }
 
     /**
      * Appends an activity to the end of this list.
      * 
      * @param activity The activity to append.
-     * @return The same activity reference after insertion, or {@code null} if full.
-     *         Check for {@code null} to detect a full list before using the result.
+     * @return Whether the element was added
      */
-    public Activity append(Activity activity) {
-        if (isFull())
-            return null;
-
-        array[length] = activity;
-        length++;
-        
-        return activity;
+    public boolean add(Activity activity) {
+        return array.add(activity);
     }
 
     /**
@@ -374,24 +313,15 @@ public class ActivityList extends AbstractList<Activity> {
             private int index = 0;
 
             public boolean hasNext() {
-                return index < length;
+                return index < size();
             }
 
             public Activity next() {
-                Activity ret = array[index];
+                Activity ret = array.get(index);
                 index++;
                 return ret;
             }
         };
-    }
-
-    /**
-     * Sorts the activities in-place in chronological order by start time.
-     * Activities with equal start times compare equally and may appear in either
-     * relative order.
-     */
-    public void sort() {
-        Arrays.sort(array, 0, length);
     }
 
 

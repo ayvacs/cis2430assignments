@@ -141,12 +141,6 @@ public class DayPlanner {
                 continue;
             }
 
-            // Check first if room is available per Requirement (2)
-            if (activities.isFull()) {
-                System.out.println("You're pretty busy... the list is full, sorry!");
-                return;
-            }
-
             break;
         }
 
@@ -206,7 +200,7 @@ public class DayPlanner {
         };
 
         if (act != null) {
-            activities.append(act);
+            activities.add(act);
             System.out.println("Successfully created the new activity:\n\t" + act.toString());
         }
     }
