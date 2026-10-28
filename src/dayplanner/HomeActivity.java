@@ -56,6 +56,22 @@ public class HomeActivity extends Activity {
         super(ras);
     }
 
+
+
+    /*
+     * Activity Overrides
+     */
+
+    
+    
+    /**
+     * Returns the {@link dayplanner.ActivityType} that corresponds to this Activity.
+     * @return Corresponding ActivityType. For HomeActivities, this is <code>HOME</code>.
+     */
+    public ActivityType getType() {
+        return ActivityType.HOME;
+    }
+
     
 
     /*

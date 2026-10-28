@@ -58,12 +58,10 @@ public class DayPlannerUtils {
      * user. Each line of the greeting is indented by 1 tab.
      * 
      * @param username            The user's name.
-     * @param numHomeActivities   The current number of home activities.
-     * @param numSchoolActivities The current number of school activities.
-     * @param numOtherActivities  The current number of other activities.
+     * @param numActivities       The current number of activities.
      * @return Formatted greeting string indented by 1 tab.
      */
-    public static String getGreeting(String username, int numHomeActivities, int numSchoolActivities, int numOtherActivities) {
+    public static String getGreeting(String username, int numActivities) {
         int hour = LocalTime.now().getHour();
         String greeting;
 
@@ -71,11 +69,8 @@ public class DayPlannerUtils {
         else if (hour < 17) greeting = "Good afternoon";
         else                greeting = "Good evening";
 
-        String text = "\t%s, %s!\n\tYou have %d %s activities, %d %s activities,\n\tand %d %s activities currently entered.";
-        return String.format(text, greeting, username,
-            numHomeActivities, ActivityType.HOME.getDisplayName(),
-            numSchoolActivities, ActivityType.SCHOOL.getDisplayName(),
-            numOtherActivities, ActivityType.OTHER.getDisplayName());
+        String text = "\t%s, %s!\n\tYou have %d activities currently entered.";
+        return String.format(text, greeting, username, numActivities);
     }
 
 

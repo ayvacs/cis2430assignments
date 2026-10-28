@@ -53,6 +53,26 @@ public class SchoolActivity extends Activity {
         super(ras);
     }
 
+
+
+    /*
+     * Activity Overrides
+     */
+
+
+    
+    /**
+     * Returns the {@link dayplanner.ActivityType} that corresponds to this
+     * Activity.
+     * 
+     * @return Corresponding ActivityType. For SchoolActivities, this is
+     *         <code>SCHOOL</code>.
+     */
+    @Override
+    public ActivityType getType() {
+        return ActivityType.SCHOOL;
+    }
+
     
 
     /*

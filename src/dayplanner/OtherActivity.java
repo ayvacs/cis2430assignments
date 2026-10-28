@@ -92,6 +92,26 @@ public class OtherActivity extends Activity {
 
 
     /*
+     * Activity Overrides
+     */
+
+
+    
+    /**
+     * Returns the {@link dayplanner.ActivityType} that corresponds to this
+     * Activity.
+     * 
+     * @return Corresponding ActivityType. For OtherActivities, this is
+     *         <code>OTHER</code>.
+     */
+    @Override
+    public ActivityType getType() {
+        return ActivityType.OTHER;
+    }
+
+
+
+    /*
      * Object Overrides
      */
 

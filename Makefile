@@ -14,7 +14,6 @@ JAR = $(BIN_DIR)/DayPlanner.jar
 NAME ?= $(PACKAGE)
 
 SRCFILES = $(SRC_DIR)/**/*.java
-PRPFILES = $(SRC_DIR)/**/*.properties
 
 
 # Set default target
@@ -24,7 +23,6 @@ all: compile docs jar
 # Compile the program
 compile:
 	$(JC) $(JCFLAGS) $(SRCFILES)
-	cp $(PRPFILES) $(BIN_DIR)/
 
 # Compile and execute the main program
 run: compile

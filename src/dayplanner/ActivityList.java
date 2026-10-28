@@ -180,6 +180,8 @@ public class ActivityList extends AbstractList<Activity> {
             System.out.println("Error writing to " + dirName + "/" + fileName);
             e.printStackTrace();
             return false;
+        } catch (Exception e) {
+            return false;
         }
 
         return true;

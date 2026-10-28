@@ -143,6 +143,19 @@ public class Activity implements Comparable<Activity> {
 
 
 
+    /**
+     * Returns the {@link dayplanner.ActivityType} that corresponds to this
+     * Activity.
+     * 
+     * @return Corresponding ActivityType. For regular Activities, this is
+     *         <code>null</code>.
+     */
+    public ActivityType getType() {
+        return null;
+    }
+
+
+
     /*
      * Mutators
      */
