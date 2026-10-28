@@ -2,10 +2,6 @@ package dayplanner;
 
 
 
-import java.util.ResourceBundle;
-
-
-
 /**
  * <p>
  * Main application class and execution entry point for DayPlanner.
@@ -36,8 +32,10 @@ public class DayPlanner {
      */
     public static void main(String[] args) {
         // Get the data file name from args
-        if (args.length < 1) {
-            System.out.println("Specify a data file name.");
+        if (args.length != 1) {
+            System.out.println("\nThe program has halted because you did not specify a data file name.");
+            System.out.println("A sample file named 'sampleData.ras' is included. Specify it as the first execution argument:");
+            System.out.println("\tjava -jar bin/DayPlanner.jar sampleData.ras\n");
             return;
         }
         dataFileName = args[0];
@@ -46,7 +44,7 @@ public class DayPlanner {
         try {
             activities = new ActivityList(DATA_DIRECTORY, dataFileName);
         } catch (Exception e) {
-            System.out.println("Error initializing activitylist from this data file.");
+            System.out.println("\nError initializing activitylist from this data file ("+dataFileName+").\n");
             return;
         }
 

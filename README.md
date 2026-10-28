@@ -46,7 +46,13 @@ make clean         # Remove generated bin/ and docs/ folders
 It is recommended to compile the entire project with `make all`, then an executable JAR file named `DayPlanner.jar` will be generated, you can execute the JAR from the terminal:
 
 ```shell
-java -jar bin/DayPlanner.jar
+java -jar bin/DayPlanner.jar <data file name>
+```
+
+The data file is saved in the `dat` directory. A sample data file called `sampleData.ras` is included. To load this example file, execute the JAR from the terminal:
+
+```shell
+java -jar bin/DayPlanner.jar sampleData.ras
 ```
 
 ## Interface
