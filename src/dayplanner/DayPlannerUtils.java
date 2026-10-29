@@ -3,8 +3,6 @@ package dayplanner;
 
 
 import java.time.LocalTime;
-import java.util.Arrays;
-import java.util.HashSet;
 
 
 
@@ -95,59 +93,12 @@ public class DayPlannerUtils {
 
     /**
      * <p>
-     * Checks if all keywords appear as individual words in the title
-     * (case-insensitive, any order).
-     * </p>
-     * <p>
-     * A keyword matches only if it appears as a complete word in the title; partial
-     * word matches are rejected. For example, keyword <code>"Cook"</code> matches
-     * title <code>"Cook Meal"</code> but does <em>not</em> match
-     * <code>"Cooking"</code> because <code>"cooking"</code> is a different word.
-     * Multiple-word keywords are split on non-alphanumeric characters and each
-     * resulting token must appear as its own word in the title.
-     * </p>
-     * 
-     * @param title    The activity title.
-     * @param keywords Search terms; every non-empty term must match a whole title
-     *                 word, with case ignored. An empty or null keyword array
-     *                 imposes no filter.
-     * @return <code>true</code> if all keywords match words in the title,
-     *         <code>false</code> otherwise.
-     */
-    public static boolean matchesKeywords(String title, String[] keywords) {
-        // no keywords means the caller did not ask to filter by title
-        if (keywords == null || keywords.length == 0)
-            return true;
-
-        // if title doesnt exist, reject
-        if (title == null)
-            return false;
-
-        // i used a hashset so that the order doesnt matter and so partial words dont match
-        HashSet<String> titleWords = new HashSet<>(
-            Arrays.asList(title.toLowerCase().split("[^a-zA-Z0-9]+")));
-
-        // just check if the keywords match!
-        for (String keyword : keywords)
-            for (String token : keyword.toLowerCase().split("[^a-zA-Z0-9]+"))
-                if (!token.isEmpty() && !titleWords.contains(token))
-                    return false;
-
-        return true;
-    }
-
-
-
-    /**
-     * <p>
      * Determines whether an activity satisfies the specified search criteria.
      * </p>
      * <p>
      * All non-null criteria must be satisfied simultaneously:
      * </p>
      * <ul>
-     * <li><b>keywords</b>: every keyword must be a whole-word match in the title
-     * (see {@link #matchesKeywords}).</li>
      * <li><b>searchStart</b>: the activity's start time must be &gt;=
      * <code>searchStart</code>.</li>
      * <li><b>searchEnd</b>: the activity's end time must be &lt;=
@@ -161,24 +112,18 @@ public class DayPlannerUtils {
      * @param type        If valid {@link dayplanner.ActivityType}, then
      *                    <code>act</code> must be an instance of this type. Value
      *                    of <code>null</code> indicates to not filter by type.
-     * @param keywords    Array of title keywords that must all match words in the
-     *                    title, or <code>null</code> to match all.
      * @param searchStart Minimum start time, or <code>null</code> for open start.
      * @param searchEnd   Maximum end time, or <code>null</code> for open end.
      * @return <code>true</code> if the activity satisfies all given criteria,
      *         <code>false</code> otherwise.
      */
-    public static boolean matchesCriteria(Activity act, ActivityType type, String[] keywords, Time searchStart, Time searchEnd) {
+    public static boolean matchesCriteria(Activity act, ActivityType type, Time searchStart, Time searchEnd) {
         // if no activity was given, there is nothing to check
         if (act == null)
             return false;
 
         // check type
         if (type != null && !act.getType().equals(type))
-            return false;
-
-        // check title
-        if (keywords != null && keywords.length > 0 && !matchesKeywords(act.getTitle(), keywords))
             return false;
 
         // check start time

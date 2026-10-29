@@ -248,9 +248,9 @@ public class DayPlanner {
         int totalMatches = 0;
         System.out.println("\nSearch results:");
 
-        // visit each activity once and only print it and update the counter if all filters match
-        for (Activity activity : activities) {
-            if (DayPlannerUtils.matchesCriteria(activity, type, keywords, searchStart, searchEnd)) {
+        for (int position : activities.findTitleMatches(keywords)) {
+            Activity activity = activities.get(position);
+            if (DayPlannerUtils.matchesCriteria(activity, type, searchStart, searchEnd)) {
                 totalMatches++;
                 System.out.println(String.format(
                     "\t%d. %s",

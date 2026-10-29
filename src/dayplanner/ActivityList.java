@@ -6,6 +6,12 @@ import java.io.IOException;
 import java.util.AbstractList;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.HashMap;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Set;
 
 
 /**
@@ -26,6 +32,7 @@ import java.util.Iterator;
  */
 public class ActivityList extends AbstractList<Activity> {
     private ArrayList<Activity> array;
+    private final Map<String, ArrayList<Integer>> titleIndex = new HashMap<>();
 
 
 
@@ -235,7 +242,9 @@ public class ActivityList extends AbstractList<Activity> {
         if (index < 0 || index >= size())
             throw new IndexOutOfBoundsException("Index " + index + ", Size " + size());
 
-        return set(index, activity);
+        Activity previous = array.set(index, activity);
+        rebuildTitleIndex();
+        return previous;
     }
 
     /**
@@ -258,6 +267,7 @@ public class ActivityList extends AbstractList<Activity> {
             throw new IndexOutOfBoundsException("Index " + index + ", Size " + size());
 
         array.add(index, activity);
+        rebuildTitleIndex();
     }
 
     /**
@@ -274,7 +284,9 @@ public class ActivityList extends AbstractList<Activity> {
         if (index < 0 || index >= size())
             throw new IndexOutOfBoundsException("Index " + index + ", Size " + size());
 
-        return array.remove(index);
+        Activity removed = array.remove(index);
+        rebuildTitleIndex();
+        return removed;
     }
 
     /**
@@ -293,7 +305,71 @@ public class ActivityList extends AbstractList<Activity> {
      * @return Whether the element was added
      */
     public boolean add(Activity activity) {
-        return array.add(activity);
+        int position = array.size();
+        boolean added = array.add(activity);
+        if (added)
+            indexActivity(position, activity);
+        return added;
+    }
+
+    /**
+     * Returns a list of positions containing every requested title keyword in this
+     * list.
+     * 
+     * @param keywords Array of keywords to search.
+     * @return List of positions.
+     */
+    public List<Integer> findTitleMatches(String[] keywords) {
+        if (keywords == null || keywords.length == 0) {
+            ArrayList<Integer> all = new ArrayList<>();
+            for (int i = 0; i < size(); i++)
+                all.add(i);
+            return all;
+        }
+
+        Set<Integer> matches = null;
+        for (String keyword : keywords) {
+            if (keyword == null) continue;
+            for (String token : keyword.toLowerCase(Locale.ROOT).split("[^a-z0-9]+")) {
+                if (token.isEmpty()) continue;
+                List<Integer> positions = titleIndex.get(token);
+                if (positions == null)
+                    return new ArrayList<>();
+
+                if (matches == null)
+                    matches = new LinkedHashSet<>(positions);
+                else
+                    matches.retainAll(positions);
+
+                if (matches.isEmpty())
+                    return new ArrayList<>();
+            }
+        }
+        return matches == null
+            ? findTitleMatches(null)
+            : new ArrayList<>(matches);
+    }
+
+    /**
+     * Indexes the activity at this position if its title is not empty.
+     * @param position The position.
+     * @param activity The activity.
+     */
+    private void indexActivity(int position, Activity activity) {
+        if (activity == null || activity.getTitle() == null)
+            return;
+        for (String word : activity.getTitle().toLowerCase(Locale.ROOT).split("[^a-z0-9]+")) 
+            if (!word.isEmpty())
+                titleIndex.computeIfAbsent(word, ignored -> new ArrayList<>()).add(position);
+    }
+
+    /**
+     * Rebuilds the titleIndex.
+     */
+    private void rebuildTitleIndex() {
+        titleIndex.clear();
+        for (int i = 0; i < size(); i++)
+            indexActivity(i, array.get(i));
     }
 
     /**
