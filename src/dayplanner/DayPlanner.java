@@ -197,6 +197,7 @@ public class DayPlanner {
             case HOME   -> new HomeActivity(title, startTime, endTime, comment);
             case SCHOOL -> new SchoolActivity(title, startTime, endTime, comment);
             case OTHER  -> new OtherActivity(title, startTime, endTime, comment, location);
+            default     -> new Activity(title, startTime, endTime, comment);
         };
 
         if (act != null) {
@@ -216,7 +217,6 @@ public class DayPlanner {
 
         // an empty type means the search should include all three lists
         ActivityType type = null;
-        boolean filterByType = false;
         while (true) {
             System.out.println("Enter activity type ('home', 'school', 'other'), or press Enter to search all types:");
             String input = KEYBOARD.readString();
@@ -224,7 +224,6 @@ public class DayPlanner {
                 break;
 
             type = ActivityType.parse(input);
-            filterByType = true;
             if (type != null)
                 break;
 
@@ -251,8 +250,7 @@ public class DayPlanner {
 
         // visit each activity once and only print it and update the counter if all filters match
         for (Activity activity : activities) {
-            if ((filterByType && type.getCode() == activity.getType().getCode()) &&
-            (DayPlannerUtils.matchesCriteria(activity, keywords, searchStart, searchEnd))) {
+            if (DayPlannerUtils.matchesCriteria(activity, type, keywords, searchStart, searchEnd)) {
                 totalMatches++;
                 System.out.println(String.format(
                     "\t%d. %s",

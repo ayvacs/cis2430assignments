@@ -158,6 +158,9 @@ public class DayPlannerUtils {
      * </p>
      * 
      * @param act         The activity to test.
+     * @param type        If valid {@link dayplanner.ActivityType}, then
+     *                    <code>act</code> must be an instance of this type. Value
+     *                    of <code>null</code> indicates to not filter by type.
      * @param keywords    Array of title keywords that must all match words in the
      *                    title, or <code>null</code> to match all.
      * @param searchStart Minimum start time, or <code>null</code> for open start.
@@ -165,15 +168,18 @@ public class DayPlannerUtils {
      * @return <code>true</code> if the activity satisfies all given criteria,
      *         <code>false</code> otherwise.
      */
-    public static boolean matchesCriteria(Activity act, String[] keywords, Time searchStart, Time searchEnd) {
+    public static boolean matchesCriteria(Activity act, ActivityType type, String[] keywords, Time searchStart, Time searchEnd) {
         // if no activity was given, there is nothing to check
         if (act == null)
             return false;
 
+        // check type
+        if (type != null && !act.getType().equals(type))
+            return false;
+
         // check title
-        if (keywords != null && keywords.length > 0)
-            if (!matchesKeywords(act.getTitle(), keywords))
-                return false;
+        if (keywords != null && keywords.length > 0 && !matchesKeywords(act.getTitle(), keywords))
+            return false;
 
         // check start time
         // a must start on or after the lower bound
@@ -200,60 +206,59 @@ public class DayPlannerUtils {
      *         may be null to represent an open bound.
      */
     public static Time[] readTimePeriod(Input keyboard) {
-        while (true) {
-            System.out.println("Enter a time period (e.g. '2026/9/12, 6:00 - 2026/9/22, 11:59', '2026/9/12, 6:00 -', '- 2026/9/22, 11:59'), or press Enter for any time:");
-            String line = keyboard.readString();
+        System.out.println("Enter a time period (e.g. '2026/9/12, 6:00 - 2026/9/22, 11:59', '2026/9/12, 6:00 -', '- 2026/9/22, 11:59'), or press Enter for any time:");
+        String line = keyboard.readString();
 
-            // if the user typed nothing, both sides of the range should be unrestricted
-            if (line.isEmpty())
-                return new Time[] { null, null };
+        // if the user typed nothing, both sides of the range should be unrestricted
+        if (line.isEmpty())
+            return new Time[] { null, null };
 
-            // find at what index the dash is typed
-            // all common dash characters are accepted
-            int dashIndex = -1;
-            char[] dashes = { '-', '–', '—' };
-            for (char d : dashes) {
-                dashIndex = line.indexOf(d);
-                if (dashIndex != -1)
-                    break;
-            }
-
-            // if the user actually did type a dash...
-            if (dashIndex != -1) {
-                // convert the input into two time instances
-                String part1 = line.substring(0, dashIndex).trim();
-                String part2 = line.substring(dashIndex + 1).trim();
-                Time start = part1.isEmpty() ? null : Input.parseTime(part1);
-                Time end = part2.isEmpty() ? null : Input.parseTime(part2);
-
-                // and only parse a boundary if the user typed one properly
-                if (!part1.isEmpty() && start == null) {
-                    System.out.println("Invalid starting time. Use format YYYY/MM/DD HH:MM. Try again:");
-                    continue;
-                }
-                if (!part2.isEmpty() && end == null) {
-                    System.out.println("Invalid ending time. Use format YYYY/MM/DD HH:MM. Try again:");
-                    continue;
-                }
-
-                // ensure that start comes first
-                if (start != null && end != null && start.compareTo(end) >= 0) {
-                    System.out.println("Starting time must be before ending time. Try again:");
-                    continue;
-                }
-
-                return new Time[] { start, end };
-            }
-
-            // if the user didn't input a dash...
-            // then a single valid time is treated as the lower bound with no upper bound
-            Time single = Input.parseTime(line);
-            if (single != null)
-                return new Time[] { single, null };
-
-            // if we got here then nothing else worked
-            System.out.println("Invalid time period. Expected 'start - end', 'start -', '- end', or press Enter to skip. Try again:");
+        // find at what index the dash is typed
+        // all common dash characters are accepted
+        int dashIndex = -1;
+        char[] dashes = { '-', '–', '—' };
+        for (char d : dashes) {
+            dashIndex = line.indexOf(d);
+            if (dashIndex != -1)
+                break;
         }
+
+        // if the user actually did type a dash...
+        if (dashIndex != -1) {
+            // convert the input into two time instances
+            String part1 = line.substring(0, dashIndex).trim();
+            String part2 = line.substring(dashIndex + 1).trim();
+            Time start = part1.isEmpty() ? null : Input.parseTime(part1);
+            Time end = part2.isEmpty() ? null : Input.parseTime(part2);
+
+            // and only parse a boundary if the user typed one properly
+            if (!part1.isEmpty() && start == null) {
+                System.out.println("Invalid starting time. Use format YYYY/MM/DD HH:MM. Try again:");
+                return readTimePeriod(keyboard);
+            }
+            if (!part2.isEmpty() && end == null) {
+                System.out.println("Invalid ending time. Use format YYYY/MM/DD HH:MM. Try again:");
+                return readTimePeriod(keyboard);
+            }
+
+            // ensure that start comes first
+            if (start != null && end != null && start.compareTo(end) >= 0) {
+                System.out.println("Starting time must be before ending time. Try again:");
+                return readTimePeriod(keyboard);
+            }
+
+            return new Time[] { start, end };
+        }
+
+        // if the user didn't input a dash...
+        // then a single valid time is treated as the lower bound with no upper bound
+        Time single = Input.parseTime(line);
+        if (single != null)
+            return new Time[] { single, null };
+
+        // if we got here then nothing else worked
+        System.out.println("Invalid time period. Expected 'start - end', 'start -', '- end', or press Enter to skip. Try again:");
+        return readTimePeriod(keyboard);
     }
 
 

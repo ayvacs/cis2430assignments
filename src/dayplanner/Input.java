@@ -13,7 +13,7 @@ import java.io.InputStream;
  * Read methods display prompts and generally retry invalid input. The stream
  * constructor also supports scripted input, such as a
  * {@code ByteArrayInputStream} in a small example program, which is actually
- * used in {@link Tester} for scripted input.
+ * used in {@link dayplanner.Tester} for scripted input.
  * </p>
  * <p>
  * The goal of this class is to make user input as easy as possible to deal with
