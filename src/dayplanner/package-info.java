@@ -26,15 +26,17 @@
  * </pre>
  * 
  * <p>
- * The package models scheduled activities, collects them into lists by
- * category, accepts menu input, searches activities, and persists the lists
+ * The package models scheduled activities, collects them in one list,
+ * category, accepts menu input, searches activities, and persists the list
  * between runs. {@link dayplanner.DayPlanner} is the main application class.
  * {@link dayplanner.Activity} is the common activity model, with
  * {@link dayplanner.HomeActivity}, {@link dayplanner.SchoolActivity}, and
  * {@link dayplanner.OtherActivity} representing the specialized categories of
  * activities. Other activities include a location.
- * {@link dayplanner.ActivityList} stores and orders activities, while
- * {@link dayplanner.DayPlannerUtils} provides utility methods.
+ * {@link dayplanner.ActivityList} stores activities in one {@link
+ * java.util.ArrayList} and maintains a lower-case title keyword index in a
+ * {@link java.util.HashMap}.{@link dayplanner.DayPlannerUtils} provides utility
+ * methods.
  * </p>
  * <p>
  * {@link dayplanner.Time} represents a date and time to minute precision in

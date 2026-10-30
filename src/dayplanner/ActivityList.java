@@ -16,17 +16,17 @@ import java.util.Set;
 
 /**
  * <p>
- * A fixed-capacity, array-backed list of {@link Activity} objects. Extends
- * {@link AbstractList} to ensure methods are familiar. The backing array never
- * grows or resizes.
+ * An {@link ArrayList}-backed list of {@link Activity} objects with a keyword
+ * index for activity titles. Extends {@link AbstractList} so list methods are
+ * familiar. The index maps each lower-case title word to activity positions.
  * </p>
  * <p>
  * Example usage:
  * </p>
  * 
  * <pre>
- * ActivityList activities = new ActivityList(2); // max capacity is 2
- * activities.append(new HomeActivity("Laundry", start, end));
+ * ActivityList activities = new ActivityList();
+ * activities.add(new HomeActivity("Laundry", start, end));
  * activities.sort(); // orders by start time
  * </pre>
  */
@@ -74,7 +74,7 @@ public class ActivityList extends AbstractList<Activity> {
             /**
              * If the file is not found that means the user never saved data before. We
              * don't need to do anything here, just start this list as one with the default
-             * capacity (which was the first line in this method anyways)
+             * default empty state
              */
             System.out.println("There was no list found at " + dirName + "/" + fileName + "; starting with an empty list");
 
@@ -96,8 +96,6 @@ public class ActivityList extends AbstractList<Activity> {
      * @param dirName  The directory containing the RAS file.
      * @param fileName The name of the RAS file.
      * @throws FileNotFoundException          if the file does not exist.
-     * @throws ArrayIndexOutOfBoundsException if the file is greater than the
-     *                                        allotted array size.
      * @throws IOException                    if there was an error reading to the
      *                                        file.
      */
@@ -253,8 +251,8 @@ public class ActivityList extends AbstractList<Activity> {
      * right.
      * </p>
      * <p>
-     * Ensure the list is not full before calling; this fixed-capacity
-     * implementation cannot accommodate an insertion when all slots are occupied.
+     * Existing elements are shifted right. The title index is rebuilt so its
+     * positions continue to identify the correct activities.
      * </p>
      * 
      * @param index    Index at which the activity is to be inserted.
@@ -299,7 +297,8 @@ public class ActivityList extends AbstractList<Activity> {
     }
 
     /**
-     * Appends an activity to the end of this list.
+     * Appends an activity to the end of this list and adds its title keywords to
+     * the index.
      * 
      * @param activity The activity to append.
      * @return Whether the element was added

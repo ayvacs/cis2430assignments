@@ -215,7 +215,7 @@ public class DayPlanner {
     public static void searchForActivity() {
         System.out.println("Let's search for activities in the DayPlanner.");
 
-        // an empty type means the search should include all three lists
+        // an empty type means the search should include every activity
         ActivityType type = null;
         while (true) {
             System.out.println("Enter activity type ('home', 'school', 'other'), or press Enter to search all types:");

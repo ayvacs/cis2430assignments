@@ -3,6 +3,9 @@ package dayplanner;
 
 
 import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 
 
 /**
@@ -41,7 +44,7 @@ public class Tester {
         runTestCase("case18", "Time Period: Open Start Range", testCase18());
         runTestCase("case19", "Time Period: Invalid Inverted Range", testCase19());
         runTestCase("case20", "Search: No Filters (Match All)", testCase20());
-        runTestCase("case21", "Array Capacity Boundary Check", testCase21());
+        runTestCase("case21", "Title Index: Activity Addition", testCase21());
         runTestCase("case22", "Persistence Verification (RAS Read/Write)", testCase22());
 
         System.out.printf(String.format("Out of %d tests, %d passed and %d failed\n",
@@ -186,12 +189,12 @@ public class Tester {
      * @return <code>true</code> if the test passes, <code>false</code> otherwise.
      */
     public static boolean testCase09() {
-        ActivityList list = new ActivityList(10);
+        ActivityList list = new ActivityList();
         Time start = new Time(2026, 10, 20, 14, 30);
         Time end = new Time(2026, 10, 20, 16, 30);
         SchoolActivity sa = new SchoolActivity("CIS 2430 Lab Office Hours", start, end, "Ask TA about search");
 
-        list.append(sa);
+        list.add(sa);
         if (list.size() != 1) return false;
 
         Activity retrieved = list.get(0);
@@ -206,12 +209,8 @@ public class Tester {
      * @return <code>true</code> if the test passes, <code>false</code> otherwise.
      */
     public static boolean testCase10() {
-        ActivityList homeList = new ActivityList("dat", "home.ras");
-        if (homeList.isEmpty()) return false;
-
-        Activity first = homeList.get(0);
-        boolean matches = DayPlannerUtils.matchesCriteria(first, new String[] { "Co-Op" }, null, null);
-        return matches && first.getTitle().contains("Co-Op");
+        ActivityList activities = testActivities();
+        return activities.findTitleMatches(new String[] { "Java" }).equals(java.util.Arrays.asList(0, 2));
     }
 
     /**
@@ -219,12 +218,9 @@ public class Tester {
      * @return <code>true</code> if the test passes, <code>false</code> otherwise.
      */
     public static boolean testCase11() {
-        ActivityList homeList = new ActivityList("dat", "home.ras");
-        if (homeList.size() <= 3) return false;
-
-        Activity mid = homeList.get(3);
-        boolean matches = DayPlannerUtils.matchesCriteria(mid, new String[] { "Cook", "Meal" }, null, null);
-        return matches && mid.getTitle().contains("Cook Meal");
+        ActivityList activities = testActivities();
+        return activities.findTitleMatches(new String[] { "Java", "Programming" })
+            .equals(java.util.Arrays.asList(0));
     }
 
     /**
@@ -232,12 +228,9 @@ public class Tester {
      * @return <code>true</code> if the test passes, <code>false</code> otherwise.
      */
     public static boolean testCase12() {
-        ActivityList homeList = new ActivityList("dat", "home.ras");
-        if (homeList.isEmpty()) return false;
-
-        Activity last = homeList.get(homeList.size() - 1);
-        boolean matches = DayPlannerUtils.matchesCriteria(last, new String[] { "Bike", "Ride" }, null, null);
-        return matches && last.getTitle().contains("Bike Ride");
+        ActivityList activities = testActivities();
+        return activities.findTitleMatches(new String[] { "JAVA", "PROGRAMMING" })
+            .equals(java.util.Arrays.asList(0));
     }
 
     /**
@@ -245,14 +238,7 @@ public class Tester {
      * @return <code>true</code> if the test passes, <code>false</code> otherwise.
      */
     public static boolean testCase13() {
-        ActivityList homeList = new ActivityList("dat", "home.ras");
-        int matchCount = 0;
-        for (Activity a : homeList) {
-            if (DayPlannerUtils.matchesCriteria(a, new String[] { "Nonexistent", "Activity" }, null, null)) {
-                matchCount++;
-            }
-        }
-        return matchCount == 0;
+        return testActivities().findTitleMatches(new String[] { "Nonexistent", "Activity" }).isEmpty();
     }
 
     /**
@@ -260,8 +246,8 @@ public class Tester {
      * @return <code>true</code> if the test passes, <code>false</code> otherwise.
      */
     public static boolean testCase14() {
-        String title = "Buy Programming in Java";
-        return !DayPlannerUtils.matchesKeywords(title, new String[] { "Program" });
+        ActivityList activities = testActivities();
+        return activities.findTitleMatches(new String[] { "Program" }).isEmpty();
     }
 
     /**
@@ -269,8 +255,9 @@ public class Tester {
      * @return <code>true</code> if the test passes, <code>false</code> otherwise.
      */
     public static boolean testCase15() {
-        String title = "Programming in Java";
-        return DayPlannerUtils.matchesKeywords(title, new String[] { "java", "PROGRAMMING" });
+        ActivityList activities = testActivities();
+        return activities.findTitleMatches(new String[] { "programming", "jAvA" })
+            .equals(java.util.Arrays.asList(0));
     }
 
     /**
@@ -278,7 +265,7 @@ public class Tester {
      * @return <code>true</code> if the test passes, <code>false</code> otherwise.
      */
     public static boolean testCase16() {
-        ActivityList homeList = new ActivityList("dat", "home.ras");
+        ActivityList homeList = testTimeActivities();
         Time start = new Time(2026, 10, 4, 0, 0);
         Time end = new Time(2026, 10, 6, 12, 0);
 
@@ -296,7 +283,7 @@ public class Tester {
      * @return <code>true</code> if the test passes, <code>false</code> otherwise.
      */
     public static boolean testCase17() {
-        ActivityList homeList = new ActivityList("dat", "home.ras");
+        ActivityList homeList = testTimeActivities();
         Time start = new Time(2026, 10, 8, 0, 0);
 
         int count = 0;
@@ -313,7 +300,7 @@ public class Tester {
      * @return <code>true</code> if the test passes, <code>false</code> otherwise.
      */
     public static boolean testCase18() {
-        ActivityList homeList = new ActivityList("dat", "home.ras");
+        ActivityList homeList = testTimeActivities();
         Time end = new Time(2026, 10, 5, 12, 0);
 
         int count = 0;
@@ -336,34 +323,27 @@ public class Tester {
     }
 
     /**
-     * Case 20: Verifies that unfiltered search matches all activities across lists.
+     * Case 20: Verifies that a search without title keywords returns every list position.
      * @return <code>true</code> if the test passes, <code>false</code> otherwise.
      */
     public static boolean testCase20() {
-        ActivityList home = new ActivityList("dat", "home.ras");
-        ActivityList school = new ActivityList("dat", "school.ras");
-        ActivityList other = new ActivityList("dat", "other.ras");
-
-        int total = home.size() + school.size() + other.size();
-        return total == 23;
+        ActivityList activities = testActivities();
+        return activities.findTitleMatches(null).size() == activities.size();
     }
 
     /**
-     * Case 21: Verifies that adding to an ActivityList at maximum capacity is rejected.
+     * Case 21: Verifies that appending an activity updates its title index position.
      * @return <code>true</code> if the test passes, <code>false</code> otherwise.
      */
     public static boolean testCase21() {
-        ActivityList smallList = new ActivityList(2);
+        ActivityList list = new ActivityList();
         Time t1 = new Time(2026, 10, 1, 10, 0);
         Time t2 = new Time(2026, 10, 1, 11, 0);
 
-        smallList.append(new HomeActivity("A1", t1, t2));
-        smallList.append(new HomeActivity("A2", t1, t2));
-
-        boolean full = smallList.isFull();
-        Activity extra = smallList.append(new HomeActivity("A3", t1, t2));
-
-        return full && (extra == null) && (smallList.size() == 2);
+        list.add(new HomeActivity("A1", t1, t2));
+        list.add(new HomeActivity("A2", t1, t2));
+        list.add(new HomeActivity("A3", t1, t2));
+        return list.findTitleMatches(new String[] { "A3" }).equals(java.util.Arrays.asList(2));
     }
 
     /**
@@ -371,10 +351,15 @@ public class Tester {
      * @return <code>true</code> if the test passes, <code>false</code> otherwise.
      */
     public static boolean testCase22() {
-        String testDir = "dat";
+        String testDir;
+        try {
+            testDir = java.nio.file.Files.createTempDirectory("dayplanner-test-").toString();
+        } catch (java.io.IOException e) {
+            return false;
+        }
         String testFile = "test_persistence.ras";
 
-        ActivityList outList = new ActivityList(10);
+        ActivityList outList = new ActivityList();
         Time t1 = new Time(2026, 10, 1, 10, 0);
         Time t2 = new Time(2026, 10, 1, 11, 0);
 
@@ -382,9 +367,9 @@ public class Tester {
         SchoolActivity sa = new SchoolActivity("Test School", t1, t2, "School Comment");
         OtherActivity oa = new OtherActivity("Test Other", t1, t2, "Other Comment", "Library");
 
-        outList.append(ha);
-        outList.append(sa);
-        outList.append(oa);
+        outList.add(ha);
+        outList.add(sa);
+        outList.add(oa);
 
         boolean saved = outList.saveToRAS(testDir, testFile);
         if (!saved) return false;
@@ -395,11 +380,45 @@ public class Tester {
                             inList.get(1).equals(sa) &&
                             inList.get(2).equals(oa);
 
-        // Clean up test file
-        if (FileUtils.exists(testDir, testFile))
-            FileUtils.delete(testDir, testFile);
+        // Clean up test file and directory
+        try {
+            Files.deleteIfExists(Path.of(testDir, testFile));
+            Files.deleteIfExists(Path.of(testDir));
+        } catch (IOException e) {
+            // ignore lol
+        }
 
-        return sizeMatches && equalData;
+        return sizeMatches && equalData
+            && inList.findTitleMatches(new String[] { "Test" }).equals(java.util.Arrays.asList(0, 1, 2));
+    }
+
+    /**
+     * Return an ActivityList with a bunch of activities with the same start and end
+     * times (Sample data)
+     */
+    private static ActivityList testActivities() {
+        ActivityList list = new ActivityList();
+        Time start = new Time(2026, 10, 1, 9, 0);
+        Time end = new Time(2026, 10, 1, 10, 0);
+        list.add(new HomeActivity("Java Programming", start, end));
+        list.add(new SchoolActivity("Programming Workshop", start, end));
+        list.add(new OtherActivity("Java Study", start, end, "Library"));
+        return list;
+    }
+
+    /**
+     * Return a ActivityList with a bunch of activities with differing start and end
+     * times (Sample data)
+     */
+    private static ActivityList testTimeActivities() {
+        ActivityList list = new ActivityList();
+        list.add(new HomeActivity("Oct 4", new Time(2026, 10, 4, 9, 0), new Time(2026, 10, 4, 10, 0)));
+        list.add(new HomeActivity("Oct 5", new Time(2026, 10, 5, 9, 0), new Time(2026, 10, 5, 10, 0)));
+        list.add(new HomeActivity("Oct 6", new Time(2026, 10, 6, 10, 0), new Time(2026, 10, 6, 11, 0)));
+        list.add(new HomeActivity("Oct 8", new Time(2026, 10, 8, 9, 0), new Time(2026, 10, 8, 10, 0)));
+        list.add(new HomeActivity("Oct 9", new Time(2026, 10, 9, 9, 0), new Time(2026, 10, 9, 10, 0)));
+        list.add(new HomeActivity("Oct 10", new Time(2026, 10, 10, 9, 0), new Time(2026, 10, 10, 10, 0)));
+        return list;
     }
 
     

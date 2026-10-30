@@ -8,7 +8,7 @@ The DayPlanner program is a schedule management tool that allows the user to tra
 * **School activities**: Anything done at university like attending lectures, scheduled labs, and campus meetings.
 * **Other activities**: Anything done outside of home and school, like doctor visits, gym workouts, shopping, which additionally require a location attribute.
 
-Activities contain a title, starting time, ending time, an optional comment, and (for **Other activities**) a mandatory location. The system stores each category in a dedicated array of fixed capacity, supports sequential search queries across multiple optional filters (category, title keywords, and time periods), and data persists between sessions in a custom text based format called `RAS`.
+Activities contain a title, starting time, ending time, an optional comment, and (for **Other activities**) a mandatory location. The system stores all activities in one `ArrayList`. A `HashMap` title index maps each lower-case title keyword to the positions of activities containing that keyword. Searches intersect those positions before applying category and time filters. Data persists between sessions in a custom text based format called `RAS`.
 
 This repository also consists of a Tester (`Tester.java`), which is an automatic tester, that executes all of the described test cases.
 
@@ -69,7 +69,7 @@ When running the application, the command loop presents a main menu with options
 The following steps are presented:
 
 1. **Activity Type**: Enter `home` (or `1`, `h`), `school` (or `2`, `s`), or `other` (or `3`, `o`).
-   * If the chosen array is full (capacity reached), the system rejects the addition immediately with feedback and returns to the menu.
+   * The new activity is appended to the activity list and its title keywords are added to the index.
 2. **Title**: Enter a non-empty descriptive title.
 3. **Starting Time**: Enter a timestamp in `YYYY/MM/DD HH:MM` format (e.g. `2026/09/10 17:30`).
    * Validated defensively: year $\ge 1$, month between $1$ and $12$, days valid according to the month (including leap year rules for February: 29 days on leap years, 28 days otherwise), hour between $0$ and $23$, minute between $0$ and $59$.
@@ -90,7 +90,7 @@ A search query accepts up to three optional components (press Enter on any promp
 
 ### 3. Quitting (`quit`)
 
-Saves all activity lists to disk in RAS format and exits.
+Saves the activity list to disk in RAS format and exits.
 
 ### 4. Hidden functions
 
@@ -102,14 +102,14 @@ There are hidden utility functions, which you can access by typing the full comm
 
 # Implementation
 
-The DayPlanner consists of eight primary classes in the `dayplanner` package:
+The DayPlanner consists of the following classes in the `dayplanner` package:
 
 * `Time`: Represents an instant in time with minute precision (`year`, `month`, `day`, `hour`, `minute`). Implements `Comparable<Time>` for chronological ordering and defensive range validation (including leap year calculations).
 * `Activity`: Abstract base class holding common attributes: `title`, `startTime`, `endTime`, `comment`. Implements `Comparable<Activity>` to sort by starting time, accessors, mutators, and also overrides `equals` and `toString`.
     * `HomeActivity`: Subclass of `Activity` representing home activities.
     * `SchoolActivity`: Subclass of `Activity` representing school activities.
     * `OtherActivity`: Subclass of `Activity` representing miscellaneous activities, adding the `location` attribute, accessors, mutators, and custom `toString`.
-* `ActivityList`: Wrapper around a fixed-size Java array, extending `AbstractList<Activity>`. Bounds are checked and methods like `append`, `sort`, `isFull`, `isEmpty` are implemented.
+* `ActivityList`: Wrapper around an `ArrayList<Activity>`, extending `AbstractList<Activity>`. It maintains a `HashMap` title index whose values are activity positions. The index is built as activities load, updated when activities are added, and rebuilt after indexed insertions, removals, or replacements.
 * `Input`: Wrapper around `Scanner` with defensive validation methods for integers, booleans, commands, and timestamps.
 * `DayPlanner`: The main application class which manages the user menu.
 
@@ -124,7 +124,6 @@ My app assumes:
 * The user is comfortable executing Java code from a terminal.
 * The three activity categories (Home, School, Other) are sufficient to classify all scheduled items.
 * Time values follow the standard Gregorian calendar.
-* The fixed array capacity of 256 entries per list is adequate for the user's needs.
 * The user is fine with accessing their schedule on one device without syncing between devices
 
 ## Limitations
@@ -132,7 +131,7 @@ My app assumes:
 My app has several limitations:
 
 * Does not offer all CRUD (create, remove, update, delete) operations which are standard for working with data.
-* Fixed-size arrays have a limit on the number of activities stored in each category before resizing or reallocation would be needed.
+* Activities cannot currently be removed or edited through the application.
 * The text-based interface does not visually represent events on a calendar grid or timetable which makes it more difficult to detect overlapping events.
 * No warning is given when two activities overlap or occupy the same time slot.
 * The schedule doesn't sync between devices which is a very helpful feature in other scheduling apps.
@@ -141,10 +140,10 @@ My app has several limitations:
 
 If I had additional time to extend the project further, I would implement several features to resolve the downsides listed above:
 
-1. Replace standard arrays with `ArrayList` to remove the capacity cap and support dynamic resizing and natural sorting.
-2. Add a gui with a weekly/monthly timetable with drag-and-drop scheduling.
-3. Warn the user when an activity's time range conflicts with an existing activity in any category.
-5. Support recurrence rules (e.g., weekly lectures or daily gym sessions) without manual repetition like other scheduling apps.
+1. Add the ability to remove and edit existing activities.
+1. Add a gui with a weekly/monthly timetable with drag-and-drop scheduling.
+1. Warn the user when an activity's time range conflicts with an existing activity in any category.
+1. Support recurrence rules (e.g., weekly lectures or daily gym sessions) without manual repetition like other scheduling apps.
 
 # Serialization
 
@@ -191,7 +190,7 @@ where each `<entry...>` is enclosed in angle brackets with comma-separated field
    * **Time Ranges**: Checking valid month, day, hour, minute, year.
    * **Chronological Ordering**: Starting time must be strictly before ending time. End time before or equal to start time is rejected with feedback.
    * **Mandatory vs Optional Fields**: Title cannot be blank. Location cannot be blank for `OtherActivity`. Comment is optional.
-   * **Array Capacity Boundary**: Attempting to add an activity when the corresponding array is at capacity must be rejected before prompting for attributes.
+   * **Title Index Maintenance**: Loading and adding activities must populate the index with their list positions; indexed insertions, replacements, and removals must keep those positions correct.
 
 3. **Search Matching Conditions**:
    * **Activity Category**: Filter by Home only, School only, Other only, or all categories (empty input).
@@ -237,31 +236,30 @@ The tester will automatically run all test cases, and report results.
 
 **Notes:**
 
-* Some test cases define "success" based on expected output given the provided data files. Altering the provided data files might change the output of the tester, indicating failure.
-* Some test cases will report "failure" if data files do not exist. Failure in these cases does not indicate that an aspect of the program does not work properly. Rather, it indicates that the persistance methods failed because no data files exist yet.
-* "Failure" does not always mean true failure and it depends on the context in which the tester is being run.
+* The test cases use self-contained activity lists and do not depend on user data files.
+* The persistence test creates and removes a temporary directory and file.
 
 | Case ID | Feature / Condition | Input Data / Steps | Expected Output | Status |
 | --- | --- | --- | --- | --- |
-| **case01** | Command Loop: Invalid Command | Enter `bye` at main menu prompt. | Rejects with message: `Invalid command: "bye". Please enter 'add' (or 'a'), 'search' (or 's'), or 'quit' (or 'q'):` and re-prompts. | **PASS** |
-| **case02** | Command Loop: Case & Alias | Enter `a`, then `ADD`, then `s`, then `q`. | All recognized as valid commands (`add`, `search`, `quit`). | **PASS** |
+| **case01** | Command Parsing: Invalid Command | Parse command `bye`. | Returns no menu option for the unrecognized command. | **PASS** |
+| **case02** | Command Parsing: Case & Alias | Parse `ADD`, `s`, and `3`. | Recognizes the add, search, and quit options. | **PASS** |
 | **case03** | Time Validation: Non-leap Feb 29 | When adding activity, enter start time `2026/02/29 10:00`. | Rejects with message: `Invalid day (29): Month 2 has max 28 days. Try again:` and re-prompts. | **PASS** |
 | **case04** | Time Validation: Leap Year Feb 29 | Enter start time `2024/02/29 10:00`. | Accepted as valid leap year timestamp. | **PASS** |
 | **case05** | Time Validation: Month Day Overflow | Enter start time `2026/04/31 09:00` (April has 30 days). | Rejects with message: `Invalid day (31): Month 4 has max 30 days. Try again:` and re-prompts. | **PASS** |
 | **case06** | Time Validation: Component Bounds | Enter start times `2026/13/01 10:00`, `2026/05/10 24:00`, `2026/05/10 12:60`, `0/01/01 10:00`. | Each rejected with specific feedback identifying the out-of-range field (month, hour, minute, year). | **PASS** |
-| **case07** | Chronological Validation | Start time: `2026/10/15 14:00`<br>End time: `2026/10/15 12:00`. | Rejects with message: `Ending time has to be after the starting time (2026/10/15 14:00). Try again:` | **PASS** |
-| **case08** | Defensive Title & Location | Enter blank title on add; enter blank location for OtherActivity. | Rejects blanks: `Title cannot be empty. Try again:`, `Location cannot be empty for Other activities. Try again:` | **PASS** |
-| **case09** | Add Activity: Complete Flow | Add `SchoolActivity`:<br>Type: `school`<br>Title: `CIS 2430 Lab Office Hours`<br>Start: `2026/10/20 14:30`<br>End: `2026/10/20 16:30`<br>Comment: `Y` $\rightarrow$ `Ask TA about search` | Successfully creates the new activity and stores it in the school list with all attributes preserved. | **PASS** |
-| **case10** | Search: Element at Beginning | Search type `home`, keywords `Co-Op`, time period `[Enter]`. | Finds `1. [Home] Co-Op Interview (2026/10/04 14:00 - 2026/10/04 15:00) (For Software Developer)`. | **PASS** |
-| **case11** | Search: Element in Middle | Search type `home`, keywords `Cook Meal`, time period `[Enter]`. | Finds `1. [Home] Cook Meal Prep (2026/10/07 18:00 - 2026/10/07 19:30) (Prep for the rest of the week)`. | **PASS** |
-| **case12** | Search: Element at End | Search type `home`, keywords `Bike Ride`, time period `[Enter]`. | Finds `1. [Home] Bike Ride (2026/10/10 10:00 - 2026/10/10 11:00)`. | **PASS** |
-| **case13** | Search: Element Not on List | Search type `home`, keywords `Nonexistent Activity`, time period `[Enter]`. | Displays message: `No activities matched your search request.` | **PASS** |
-| **case14** | Keyword Word-Level Exactness | Search title `Buy Programming in Java` with keyword `Program`. | Zero matches: `Program` does not match word `Programming`. | **PASS** |
-| **case15** | Keyword Case & Order Invariance | Search keywords `java PROGRAMMING` against title `Programming in Java`. | Matched successfully: case ignored, order independent. | **PASS** |
-| **case16** | Time Period: Bounded Range | Search range `2026/10/04 00:00 - 2026/10/06 12:00` in `home`. | Matches only 3 activities occurring within that window (`Co-Op Interview`, `Groceries`, `Laundry`). | **PASS** |
-| **case17** | Time Period: Open End | Search range `2026/10/08 00:00 -` in `home`. | Matches 3 activities starting at or after Oct 8 (`Clean Apartment`, `Call Parents`, `Bike Ride`). | **PASS** |
-| **case18** | Time Period: Open Start | Search range `- 2026/10/05 12:00` in `home`. | Matches 2 activities ending at or before Oct 5 12:00 (`Co-Op Interview`, `Groceries`). | **PASS** |
-| **case19** | Time Period: Invalid Inverted Range | Search range `2026/10/20 12:00 - 2026/10/10 12:00`. | Rejects: `Starting time must be before ending time. Try again:` and re-prompts. | **PASS** |
-| **case20** | Search: No Filters (Match All) | Type `[Enter]`, Keywords `[Enter]`, Time `[Enter]`. | Returns all 23 activities sequentially across Home, School, and Other categories. | **PASS** |
-| **case21** | Array Capacity Check | Array at capacity (`length == capacity`). | Rejects add request immediately: `You're pretty busy... the specified array is full, sorry!` | **PASS** |
-| **case22** | Persistence Verification | Add activity, quit program, relaunch program and search for added item. | Activity loaded from disk and found in search results. | **PASS** |
+| **case07** | Chronological Comparison | Compare `2026/10/15 14:00` with an earlier and equal time. | Confirms the start is later than the earlier time and equal to the matching time. | **PASS** |
+| **case08** | Blank Title & Location Values | Check blank title and location strings, plus a valid Other activity location. | Identifies blank strings and confirms the activity has a nonblank location. | **PASS** |
+| **case09** | Activity Creation and Retrieval | Add a `SchoolActivity` with title, times, and comment to an `ActivityList`. | Retrieves the same activity with its fields preserved. | **PASS** |
+| **case10** | Title Index: Beginning Position | Search local activities with keyword `Java`. | Returns positions 0 and 2. | **PASS** |
+| **case11** | Title Index: Keyword Intersection | Search local activities with keywords `Java Programming`. | Returns only position 0, which contains both keywords. | **PASS** |
+| **case12** | Title Index: Case Normalization | Search with `JAVA PROGRAMMING`. | Returns the same result as lower-case keywords. | **PASS** |
+| **case13** | Title Index: Missing Keyword | Search local activities for `Nonexistent Activity`. | Returns no candidate positions. | **PASS** |
+| **case14** | Title Index: Whole-Word Matching | Search for `Program` when the title contains `Programming`. | Returns no matches. | **PASS** |
+| **case15** | Title Index: Case & Order Invariance | Search keywords `programming Java`. | Returns position 0. | **PASS** |
+| **case16** | Time Period: Bounded Range | Search local activities from `2026/10/04 00:00` to `2026/10/06 12:00`. | Matches 3 activities. | **PASS** |
+| **case17** | Time Period: Open End | Search local activities from `2026/10/08 00:00`. | Matches 3 activities. | **PASS** |
+| **case18** | Time Period: Open Start | Search local activities through `2026/10/05 12:00`. | Matches 2 activities. | **PASS** |
+| **case19** | Time Period: Inverted Range | Compare `2026/10/20 12:00` with `2026/10/10 12:00`. | Confirms that the proposed start time comes after the end time. | **PASS** |
+| **case20** | Search: No Title Keywords | Request all title candidates with no keywords. | Returns every position in the activity list. | **PASS** |
+| **case21** | Title Index: Activity Addition | Add three activities, then search for the title of the last activity. | Returns its updated position, 2. | **PASS** |
+| **case22** | Persistence Verification | Write three activities to a temporary RAS file and load them again. | Activities are restored in order and the title index returns the expected positions. | **PASS** |
