@@ -80,8 +80,12 @@ public class ActivityList extends AbstractList<Activity> {
 
         } catch (Exception e) {
 
-            System.out.println(e.toString());
+            System.out.println("\nThe program has halted because the following exception occurred.");
             e.printStackTrace();
+            System.out.println("\nIt probably occurred because you used a data file of incorrect format.");
+            System.out.println("A sample file named 'sampleData.ras' is included. Specify it as the first execution argument:");
+            System.out.println("\tjava -jar bin/DayPlanner.jar sampleData.ras\n");
+            System.exit(1);
 
         }
     }
@@ -104,9 +108,16 @@ public class ActivityList extends AbstractList<Activity> {
         if (!FileUtils.exists(dirName, fileName))
             throw new FileNotFoundException(dirName + ", " + fileName);
 
+        int ln = 0;
         for (String line : FileUtils.readLines(dirName, fileName)) {
-            if (line != null && !line.isEmpty())
+            ln++;
+            if (line == null || line.isBlank())
+                continue;
+            try {
                 add(activityFromRAS(line));
+            } catch (IllegalArgumentException e) {
+                System.out.println("Skipping line " + ln + ": " + e.getMessage());
+            }
         }
     }
 

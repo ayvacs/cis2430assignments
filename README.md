@@ -168,7 +168,6 @@ where each `<entry...>` is enclosed in angle brackets with comma-separated field
 4. `String` denoting the ending time (`YYYY/MM/DD HH:MM`).
 5. `String` denoting the comment (or `NIL` if no comment was provided).
 6. `String` denoting the location (only present for `OtherActivity`).</li>
-<li>Configuration file at <code>src/dayplanner/ras.properties</code> which makes it easy to alter how the saving mechanism works without touching any code.</li>
 </ul>
 
 # Test Plan

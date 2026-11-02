@@ -107,16 +107,38 @@ public final class RasParser {
      * @param activity The activity whose fields to populate.
      * @param ras      Serialized activity record.
      */
-    public static void populate(Activity activity, String ras) {
-        String[] fields = fields(ras);
-        if (fields.length >= 2 && !fields[1].isEmpty())
-            activity.setTitle(fields[1]);
-        if (fields.length >= 3 && !fields[2].isEmpty())
-            activity.setStartTime(new Time(fields[2]));
-        if (fields.length >= 4 && !fields[3].isEmpty())
-            activity.setEndTime(new Time(fields[3]));
-        if (fields.length >= 5 && !fields[4].isEmpty() && !fields[4].equals("NIL"))
-            activity.setComment(fields[4]);
+    public static void populate(Activity activity, String ras)
+    throws IllegalArgumentException {
+        if (ras == null || !ras.startsWith("<") || !ras.endsWith(">"))
+            throw new IllegalArgumentException("record must be wrapped in < >");
+
+
+        String[] f = fields(ras);
+        boolean other = f[0].equals("OtherActivity");
+        if (!other && !f[0].equals("HomeActivity") && !f[0].equals("SchoolActivity"))
+            throw new IllegalArgumentException("unknown activity type: " + f[0]);
+        if (f.length != (other ? 6 : 5))
+            throw new IllegalArgumentException("expected " + (other ? 6 : 5) + " fields but found " + f.length);
+        if (f[1].isBlank())
+            throw new IllegalArgumentException("title is empty");
+
+        Time start = Input.parseTime(f[2]);
+        Time end = Input.parseTime(f[3]);
+        if (start == null || end == null)
+            throw new IllegalArgumentException("invalid start or end time");
+        if (start.compareTo(end) >= 0)
+            throw new IllegalArgumentException("start is not before end");
+
+        String comment = optional(f, 4);
+        switch (f[0]) {
+            case "HomeActivity"   -> new HomeActivity(f[1], start, end, comment);
+            case "SchoolActivity" -> new SchoolActivity(f[1], start, end, comment);
+            default -> {
+                if (f[5].isBlank())
+                    throw new IllegalArgumentException("location is empty");
+                new OtherActivity(f[1], start, end, comment, f[5]);
+            }
+        };
     }
 
     /**

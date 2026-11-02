@@ -56,8 +56,8 @@ public class DayPlanner {
         // The above loop only finishes when the user wants to quit
         // Attempt to save the list in RAS format
         boolean errors = saveToRAS();
-        if (errors)    System.out.println("\nError saving one or more lists.");
-        else           System.out.println("\nAll lists saved successfully.");
+        if (errors)    System.out.println("\nError saving the list.");
+        else           System.out.println("\nThe list was saved successfully.");
 
         System.out.println("\nNow quitting DayPlanner. Goodbye!");
     }

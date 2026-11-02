@@ -93,8 +93,8 @@ public class Activity implements Comparable<Activity> {
      *            {@code <HomeActivity,Laundry,2026/10/20 09:00,2026/10/20 10:00,NIL>}.
      */
     public Activity(String ras) {
-        // declare default values in case of ras error
-        this("raserror", new Time(), new Time());
+        // declare default values
+        this("", new Time(), new Time());
 
         RasParser.populate(this, ras);
     }
