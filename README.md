@@ -152,6 +152,7 @@ RAS (**Readable Activity Serial**) is a custom human-readable text format used t
 <ul>
 <li>Methods in each instance class (Activities, Time, etc.) that convert the class into a RAS representation string.</li>
 <li>Methods in each instance class that construct a new instance from a RAS representation string.</li>
+<li>String sanitization/desanitization so that commas and angled brackets can be used in String fields.
 <li><code>.RAS</code> files, which follow the format:
 
 ```

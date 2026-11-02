@@ -14,7 +14,8 @@ package dayplanner;
  * </p>
  * <p>
  * RAS records are comma-delimited and wrapped in angle brackets. Commas in
- * field values are not escaped.
+ * field values are not escaped. Commas and angle brackets are
+ * sanitized/desanitized so they can be used in Activity fields.
  * </p>
  * <p>
  * For the full RAS specification, read the <code>README.md</code>
@@ -45,20 +46,20 @@ public final class RasParser {
         // extract fields
         String[] fields = fields(ras);
         String title = value(fields, 1, "raserror");
-        Time start = time(fields, 2);
-        Time end = time(fields, 3);
+        Time sTime = time(fields, 2);
+        Time eTime = time(fields, 3);
         String comment = optional(fields, 4);
 
         // instantiate the appropriate class
         return switch (fields[0]) {
             case "HomeActivity"
-                -> new HomeActivity(title, start, end, comment);
+                -> new HomeActivity(title, sTime, eTime, comment);
             case "SchoolActivity"
-                -> new SchoolActivity(title, start, end, comment);
+                -> new SchoolActivity(title, sTime, eTime, comment);
             case "OtherActivity"
-                -> new OtherActivity(title, start, end, comment, optional(fields, 5));
+                -> new OtherActivity(title, sTime, eTime, comment, optional(fields, 5));
             default
-                -> new Activity(title, start, end, comment);
+                -> new Activity(title, sTime, eTime, comment);
         };
     }
 
@@ -76,14 +77,23 @@ public final class RasParser {
         String eTime = activity.getEndTime().toString();
         String comment = activity.getComment();
 
+        // sanitize all fields
+        type = sanitize(type);
+        title = sanitize(title);
+        sTime = sanitize(sTime);
+        eTime = sanitize(eTime);
+        comment = sanitize(comment);
+
         String ras = String.format(
             "%s,%s,%s,%s,%s",
             type, title, sTime, eTime,
             (comment == null || comment.isBlank() ? "NIL" : comment));
         
         // add location field for Other Activities
-        if (activity instanceof OtherActivity other)
-            ras += "," + other.getLocation();
+        if (activity instanceof OtherActivity other) {
+            String location = sanitize(other.getLocation());
+            ras += "," + (location == null ? "NIL" : location);
+        }
         
         // wrap in angled brackets
         return "<" + ras + ">";
@@ -163,7 +173,7 @@ public final class RasParser {
     public static Time time(String[] fields, int index) {
         if (index >= fields.length || fields[index].isEmpty())
             return new Time();
-        return new Time(fields[index]);
+        return new Time(desanitize(fields[index]));
     }
 
     /**
@@ -177,7 +187,8 @@ public final class RasParser {
      */
     public static String value(String[] fields, int index, String fallback) {
         return index < fields.length && !fields[index].isEmpty()
-            ? fields[index] : fallback;
+            ? desanitize(fields[index])
+            : fallback;
     }
 
     
@@ -192,6 +203,42 @@ public final class RasParser {
         if (index >= fields.length || fields[index].isEmpty()
          || fields[index].equals("NIL"))
             return null;
-        return fields[index];
+        return desanitize(fields[index]);
+    }
+
+    /**
+     * Sanitize input for serialization using HTML codes.
+     * HTML codes referenced from <a href=
+     * "https://www.rapidtables.com/web/html/html-codes.html">RapidTables</a>.
+     * 
+     * @param input Input to sanitize.
+     * @return Sanitized input, or <code>null</code> if input is null.
+     * @see #desanitize(String)
+     */
+    public static String sanitize(String input) {
+        if (input == null)
+            return null;
+        return input
+            .replace(",", "&#44;")
+            .replace("<", "&#60;")
+            .replace(">", "&#62;");
+    }
+
+    /**
+     * Desanitize input for serialization using HTML codes.
+     * HTML codes referenced from <a href=
+     * "https://www.rapidtables.com/web/html/html-codes.html">RapidTables</a>.
+     * 
+     * @param input Input to desanitize.
+     * @return Desnitized input, or <code>null</code> if input is null.
+     * @see #sanitize(String)
+     */
+    public static String desanitize(String input) {
+        if (input == null)
+            return null;
+        return input
+            .replace("&#62;", ">")
+            .replace("&#60;", "<")
+            .replace("&#44;", ",");
     }
 }
