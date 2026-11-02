@@ -1,0 +1,14 @@
+.DS_Store
+._*
+.AppleDouble
+.LSOverride
+.Spotlight-V100
+.Trashes
+.fseventsd
+.TemporaryItems
+.DocumentRevisions-V100
+.VolumeIcon.icns
+.apdisk
+.com.apple.timemachine.donotpresent
+__MACOSX
+username.txt
