@@ -24,8 +24,7 @@ jobs:
       - name: Generate Javadoc
         run: |
           mkdir -p docs/javadoc
-          # Find all .java files and run javadoc
-          find src -name "*.java" | xargs javadoc -d docs/javadoc -encoding UTF-8 -sourcepath src
+          find src -name "*.java" | xargs javadoc -locale en_CA -d docs/javadoc -encoding UTF-8 -sourcepath src -quiet -linksource
 
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v4
