@@ -110,8 +110,13 @@ The DayPlanner consists of the following classes in the `dayplanner` package:
     * `SchoolActivity`: Subclass of `Activity` representing school activities.
     * `OtherActivity`: Subclass of `Activity` representing miscellaneous activities, adding the `location` attribute, accessors, mutators, and custom `toString`.
 * `ActivityList`: Wrapper around an `ArrayList<Activity>`, extending `AbstractList<Activity>`. It maintains a `HashMap` title index whose values are activity positions. The index is built as activities load, updated when activities are added, and rebuilt after indexed insertions, removals, or replacements.
+* `ActivityType`: Enum denoting all valid types of Activities.
 * `Input`: Wrapper around `Scanner` with defensive validation methods for integers, booleans, commands, and timestamps.
 * `DayPlanner`: The main application class which manages the user menu.
+* `DayPlannerUtils`: Utility methods for `DayPlanner`.
+* `MenuOption`: Enum denoting all valid menu options.
+* `RasParser`: Utiltiy methods for serialization/deserialization.
+* `RasException`: Exception denoting something went wrong with serialization/deserialization.
 
 The Tester consists of one class:
 

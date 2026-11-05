@@ -11,53 +11,16 @@
  * order
  * in the root directory:
  * </p>
- * 
  * <pre>
  * make jar
  * java -jar bin/DayPlanner.jar &lt;data file name&gt;
  * </pre>
- * 
  * The data file is saved in the <code>dat</code> directory. A sample data file
  * called <code>sampleData.ras</code> is included. To load this example file,
  * execute the JAR from the terminal:
- * 
  * <pre>
  * java -jar bin/DayPlanner.jar sampleData.ras
  * </pre>
- * 
- * <p>
- * The package models scheduled activities, collects them in one list,
- * category, accepts menu input, searches activities, and persists the list
- * between runs. {@link dayplanner.DayPlanner} is the main application class.
- * {@link dayplanner.Activity} is the common activity model, with
- * {@link dayplanner.HomeActivity}, {@link dayplanner.SchoolActivity}, and
- * {@link dayplanner.OtherActivity} representing the specialized categories of
- * activities. Other activities include a location.
- * {@link dayplanner.ActivityList} stores activities in one {@link
- * java.util.ArrayList} and maintains a lower-case title keyword index in a
- * {@link java.util.HashMap}.{@link dayplanner.DayPlannerUtils} provides utility
- * methods.
- * </p>
- * <p>
- * {@link dayplanner.Time} represents a date and time to minute precision in
- * {@code YYYY/MM/DD HH:MM} form. It validates calendar fields, including month
- * lengths and leap years, and supports comparison.
- * </p>
- * <p>
- * Activity data is persisted in custom text format called RAS (Readable
- * Activity Serial). The full RAS specialization is available in the
- * <code>README.md</code>. In a RAS list, each activity is encoded on one line
- * with its category, title, start time, end time, optional comment, and any
- * category-specific fields. {@link dayplanner.RasParser} handles serialization.
- * {@link dayplanner.FileUtils} and {@link dayplanner.Input} are wrapper classes
- * to handle text file access, and console input respectively. The
- * {@link dayplanner.Tester} class provides the project's automated test cases.
- * </p>
- * <p>
- * Enums are implemented for concepts with strict options.
- * {@link dayplanner.ActivityType} denotes all possible types of Activities, and
- * {@link dayplanner.MenuOption} denotes all main menu operations.
- * </p>
  * <p>
  * Some cool special features of the program include:
  * </p>
