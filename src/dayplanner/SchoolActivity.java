@@ -48,8 +48,10 @@ public class SchoolActivity extends Activity {
      * Serial) string.
      * 
      * @param ras Serialized activity entry, normally produced by {@link #toRAS()}.
+     * @throws RasException when RAS input is invalid.
      */
-    public SchoolActivity(String ras) {
+    public SchoolActivity(String ras)
+    throws RasException {
         super(ras);
     }
 

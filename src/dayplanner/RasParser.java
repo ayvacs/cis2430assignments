@@ -41,13 +41,28 @@ public final class RasParser {
      *
      * @param ras Serialized activity record.
      * @return The activity represented by the record.
+     * @throws RasException when RAS input is invalid.
      */
-    public static Activity parse(String ras) {
+    public static Activity parse(String ras)
+    throws RasException {
         // extract fields
         String[] fields = fields(ras);
-        String title = value(fields, 1, "raserror");
-        Time sTime = time(fields, 2);
-        Time eTime = time(fields, 3);
+        boolean other = fields[0].equals("OtherActivity");
+        if (!other && !fields[0].equals("HomeActivity") && !fields[0].equals("SchoolActivity"))
+            throw new RasException("unknown activity type: " + fields[0]);
+        if (fields.length != (other ? 6 : 5))
+            throw new RasException("expected " + (other ? 6 : 5) + " fields but found " + fields.length);
+        if (fields[1].isBlank())
+            throw new RasException("title is empty");
+
+        Time sTime = Input.parseTime(desanitize(fields[2]));
+        Time eTime = Input.parseTime(desanitize(fields[3]));
+        if (sTime == null || eTime == null)
+            throw new RasException("invalid start or end time");
+        if (sTime.compareTo(eTime) >= 0)
+            throw new RasException("start is not before end");
+
+        String title = desanitize(fields[1]);
         String comment = optional(fields, 4);
 
         // instantiate the appropriate class
@@ -56,10 +71,11 @@ public final class RasParser {
                 -> new HomeActivity(title, sTime, eTime, comment);
             case "SchoolActivity"
                 -> new SchoolActivity(title, sTime, eTime, comment);
-            case "OtherActivity"
-                -> new OtherActivity(title, sTime, eTime, comment, optional(fields, 5));
-            default
-                -> new Activity(title, sTime, eTime, comment);
+            default -> {
+                if (fields[5].isBlank())
+                    throw new RasException("location is empty");
+                yield new OtherActivity(title, sTime, eTime, comment, desanitize(fields[5]));
+            }
         };
     }
 
@@ -105,8 +121,12 @@ public final class RasParser {
      *
      * @param ras Serialized activity record.
      * @return The record fields, including the activity type at index zero.
+     * @throws RasException when RAS input is invalid.
      */
-    public static String[] fields(String ras) {
+    public static String[] fields(String ras)
+    throws RasException {
+        if (ras == null || !ras.startsWith("<") || !ras.endsWith(">") || ras.length() < 2)
+            throw new RasException("record must be wrapped in < >");
         String inner = ras.substring(1, ras.length() - 1);
         return inner.split(",", -1);
     }
@@ -116,39 +136,40 @@ public final class RasParser {
      * 
      * @param activity The activity whose fields to populate.
      * @param ras      Serialized activity record.
+     * @throws RasException when RAS input is invalid.
      */
     public static void populate(Activity activity, String ras)
-    throws IllegalArgumentException {
-        if (ras == null || !ras.startsWith("<") || !ras.endsWith(">"))
-            throw new IllegalArgumentException("record must be wrapped in < >");
-
-
+    throws RasException {
         String[] f = fields(ras);
         boolean other = f[0].equals("OtherActivity");
         if (!other && !f[0].equals("HomeActivity") && !f[0].equals("SchoolActivity"))
-            throw new IllegalArgumentException("unknown activity type: " + f[0]);
+            throw new RasException("unknown activity type: " + f[0]);
         if (f.length != (other ? 6 : 5))
-            throw new IllegalArgumentException("expected " + (other ? 6 : 5) + " fields but found " + f.length);
+            throw new RasException("expected " + (other ? 6 : 5) + " fields but found " + f.length);
         if (f[1].isBlank())
-            throw new IllegalArgumentException("title is empty");
+            throw new RasException("title is empty");
 
-        Time start = Input.parseTime(f[2]);
-        Time end = Input.parseTime(f[3]);
+        Time start = Input.parseTime(desanitize(f[2]));
+        Time end = Input.parseTime(desanitize(f[3]));
         if (start == null || end == null)
-            throw new IllegalArgumentException("invalid start or end time");
+            throw new RasException("invalid start or end time");
         if (start.compareTo(end) >= 0)
-            throw new IllegalArgumentException("start is not before end");
+            throw new RasException("start is not before end");
 
         String comment = optional(f, 4);
-        switch (f[0]) {
-            case "HomeActivity"   -> new HomeActivity(f[1], start, end, comment);
-            case "SchoolActivity" -> new SchoolActivity(f[1], start, end, comment);
-            default -> {
+
+        if (activity != null) {
+            activity.setTitle(desanitize(f[1]));
+            activity.setStartTime(start);
+            activity.setEndTime(end);
+            activity.setComment(comment);
+            if (other) {
                 if (f[5].isBlank())
-                    throw new IllegalArgumentException("location is empty");
-                new OtherActivity(f[1], start, end, comment, f[5]);
+                    throw new RasException("location is empty");
+                if (activity instanceof OtherActivity o)
+                    o.setLocation(desanitize(f[5]));
             }
-        };
+        }
     }
 
     /**
@@ -156,11 +177,13 @@ public final class RasParser {
      * 
      * @param ras Serialized activity record.
      * @return Location content.
+     * @throws RasException when RAS input is invalid.
      */
-    public static String location(String ras) {
+    public static String location(String ras)
+    throws RasException {
         String[] fields = fields(ras);
         return fields.length >= 6 && !fields[5].isEmpty() && !fields[5].equals("NIL")
-            ? fields[5] : null;
+            ? desanitize(fields[5]) : null;
     }
 
     /**

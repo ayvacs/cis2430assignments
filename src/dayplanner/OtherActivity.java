@@ -59,8 +59,10 @@ public class OtherActivity extends Activity {
      * Serial) string.
      * 
      * @param ras Serialized entry.
+     * @throws RasException when RAS input is invalid.
      */
-    public OtherActivity(String ras) {
+    public OtherActivity(String ras)
+    throws RasException {
         super(ras);
         setLocation(RasParser.location(ras));
     }

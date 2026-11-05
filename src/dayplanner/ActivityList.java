@@ -115,8 +115,8 @@ public class ActivityList extends AbstractList<Activity> {
                 continue;
             try {
                 add(activityFromRAS(line));
-            } catch (IllegalArgumentException e) {
-                System.out.println("Skipping line " + ln + ": " + e.getMessage());
+            } catch (RasException e) {
+                System.out.println("Skipping line " + ln + " due to RAS formatting error:\n" + e.getMessage());
             }
         }
     }
@@ -199,8 +199,10 @@ public class ActivityList extends AbstractList<Activity> {
      * @param ras One serialized entry, such as
      *            {@code <SchoolActivity,Lab,2026/10/20 14:30,2026/10/20 16:30,NIL>}.
      * @return The instantiated <code>Activity</code> subclass.
+     * @throws RasException when RAS input is invalid.
      */
-    public static Activity activityFromRAS(String ras) {
+    public static Activity activityFromRAS(String ras)
+    throws RasException {
         return RasParser.parse(ras);
     }
 

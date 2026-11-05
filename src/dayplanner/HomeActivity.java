@@ -51,8 +51,10 @@ public class HomeActivity extends Activity {
      * string.
      * 
      * @param ras Serialized activity entry, normally produced by {@link #toRAS()}.
+     * @throws RasException when RAS input is invalid.
      */
-    public HomeActivity(String ras) {
+    public HomeActivity(String ras)
+    throws RasException {
         super(ras);
     }
 

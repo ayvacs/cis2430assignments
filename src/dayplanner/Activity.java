@@ -91,8 +91,10 @@ public class Activity implements Comparable<Activity> {
      * 
      * @param ras RAS entry, such as
      *            {@code <HomeActivity,Laundry,2026/10/20 09:00,2026/10/20 10:00,NIL>}.
+     * @throws RasException when RAS input is invalid.
      */
-    public Activity(String ras) {
+    public Activity(String ras)
+    throws RasException {
         // declare default values
         this("", new Time(), new Time());
 
