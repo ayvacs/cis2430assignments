@@ -6,6 +6,8 @@ JDOC = javadoc
 JDOCFLAGS = -locale en_CA -quiet -linksource
 JJAR = jar
 JJARFLAGS = cfe
+TAR = COPYFILE_DISABLE=1 tar
+TARFLAGS = --format=ustar --exclude-from=tar_exclude.txt --no-xattrs -cvf
 
 SRC_DIR = src
 BIN_DIR = bin
@@ -44,7 +46,7 @@ clean:
 zip: clean all
 	mkdir -p $(NAME)
 	cp -R dat docs src Makefile README.md $(NAME)/
-	COPYFILE_DISABLE=1 tar --exclude-from=tar_exclude.txt -cvf $(NAME).tar $(NAME)
+	$(TAR) $(TARFLAGS) $(NAME).tar $(NAME)
 	gzip -f $(NAME).tar
 	rm -rf $(NAME) $(NAME).tar
 
