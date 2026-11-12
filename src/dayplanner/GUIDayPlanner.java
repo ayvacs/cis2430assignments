@@ -77,11 +77,9 @@ public class GUIDayPlanner extends JFrame {
      * @param activities  The list of activities.
      */
     public void refreshWelcomeText(JLabel welcomeText, ActivityList activities) {
-        System.out.println("refresh welcome text");
-        welcomeText.setText(("<html>"
-            + DayPlannerUtils.getGreeting(activities.size())
-            + "\nChoose a command from the menu to the left."
-            + "</html>")
-                .replaceAll("\n","<br>"));
+        welcomeText.setText(String.format("<html>%s\n%s</html>",
+            DayPlannerUtils.getGreeting(activities.size()),
+            "Choose a command from the menu to the left.")
+                .replaceAll("\n", "<br>"));
     }
 }

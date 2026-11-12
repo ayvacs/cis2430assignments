@@ -28,8 +28,6 @@ public class GUICommandMenu extends JComboBox<String> {
             
             MenuOption option = MenuOption.parse(String.valueOf(selected));
 
-            System.out.println(option);
-
             if (option.equals(MenuOption.QUIT)) {
                 new GUIQuitMenu(gdp);
             }
