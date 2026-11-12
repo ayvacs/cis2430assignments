@@ -11,9 +11,7 @@ public enum MenuOption {
     /** Option 2 */
     SEARCH,
     /** Option 3 */
-    QUIT,
-    /** Hidden option 1 */
-    FLUSH_USERNAME;
+    QUIT;
 
     /**
      * Parses a menu command or alias.
@@ -29,7 +27,6 @@ public enum MenuOption {
             case "add", "a", "1", "insert" -> ADD;
             case "search", "s", "2", "find" -> SEARCH;
             case "quit", "q", "3" -> QUIT;
-            case "flush_username" -> FLUSH_USERNAME;
             default -> null;
         };
     }

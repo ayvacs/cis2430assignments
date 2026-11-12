@@ -92,14 +92,6 @@ A search query accepts up to three optional components (press Enter on any promp
 
 Saves the activity list to disk in RAS format and exits.
 
-### 4. Hidden functions
-
-There are hidden utility functions, which you can access by typing the full command name into the menu. These are not mentioned in the main command flow because they are only intended to be used while testing the program and there is no need for a regular user to use these commands.
-
-| Command name | Function |
-| --- | --- |
-| `flush_username` | Delete the user's name and the username file, without prompting for a new name |
-
 # Implementation
 
 The DayPlanner consists of the following classes in the `dayplanner` package:

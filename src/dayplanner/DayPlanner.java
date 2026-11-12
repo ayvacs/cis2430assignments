@@ -18,12 +18,6 @@ public class DayPlanner {
     private static String dataFileName;
     private static ActivityList activities;
 
-    private static final String USERNAME_FILENAME = "username.txt";
-    private static final String USERNAME = DayPlannerUtils.getUsername(
-        DATA_DIRECTORY,
-        USERNAME_FILENAME,
-        KEYBOARD);
-
 
     /**
      * Main entry point for the DayPlanner application.
@@ -47,6 +41,9 @@ public class DayPlanner {
             System.out.println("\nError initializing activitylist from this data file ("+dataFileName+").\n");
             return;
         }
+        
+        new GUIDayPlanner(
+            activities);
 
         // Perform the command loop until the user quits
         boolean doLoop = true;
@@ -74,9 +71,7 @@ public class DayPlanner {
         // Print a big greeting message
         System.out.println("\n\n\t\t===-=-==-=====-==-=-===\n\n");
         System.out.println("\t『 DAY PLANNER 』  Main Menu\n");
-        System.out.println(DayPlannerUtils.getGreeting(
-            USERNAME,
-            activities.size()));
+        System.out.println(DayPlannerUtils.getGreeting(activities.size()));
         System.out.println("\nPlease enter a command:");
         System.out.println("\t1. add    - Insert a new activity");
         System.out.println("\t2. search - Search for an activity");
@@ -101,8 +96,6 @@ public class DayPlanner {
             case ADD    -> addActivity();
             case SEARCH -> searchForActivity();
             case QUIT   -> { return false; }
-            case FLUSH_USERNAME ->
-                DayPlannerUtils.flushUsername(DATA_DIRECTORY, USERNAME_FILENAME);
         }
 
         return true;

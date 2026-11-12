@@ -8,58 +8,18 @@ import java.time.LocalTime;
 
 /**
  * Provides shared helpers for activity category parsing, greeting generation,
- * username storage, and search filtering. Methods are static so callers can use
- * them without creating a utility instance.
+ * and search filtering. Methods are static so callers can use them without
+ * creating a utility instance.
  */
 public class DayPlannerUtils {
-    /**
-     * Retrieves the username from file, prompting the user (and storing the new
-     * name to file) if no name is currently stored.
-     * 
-     * @param dirName  Name of the data directory.
-     * @param fileName Name of the username file.
-     * @param keyboard Input instance to use to enter new username if necessary.
-     * @return The stored name, or a newly entered name when no usable file value
-     *         exists.
-     */
-    public static String getUsername(String dirName, String fileName, Input keyboard) {
-        String name = "exception"; // fall back name in case of error
-
-        // Case 1: file doesn't exist
-        if (!FileUtils.exists(dirName, fileName)) {
-            System.out.println("\n\nHello new user, please enter your name:");
-            name = keyboard.readString();
-
-            try {
-                FileUtils.writeText(dirName, fileName, name);
-            } catch (Exception e) {
-                System.out.println("Couldn't write name to file.");
-            }
-
-            return name;
-        }
-
-        // Case 2: File exists
-        try {
-            name = FileUtils.readFirstLine(dirName, fileName);
-        } catch (Exception e) {
-            System.out.println("Couldn't read name from file.");
-        }
-
-        return name;
-    }
-
-
-
     /**
      * Generates a multi-line time-appropriate greeting and activity summary for the
      * user. Each line of the greeting is indented by 1 tab.
      * 
-     * @param username            The user's name.
-     * @param numActivities       The current number of activities.
+     * @param numActivities The current number of activities.
      * @return Formatted greeting string indented by 1 tab.
      */
-    public static String getGreeting(String username, int numActivities) {
+    public static String getGreeting(int numActivities) {
         int hour = LocalTime.now().getHour();
         String greeting;
 
@@ -67,26 +27,8 @@ public class DayPlannerUtils {
         else if (hour < 17) greeting = "Good afternoon";
         else                greeting = "Good evening";
 
-        String text = "\t%s, %s!\n\tYou have %d activities currently entered.";
-        return String.format(text, greeting, username, numActivities);
-    }
-
-
-
-    /**
-     * Deletes the stored username file if it exists. This is used by the hidden
-     * maintenance command; it does not prompt for or create a replacement name.
-     * 
-     * @param dirName  Name of the data directory.
-     * @param fileName Name of the username file.
-     */
-    public static void flushUsername(String dirName, String fileName) {
-        try {
-            FileUtils.delete(dirName, fileName);
-            System.out.println("Done, although username isn't refreshed until program is relaunched");
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        String text = "\t%s!\n\tYou have %d activities currently entered.";
+        return String.format(text, greeting, numActivities);
     }
 
 
