@@ -38,27 +38,21 @@ public class GUIDayPlanner extends JFrame {
 
 
         // ==============================
-        // Menu
-        // ==============================
-
-        GUICommandMenu dropdown = new GUICommandMenu(this);
-        add(dropdown);
-
-
-        // ==============================
-        // Welcome Text
+        // Contents
         // ==============================
 
         JLabel welcomeText = new JLabel();
-        welcomeText.setText(("<html>"
-            + DayPlannerUtils.getGreeting(activities.size())
-            + "\nChoose a command from the menu to the left."
-            + "</html>")
-                .replaceAll("\n","<br>"));
         welcomeText.setBorder(PADDING);
+        refreshWelcomeText(welcomeText, activities);
 
+        GUICommandMenu dropdown = new GUICommandMenu(this);
+        dropdown.addActionListener(e -> {
+            refreshWelcomeText(welcomeText, activities);
+        });
+
+        add(dropdown);
         add(welcomeText);
-
+        
 
         // ==============================
         // End
@@ -74,5 +68,20 @@ public class GUIDayPlanner extends JFrame {
         DayPlanner.quit();
         dispose();
         System.exit(0);
+    }
+
+    /**
+     * Refresh the welcome text label.
+     * 
+     * @param welcomeText The welcome text label.
+     * @param activities  The list of activities.
+     */
+    public void refreshWelcomeText(JLabel welcomeText, ActivityList activities) {
+        System.out.println("refresh welcome text");
+        welcomeText.setText(("<html>"
+            + DayPlannerUtils.getGreeting(activities.size())
+            + "\nChoose a command from the menu to the left."
+            + "</html>")
+                .replaceAll("\n","<br>"));
     }
 }
