@@ -51,6 +51,14 @@ public class DayPlanner {
             doLoop = commandLoop();
 
         // The above loop only finishes when the user wants to quit
+        quit();
+    }
+
+
+    /**
+     * Saves the list and exits the program.
+     */
+    public static void quit() {
         // Attempt to save the list in RAS format
         boolean errors = saveToRAS();
         if (errors)    System.out.println("\nError saving the list.");

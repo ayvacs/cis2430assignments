@@ -15,8 +15,10 @@ public class GUICommandMenu extends JComboBox<String> {
 
     /**
      * Create a new Swing GUI picker.
+     * 
+     * @param gdp Refers to the Swing GUI window.
      */
-    public GUICommandMenu() {
+    public GUICommandMenu(GUIDayPlanner gdp) {
         super(OPTIONS);
 
         addActionListener(e -> {
@@ -27,6 +29,10 @@ public class GUICommandMenu extends JComboBox<String> {
             MenuOption option = MenuOption.parse(String.valueOf(selected));
 
             System.out.println(option);
+
+            if (option.equals(MenuOption.QUIT)) {
+                new GUIQuitMenu(gdp);
+            }
         });
     }
 }

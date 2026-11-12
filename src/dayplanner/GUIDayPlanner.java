@@ -41,7 +41,7 @@ public class GUIDayPlanner extends JFrame {
         // Menu
         // ==============================
 
-        GUICommandMenu dropdown = new GUICommandMenu();
+        GUICommandMenu dropdown = new GUICommandMenu(this);
         add(dropdown);
 
 
@@ -65,5 +65,14 @@ public class GUIDayPlanner extends JFrame {
         // ==============================
 
         setVisible(true);
+    }
+
+    /**
+     * Saves the list and exits the GUI.
+     */
+    public void quit() {
+        DayPlanner.quit();
+        dispose();
+        System.exit(0);
     }
 }
