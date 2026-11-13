@@ -9,6 +9,7 @@ import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.border.Border;
 
 /**
@@ -71,11 +72,18 @@ public class GUIDayPlanner extends JFrame {
     }
 
     /**
-     * Saves the list and exits the GUI.
+     * Saves the list and exits the GUI. Shows an error message if there was an
+     * error saving the list.
      */
     public void quit() {
-        DayPlanner.quit();
+        boolean wasError = DayPlanner.quit();
         dispose();
+
+        if (wasError)
+            JOptionPane.showMessageDialog(
+                null, "There was an error saving the list. Click \"OK\" to exit DayPlanner.",
+                null, JOptionPane.ERROR_MESSAGE);
+
         System.exit(0);
     }
 

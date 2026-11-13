@@ -57,14 +57,17 @@ public class DayPlanner {
 
     /**
      * Saves the list and exits the program.
+     * 
+     * @return True if there was a RAS save failure, false otherwise.
      */
-    public static void quit() {
+    public static boolean quit() {
         // Attempt to save the list in RAS format
         boolean errors = saveToRAS();
         if (errors)    System.out.println("\nError saving the list.");
         else           System.out.println("\nThe list was saved successfully.");
 
         System.out.println("\nNow quitting DayPlanner. Goodbye!");
+        return errors;
     }
 
 
