@@ -90,46 +90,44 @@
 <span class="source-line-no">077</span><span id="line-77">     * error saving the list.</span>
 <span class="source-line-no">078</span><span id="line-78">     */</span>
 <span class="source-line-no">079</span><span id="line-79">    public void quit() {</span>
-<span class="source-line-no">080</span><span id="line-80">        String successMsg = "The list was saved successfully. Now quitting DayPlanner. Goodbye!";</span>
-<span class="source-line-no">081</span><span id="line-81">        String errorMsg = "There was an error saving the list. Click \"OK\" to exit DayPlanner.";</span>
-<span class="source-line-no">082</span><span id="line-82">        </span>
-<span class="source-line-no">083</span><span id="line-83">        boolean errorOccurred = DayPlanner.quit(false);</span>
-<span class="source-line-no">084</span><span id="line-84">        String msg = errorOccurred</span>
-<span class="source-line-no">085</span><span id="line-85">            ? errorMsg</span>
-<span class="source-line-no">086</span><span id="line-86">            : successMsg;</span>
-<span class="source-line-no">087</span><span id="line-87">        int mode = errorOccurred </span>
-<span class="source-line-no">088</span><span id="line-88">            ? JOptionPane.ERROR_MESSAGE</span>
-<span class="source-line-no">089</span><span id="line-89">            : JOptionPane.INFORMATION_MESSAGE;</span>
-<span class="source-line-no">090</span><span id="line-90"></span>
-<span class="source-line-no">091</span><span id="line-91">        JOptionPane.showMessageDialog(null, msg, null, mode);</span>
-<span class="source-line-no">092</span><span id="line-92">        dispose();</span>
-<span class="source-line-no">093</span><span id="line-93"></span>
-<span class="source-line-no">094</span><span id="line-94">        System.exit(0);</span>
-<span class="source-line-no">095</span><span id="line-95">    }</span>
-<span class="source-line-no">096</span><span id="line-96"></span>
-<span class="source-line-no">097</span><span id="line-97">    /**</span>
-<span class="source-line-no">098</span><span id="line-98">     * Shows the GUI quit menu.</span>
-<span class="source-line-no">099</span><span id="line-99">     */</span>
-<span class="source-line-no">100</span><span id="line-100">    public void showGuiQuitMenu() {</span>
-<span class="source-line-no">101</span><span id="line-101">        new GUIQuitMenu(this);</span>
-<span class="source-line-no">102</span><span id="line-102">    }</span>
-<span class="source-line-no">103</span><span id="line-103"></span>
-<span class="source-line-no">104</span><span id="line-104">    /**</span>
-<span class="source-line-no">105</span><span id="line-105">     * Refresh the welcome text label.</span>
-<span class="source-line-no">106</span><span id="line-106">     * </span>
-<span class="source-line-no">107</span><span id="line-107">     * @param welcomeText The welcome text label.</span>
-<span class="source-line-no">108</span><span id="line-108">     * @param activities  The list of activities.</span>
-<span class="source-line-no">109</span><span id="line-109">     */</span>
-<span class="source-line-no">110</span><span id="line-110">    public void refreshWelcomeText(JLabel welcomeText, ActivityList activities) {</span>
-<span class="source-line-no">111</span><span id="line-111">        String text = ("&lt;html&gt;"</span>
-<span class="source-line-no">112</span><span id="line-112">                     + DayPlannerUtils.getGreeting(activities.size())</span>
-<span class="source-line-no">113</span><span id="line-113">                     + "\n"</span>
-<span class="source-line-no">114</span><span id="line-114">                     + "Choose a command from the menu to the left."</span>
-<span class="source-line-no">115</span><span id="line-115">                     + "&lt;/html&gt;").replaceAll("\n", "&lt;br&gt;");</span>
-<span class="source-line-no">116</span><span id="line-116">                     </span>
-<span class="source-line-no">117</span><span id="line-117">        welcomeText.setText(text);</span>
-<span class="source-line-no">118</span><span id="line-118">    }</span>
-<span class="source-line-no">119</span><span id="line-119">}</span>
+<span class="source-line-no">080</span><span id="line-80">        boolean errorOccurred = DayPlanner.quit(false);</span>
+<span class="source-line-no">081</span><span id="line-81"></span>
+<span class="source-line-no">082</span><span id="line-82">        String msg = errorOccurred</span>
+<span class="source-line-no">083</span><span id="line-83">            ? "&lt;html&gt;There was an error saving the list.&lt;br&gt;Click \"OK\" to exit DayPlanner.&lt;/html&gt;"</span>
+<span class="source-line-no">084</span><span id="line-84">            : "&lt;html&gt;The list was saved successfully.&lt;br&gt;Now quitting DayPlanner. Goodbye!&lt;/html&gt;";</span>
+<span class="source-line-no">085</span><span id="line-85">        int mode = errorOccurred </span>
+<span class="source-line-no">086</span><span id="line-86">            ? JOptionPane.ERROR_MESSAGE</span>
+<span class="source-line-no">087</span><span id="line-87">            : JOptionPane.INFORMATION_MESSAGE;</span>
+<span class="source-line-no">088</span><span id="line-88"></span>
+<span class="source-line-no">089</span><span id="line-89">        JOptionPane.showMessageDialog(null, msg, null, mode);</span>
+<span class="source-line-no">090</span><span id="line-90">        </span>
+<span class="source-line-no">091</span><span id="line-91">        dispose();</span>
+<span class="source-line-no">092</span><span id="line-92">        System.exit(0);</span>
+<span class="source-line-no">093</span><span id="line-93">    }</span>
+<span class="source-line-no">094</span><span id="line-94"></span>
+<span class="source-line-no">095</span><span id="line-95">    /**</span>
+<span class="source-line-no">096</span><span id="line-96">     * Shows the GUI quit menu.</span>
+<span class="source-line-no">097</span><span id="line-97">     */</span>
+<span class="source-line-no">098</span><span id="line-98">    public void showGuiQuitMenu() {</span>
+<span class="source-line-no">099</span><span id="line-99">        new GUIQuitMenu(this);</span>
+<span class="source-line-no">100</span><span id="line-100">    }</span>
+<span class="source-line-no">101</span><span id="line-101"></span>
+<span class="source-line-no">102</span><span id="line-102">    /**</span>
+<span class="source-line-no">103</span><span id="line-103">     * Refresh the welcome text label.</span>
+<span class="source-line-no">104</span><span id="line-104">     * </span>
+<span class="source-line-no">105</span><span id="line-105">     * @param welcomeText The welcome text label.</span>
+<span class="source-line-no">106</span><span id="line-106">     * @param activities  The list of activities.</span>
+<span class="source-line-no">107</span><span id="line-107">     */</span>
+<span class="source-line-no">108</span><span id="line-108">    public void refreshWelcomeText(JLabel welcomeText, ActivityList activities) {</span>
+<span class="source-line-no">109</span><span id="line-109">        String text = ("&lt;html&gt;"</span>
+<span class="source-line-no">110</span><span id="line-110">                     + DayPlannerUtils.getGreeting(activities.size())</span>
+<span class="source-line-no">111</span><span id="line-111">                     + "\n"</span>
+<span class="source-line-no">112</span><span id="line-112">                     + "Choose a command from the menu to the left."</span>
+<span class="source-line-no">113</span><span id="line-113">                     + "&lt;/html&gt;").replaceAll("\n", "&lt;br&gt;");</span>
+<span class="source-line-no">114</span><span id="line-114">                     </span>
+<span class="source-line-no">115</span><span id="line-115">        welcomeText.setText(text);</span>
+<span class="source-line-no">116</span><span id="line-116">    }</span>
+<span class="source-line-no">117</span><span id="line-117">}</span>
 
 
 
