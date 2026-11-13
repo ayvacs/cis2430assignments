@@ -2,6 +2,9 @@ package dayplanner;
 
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.JFrame;
@@ -14,7 +17,7 @@ import javax.swing.border.Border;
 public class GUIDayPlanner extends JFrame {
     private static final Dimension DIMS = new Dimension(600, 200);
 	private static final String TITLE = "DayPlanner";
-	private static final int CLOSE = JFrame.EXIT_ON_CLOSE;
+	private static final int CLOSE = JFrame.DO_NOTHING_ON_CLOSE;
 	private static final Color BACKGROUND = new Color(220, 220, 220);
     private static final Border PADDING = BorderFactory.createEmptyBorder(12, 12, 12, 12);
 
@@ -35,6 +38,12 @@ public class GUIDayPlanner extends JFrame {
         getContentPane().setBackground(BACKGROUND);
         setLocationRelativeTo(null);
         setLayout(new BoxLayout(getContentPane(), BoxLayout.X_AXIS));
+        addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                showGuiQuitMenu();
+            }
+        });
 
 
         // ==============================
@@ -68,6 +77,13 @@ public class GUIDayPlanner extends JFrame {
         DayPlanner.quit();
         dispose();
         System.exit(0);
+    }
+
+    /**
+     * Shows the GUI quit menu.
+     */
+    public void showGuiQuitMenu() {
+        new GUIQuitMenu(this);
     }
 
     /**
