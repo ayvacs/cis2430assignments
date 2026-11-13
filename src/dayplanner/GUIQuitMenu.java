@@ -43,38 +43,40 @@ public class GUIQuitMenu extends JFrame {
 
 
         // ==============================
-        // Warning Text
+        // Warning
         // ==============================
 
-        JLabel warningText = new JLabel();
-        warningText.setText("<html>"
+        String warningText = "<html>"
             + "Are you sure you want to exit DayPlanner?<br>"
-            + "This will save your list to disk.");
-        warningText.setBorder(PADDING);
-        add(warningText);
+            + "This will save your list to disk."
+            + "</html>";
+
+        JLabel warningLabel = new JLabel(warningText);
+        warningLabel.setBorder(PADDING);
+        add(warningLabel);
 
 
         // ==============================
         // Buttons
         // ==============================
+
+        ActionListener buttonEvent = new ActionListener() {
+            public void actionPerformed(ActionEvent event) {
+                dispose();
+                if (event.getActionCommand().equals("CLOSE"))
+                    gdp.quit();
+            }
+        };
         
         JButton closeButton = new JButton("Close");
-        closeButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                dispose();
-                gdp.quit();
-            }
-        });
-        add(closeButton);
+        closeButton.setActionCommand("CLOSE");
+        closeButton.addActionListener(buttonEvent);
 
         JButton cancelButton = new JButton("Cancel");
-        cancelButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                dispose();
-            }
-        });
+        cancelButton.setActionCommand("CANCEL");
+        cancelButton.addActionListener(buttonEvent);
+
+        add(closeButton);
         add(cancelButton);
 
 

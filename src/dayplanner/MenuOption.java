@@ -14,7 +14,7 @@ public enum MenuOption {
     QUIT;
 
     /**
-     * Parses a menu command or alias.
+     * Parses a string menu command or alias.
      *
      * @param input command entered by the user
      * @return matching option enum, or {@code null} if the command is unknown
@@ -29,5 +29,15 @@ public enum MenuOption {
             case "quit", "q", "3" -> QUIT;
             default -> null;
         };
+    }
+
+    /**
+     * Parses an integer menu command or alias.
+     * 
+     * @param input command entered by the user
+     * @return matching option enum, or {@code null} if the command is unknown
+     */
+    public static MenuOption parse(int input) {
+        return parse(String.valueOf(input));
     }
 }

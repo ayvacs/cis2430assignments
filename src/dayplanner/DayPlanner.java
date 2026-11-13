@@ -41,10 +41,12 @@ public class DayPlanner {
             System.out.println("\nError initializing activitylist from this data file ("+dataFileName+").\n");
             return;
         }
-        
-        new GUIDayPlanner(
-            activities);
 
+        // Now the the ActivityList is initialized we can Show the GUI
+        new GUIDayPlanner(activities);
+
+        /*
+        // This is Legacy Code that executes the old, terminal-based command loop.
         // Perform the command loop until the user quits
         boolean doLoop = true;
         while (doLoop)
@@ -52,6 +54,7 @@ public class DayPlanner {
 
         // The above loop only finishes when the user wants to quit
         quit();
+        */
     }
 
 

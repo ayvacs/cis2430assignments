@@ -22,15 +22,23 @@ public class GUICommandMenu extends JComboBox<String> {
         super(OPTIONS);
 
         addActionListener(e -> {
-            int selected = getSelectedIndex();
-            if (selected == 0)
-                return;
+            MenuOption option = MenuOption.parse(getSelectedIndex());
             
-            MenuOption option = MenuOption.parse(String.valueOf(selected));
-
-            if (option.equals(MenuOption.QUIT)) {
-                new GUIQuitMenu(gdp);
+            // Execute the desired task.
+            switch (option) {
+                case ADD:
+                    break;
+                case SEARCH:
+                    break;
+                case QUIT:
+                    new GUIQuitMenu(gdp);
+                    break;
+                default:
+                    break;
             }
+
+            // Immediately show the "Select Command" item.
+            setSelectedIndex(0);
         });
     }
 }

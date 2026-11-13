@@ -76,12 +76,14 @@ public class GUIDayPlanner extends JFrame {
      * error saving the list.
      */
     public void quit() {
-        boolean wasError = DayPlanner.quit();
+        String errorMsg = "There was an error saving the list. Click \"OK\" to exit DayPlanner.";
+        
+        boolean errorOccurred = DayPlanner.quit();
         dispose();
 
-        if (wasError)
+        if (errorOccurred)
             JOptionPane.showMessageDialog(
-                null, "There was an error saving the list. Click \"OK\" to exit DayPlanner.",
+                null, errorMsg,
                 null, JOptionPane.ERROR_MESSAGE);
 
         System.exit(0);
@@ -101,9 +103,13 @@ public class GUIDayPlanner extends JFrame {
      * @param activities  The list of activities.
      */
     public void refreshWelcomeText(JLabel welcomeText, ActivityList activities) {
-        welcomeText.setText(String.format("<html>%s\n%s</html>",
-            DayPlannerUtils.getGreeting(activities.size()),
-            "Choose a command from the menu to the left.")
-                .replaceAll("\n", "<br>"));
+        String text = ("<html>"
+                    + DayPlannerUtils.getGreeting(activities.size())
+                    + "\n"
+                    + "Choose a command from the menu to the left."
+                    + "</html>")
+            .replaceAll("\n", "<br>");
+
+        welcomeText.setText(text);
     }
 }
