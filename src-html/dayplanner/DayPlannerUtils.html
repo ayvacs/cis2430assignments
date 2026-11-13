@@ -21,211 +21,153 @@
 <span class="source-line-no">008</span><span id="line-8"></span>
 <span class="source-line-no">009</span><span id="line-9">/**</span>
 <span class="source-line-no">010</span><span id="line-10"> * Provides shared helpers for activity category parsing, greeting generation,</span>
-<span class="source-line-no">011</span><span id="line-11"> * username storage, and search filtering. Methods are static so callers can use</span>
-<span class="source-line-no">012</span><span id="line-12"> * them without creating a utility instance.</span>
+<span class="source-line-no">011</span><span id="line-11"> * and search filtering. Methods are static so callers can use them without</span>
+<span class="source-line-no">012</span><span id="line-12"> * creating a utility instance.</span>
 <span class="source-line-no">013</span><span id="line-13"> */</span>
 <span class="source-line-no">014</span><span id="line-14">public class DayPlannerUtils {</span>
 <span class="source-line-no">015</span><span id="line-15">    /**</span>
-<span class="source-line-no">016</span><span id="line-16">     * Retrieves the username from file, prompting the user (and storing the new</span>
-<span class="source-line-no">017</span><span id="line-17">     * name to file) if no name is currently stored.</span>
+<span class="source-line-no">016</span><span id="line-16">     * Generates a multi-line time-appropriate greeting and activity summary for the</span>
+<span class="source-line-no">017</span><span id="line-17">     * user. Each line of the greeting is indented by 1 tab.</span>
 <span class="source-line-no">018</span><span id="line-18">     * </span>
-<span class="source-line-no">019</span><span id="line-19">     * @param dirName  Name of the data directory.</span>
-<span class="source-line-no">020</span><span id="line-20">     * @param fileName Name of the username file.</span>
-<span class="source-line-no">021</span><span id="line-21">     * @param keyboard Input instance to use to enter new username if necessary.</span>
-<span class="source-line-no">022</span><span id="line-22">     * @return The stored name, or a newly entered name when no usable file value</span>
-<span class="source-line-no">023</span><span id="line-23">     *         exists.</span>
-<span class="source-line-no">024</span><span id="line-24">     */</span>
-<span class="source-line-no">025</span><span id="line-25">    public static String getUsername(String dirName, String fileName, Input keyboard) {</span>
-<span class="source-line-no">026</span><span id="line-26">        String name = "exception"; // fall back name in case of error</span>
-<span class="source-line-no">027</span><span id="line-27"></span>
-<span class="source-line-no">028</span><span id="line-28">        // Case 1: file doesn't exist</span>
-<span class="source-line-no">029</span><span id="line-29">        if (!FileUtils.exists(dirName, fileName)) {</span>
-<span class="source-line-no">030</span><span id="line-30">            System.out.println("\n\nHello new user, please enter your name:");</span>
-<span class="source-line-no">031</span><span id="line-31">            name = keyboard.readString();</span>
-<span class="source-line-no">032</span><span id="line-32"></span>
-<span class="source-line-no">033</span><span id="line-33">            try {</span>
-<span class="source-line-no">034</span><span id="line-34">                FileUtils.writeText(dirName, fileName, name);</span>
-<span class="source-line-no">035</span><span id="line-35">            } catch (Exception e) {</span>
-<span class="source-line-no">036</span><span id="line-36">                System.out.println("Couldn't write name to file.");</span>
-<span class="source-line-no">037</span><span id="line-37">            }</span>
-<span class="source-line-no">038</span><span id="line-38"></span>
-<span class="source-line-no">039</span><span id="line-39">            return name;</span>
-<span class="source-line-no">040</span><span id="line-40">        }</span>
-<span class="source-line-no">041</span><span id="line-41"></span>
-<span class="source-line-no">042</span><span id="line-42">        // Case 2: File exists</span>
-<span class="source-line-no">043</span><span id="line-43">        try {</span>
-<span class="source-line-no">044</span><span id="line-44">            name = FileUtils.readFirstLine(dirName, fileName);</span>
-<span class="source-line-no">045</span><span id="line-45">        } catch (Exception e) {</span>
-<span class="source-line-no">046</span><span id="line-46">            System.out.println("Couldn't read name from file.");</span>
-<span class="source-line-no">047</span><span id="line-47">        }</span>
-<span class="source-line-no">048</span><span id="line-48"></span>
-<span class="source-line-no">049</span><span id="line-49">        return name;</span>
-<span class="source-line-no">050</span><span id="line-50">    }</span>
-<span class="source-line-no">051</span><span id="line-51"></span>
-<span class="source-line-no">052</span><span id="line-52"></span>
-<span class="source-line-no">053</span><span id="line-53"></span>
-<span class="source-line-no">054</span><span id="line-54">    /**</span>
-<span class="source-line-no">055</span><span id="line-55">     * Generates a multi-line time-appropriate greeting and activity summary for the</span>
-<span class="source-line-no">056</span><span id="line-56">     * user. Each line of the greeting is indented by 1 tab.</span>
-<span class="source-line-no">057</span><span id="line-57">     * </span>
-<span class="source-line-no">058</span><span id="line-58">     * @param username            The user's name.</span>
-<span class="source-line-no">059</span><span id="line-59">     * @param numActivities       The current number of activities.</span>
-<span class="source-line-no">060</span><span id="line-60">     * @return Formatted greeting string indented by 1 tab.</span>
+<span class="source-line-no">019</span><span id="line-19">     * @param numActivities The current number of activities.</span>
+<span class="source-line-no">020</span><span id="line-20">     * @return Formatted greeting string indented by 1 tab.</span>
+<span class="source-line-no">021</span><span id="line-21">     */</span>
+<span class="source-line-no">022</span><span id="line-22">    public static String getGreeting(int numActivities) {</span>
+<span class="source-line-no">023</span><span id="line-23">        int hour = LocalTime.now().getHour();</span>
+<span class="source-line-no">024</span><span id="line-24">        String greeting;</span>
+<span class="source-line-no">025</span><span id="line-25"></span>
+<span class="source-line-no">026</span><span id="line-26">        if (hour &lt; 12)      greeting = "Good morning";</span>
+<span class="source-line-no">027</span><span id="line-27">        else if (hour &lt; 17) greeting = "Good afternoon";</span>
+<span class="source-line-no">028</span><span id="line-28">        else                greeting = "Good evening";</span>
+<span class="source-line-no">029</span><span id="line-29"></span>
+<span class="source-line-no">030</span><span id="line-30">        String text = "\t%s!\n\tYou have %d activities currently entered.";</span>
+<span class="source-line-no">031</span><span id="line-31">        return String.format(text, greeting, numActivities);</span>
+<span class="source-line-no">032</span><span id="line-32">    }</span>
+<span class="source-line-no">033</span><span id="line-33"></span>
+<span class="source-line-no">034</span><span id="line-34"></span>
+<span class="source-line-no">035</span><span id="line-35"></span>
+<span class="source-line-no">036</span><span id="line-36">    /**</span>
+<span class="source-line-no">037</span><span id="line-37">     * &lt;p&gt;</span>
+<span class="source-line-no">038</span><span id="line-38">     * Determines whether an activity satisfies the specified search criteria.</span>
+<span class="source-line-no">039</span><span id="line-39">     * &lt;/p&gt;</span>
+<span class="source-line-no">040</span><span id="line-40">     * &lt;p&gt;</span>
+<span class="source-line-no">041</span><span id="line-41">     * All non-null criteria must be satisfied simultaneously:</span>
+<span class="source-line-no">042</span><span id="line-42">     * &lt;/p&gt;</span>
+<span class="source-line-no">043</span><span id="line-43">     * &lt;ul&gt;</span>
+<span class="source-line-no">044</span><span id="line-44">     * &lt;li&gt;&lt;b&gt;searchStart&lt;/b&gt;: the activity's start time must be &amp;gt;=</span>
+<span class="source-line-no">045</span><span id="line-45">     * &lt;code&gt;searchStart&lt;/code&gt;.&lt;/li&gt;</span>
+<span class="source-line-no">046</span><span id="line-46">     * &lt;li&gt;&lt;b&gt;searchEnd&lt;/b&gt;: the activity's end time must be &amp;lt;=</span>
+<span class="source-line-no">047</span><span id="line-47">     * &lt;code&gt;searchEnd&lt;/code&gt;.&lt;/li&gt;</span>
+<span class="source-line-no">048</span><span id="line-48">     * &lt;/ul&gt;</span>
+<span class="source-line-no">049</span><span id="line-49">     * &lt;p&gt;</span>
+<span class="source-line-no">050</span><span id="line-50">     * Passing &lt;code&gt;null&lt;/code&gt; for any filter disables that filter entirely.</span>
+<span class="source-line-no">051</span><span id="line-51">     * &lt;/p&gt;</span>
+<span class="source-line-no">052</span><span id="line-52">     * </span>
+<span class="source-line-no">053</span><span id="line-53">     * @param act         The activity to test.</span>
+<span class="source-line-no">054</span><span id="line-54">     * @param type        If valid {@link dayplanner.ActivityType}, then</span>
+<span class="source-line-no">055</span><span id="line-55">     *                    &lt;code&gt;act&lt;/code&gt; must be an instance of this type. Value</span>
+<span class="source-line-no">056</span><span id="line-56">     *                    of &lt;code&gt;null&lt;/code&gt; indicates to not filter by type.</span>
+<span class="source-line-no">057</span><span id="line-57">     * @param searchStart Minimum start time, or &lt;code&gt;null&lt;/code&gt; for open start.</span>
+<span class="source-line-no">058</span><span id="line-58">     * @param searchEnd   Maximum end time, or &lt;code&gt;null&lt;/code&gt; for open end.</span>
+<span class="source-line-no">059</span><span id="line-59">     * @return &lt;code&gt;true&lt;/code&gt; if the activity satisfies all given criteria,</span>
+<span class="source-line-no">060</span><span id="line-60">     *         &lt;code&gt;false&lt;/code&gt; otherwise.</span>
 <span class="source-line-no">061</span><span id="line-61">     */</span>
-<span class="source-line-no">062</span><span id="line-62">    public static String getGreeting(String username, int numActivities) {</span>
-<span class="source-line-no">063</span><span id="line-63">        int hour = LocalTime.now().getHour();</span>
-<span class="source-line-no">064</span><span id="line-64">        String greeting;</span>
-<span class="source-line-no">065</span><span id="line-65"></span>
-<span class="source-line-no">066</span><span id="line-66">        if (hour &lt; 12)      greeting = "Good morning";</span>
-<span class="source-line-no">067</span><span id="line-67">        else if (hour &lt; 17) greeting = "Good afternoon";</span>
-<span class="source-line-no">068</span><span id="line-68">        else                greeting = "Good evening";</span>
-<span class="source-line-no">069</span><span id="line-69"></span>
-<span class="source-line-no">070</span><span id="line-70">        String text = "\t%s, %s!\n\tYou have %d activities currently entered.";</span>
-<span class="source-line-no">071</span><span id="line-71">        return String.format(text, greeting, username, numActivities);</span>
-<span class="source-line-no">072</span><span id="line-72">    }</span>
-<span class="source-line-no">073</span><span id="line-73"></span>
-<span class="source-line-no">074</span><span id="line-74"></span>
+<span class="source-line-no">062</span><span id="line-62">    public static boolean matchesCriteria(Activity act, ActivityType type, Time searchStart, Time searchEnd) {</span>
+<span class="source-line-no">063</span><span id="line-63">        // if no activity was given, there is nothing to check</span>
+<span class="source-line-no">064</span><span id="line-64">        if (act == null)</span>
+<span class="source-line-no">065</span><span id="line-65">            return false;</span>
+<span class="source-line-no">066</span><span id="line-66"></span>
+<span class="source-line-no">067</span><span id="line-67">        // check type</span>
+<span class="source-line-no">068</span><span id="line-68">        if (type != null &amp;&amp; !act.getType().equals(type))</span>
+<span class="source-line-no">069</span><span id="line-69">            return false;</span>
+<span class="source-line-no">070</span><span id="line-70"></span>
+<span class="source-line-no">071</span><span id="line-71">        // check start time</span>
+<span class="source-line-no">072</span><span id="line-72">        // a must start on or after the lower bound</span>
+<span class="source-line-no">073</span><span id="line-73">        if (searchStart != null &amp;&amp; act.getStartTime().compareTo(searchStart) &lt; 0)</span>
+<span class="source-line-no">074</span><span id="line-74">            return false;</span>
 <span class="source-line-no">075</span><span id="line-75"></span>
-<span class="source-line-no">076</span><span id="line-76">    /**</span>
-<span class="source-line-no">077</span><span id="line-77">     * Deletes the stored username file if it exists. This is used by the hidden</span>
-<span class="source-line-no">078</span><span id="line-78">     * maintenance command; it does not prompt for or create a replacement name.</span>
-<span class="source-line-no">079</span><span id="line-79">     * </span>
-<span class="source-line-no">080</span><span id="line-80">     * @param dirName  Name of the data directory.</span>
-<span class="source-line-no">081</span><span id="line-81">     * @param fileName Name of the username file.</span>
-<span class="source-line-no">082</span><span id="line-82">     */</span>
-<span class="source-line-no">083</span><span id="line-83">    public static void flushUsername(String dirName, String fileName) {</span>
-<span class="source-line-no">084</span><span id="line-84">        try {</span>
-<span class="source-line-no">085</span><span id="line-85">            FileUtils.delete(dirName, fileName);</span>
-<span class="source-line-no">086</span><span id="line-86">            System.out.println("Done, although username isn't refreshed until program is relaunched");</span>
-<span class="source-line-no">087</span><span id="line-87">        } catch (Exception e) {</span>
-<span class="source-line-no">088</span><span id="line-88">            e.printStackTrace();</span>
-<span class="source-line-no">089</span><span id="line-89">        }</span>
-<span class="source-line-no">090</span><span id="line-90">    }</span>
-<span class="source-line-no">091</span><span id="line-91"></span>
-<span class="source-line-no">092</span><span id="line-92"></span>
-<span class="source-line-no">093</span><span id="line-93"></span>
-<span class="source-line-no">094</span><span id="line-94">    /**</span>
-<span class="source-line-no">095</span><span id="line-95">     * &lt;p&gt;</span>
-<span class="source-line-no">096</span><span id="line-96">     * Determines whether an activity satisfies the specified search criteria.</span>
-<span class="source-line-no">097</span><span id="line-97">     * &lt;/p&gt;</span>
-<span class="source-line-no">098</span><span id="line-98">     * &lt;p&gt;</span>
-<span class="source-line-no">099</span><span id="line-99">     * All non-null criteria must be satisfied simultaneously:</span>
-<span class="source-line-no">100</span><span id="line-100">     * &lt;/p&gt;</span>
-<span class="source-line-no">101</span><span id="line-101">     * &lt;ul&gt;</span>
-<span class="source-line-no">102</span><span id="line-102">     * &lt;li&gt;&lt;b&gt;searchStart&lt;/b&gt;: the activity's start time must be &amp;gt;=</span>
-<span class="source-line-no">103</span><span id="line-103">     * &lt;code&gt;searchStart&lt;/code&gt;.&lt;/li&gt;</span>
-<span class="source-line-no">104</span><span id="line-104">     * &lt;li&gt;&lt;b&gt;searchEnd&lt;/b&gt;: the activity's end time must be &amp;lt;=</span>
-<span class="source-line-no">105</span><span id="line-105">     * &lt;code&gt;searchEnd&lt;/code&gt;.&lt;/li&gt;</span>
-<span class="source-line-no">106</span><span id="line-106">     * &lt;/ul&gt;</span>
-<span class="source-line-no">107</span><span id="line-107">     * &lt;p&gt;</span>
-<span class="source-line-no">108</span><span id="line-108">     * Passing &lt;code&gt;null&lt;/code&gt; for any filter disables that filter entirely.</span>
-<span class="source-line-no">109</span><span id="line-109">     * &lt;/p&gt;</span>
-<span class="source-line-no">110</span><span id="line-110">     * </span>
-<span class="source-line-no">111</span><span id="line-111">     * @param act         The activity to test.</span>
-<span class="source-line-no">112</span><span id="line-112">     * @param type        If valid {@link dayplanner.ActivityType}, then</span>
-<span class="source-line-no">113</span><span id="line-113">     *                    &lt;code&gt;act&lt;/code&gt; must be an instance of this type. Value</span>
-<span class="source-line-no">114</span><span id="line-114">     *                    of &lt;code&gt;null&lt;/code&gt; indicates to not filter by type.</span>
-<span class="source-line-no">115</span><span id="line-115">     * @param searchStart Minimum start time, or &lt;code&gt;null&lt;/code&gt; for open start.</span>
-<span class="source-line-no">116</span><span id="line-116">     * @param searchEnd   Maximum end time, or &lt;code&gt;null&lt;/code&gt; for open end.</span>
-<span class="source-line-no">117</span><span id="line-117">     * @return &lt;code&gt;true&lt;/code&gt; if the activity satisfies all given criteria,</span>
-<span class="source-line-no">118</span><span id="line-118">     *         &lt;code&gt;false&lt;/code&gt; otherwise.</span>
-<span class="source-line-no">119</span><span id="line-119">     */</span>
-<span class="source-line-no">120</span><span id="line-120">    public static boolean matchesCriteria(Activity act, ActivityType type, Time searchStart, Time searchEnd) {</span>
-<span class="source-line-no">121</span><span id="line-121">        // if no activity was given, there is nothing to check</span>
-<span class="source-line-no">122</span><span id="line-122">        if (act == null)</span>
-<span class="source-line-no">123</span><span id="line-123">            return false;</span>
-<span class="source-line-no">124</span><span id="line-124"></span>
-<span class="source-line-no">125</span><span id="line-125">        // check type</span>
-<span class="source-line-no">126</span><span id="line-126">        if (type != null &amp;&amp; !act.getType().equals(type))</span>
-<span class="source-line-no">127</span><span id="line-127">            return false;</span>
-<span class="source-line-no">128</span><span id="line-128"></span>
-<span class="source-line-no">129</span><span id="line-129">        // check start time</span>
-<span class="source-line-no">130</span><span id="line-130">        // a must start on or after the lower bound</span>
-<span class="source-line-no">131</span><span id="line-131">        if (searchStart != null &amp;&amp; act.getStartTime().compareTo(searchStart) &lt; 0)</span>
-<span class="source-line-no">132</span><span id="line-132">            return false;</span>
-<span class="source-line-no">133</span><span id="line-133"></span>
-<span class="source-line-no">134</span><span id="line-134">        // check end time</span>
-<span class="source-line-no">135</span><span id="line-135">        // a must end on or before the upper bound</span>
-<span class="source-line-no">136</span><span id="line-136">        if (searchEnd != null &amp;&amp; act.getEndTime().compareTo(searchEnd) &gt; 0)</span>
-<span class="source-line-no">137</span><span id="line-137">            return false;</span>
-<span class="source-line-no">138</span><span id="line-138"></span>
-<span class="source-line-no">139</span><span id="line-139">        return true;</span>
-<span class="source-line-no">140</span><span id="line-140">    }</span>
-<span class="source-line-no">141</span><span id="line-141">    </span>
-<span class="source-line-no">142</span><span id="line-142"></span>
-<span class="source-line-no">143</span><span id="line-143">    </span>
-<span class="source-line-no">144</span><span id="line-144">    /**</span>
-<span class="source-line-no">145</span><span id="line-145">     * Prompts the user for a time period filter and parses the start and end times.</span>
-<span class="source-line-no">146</span><span id="line-146">     * A blank response means both bounds are open; a single hyphen may introduce</span>
-<span class="source-line-no">147</span><span id="line-147">     * either one-sided range, for example {@code 2026/09/12 06:00 -}.</span>
-<span class="source-line-no">148</span><span id="line-148">     * </span>
-<span class="source-line-no">149</span><span id="line-149">     * @param keyboard Input instance to use to prompt the user</span>
-<span class="source-line-no">150</span><span id="line-150">     * @return A two-element array {@code {searchStart, searchEnd}}; either element</span>
-<span class="source-line-no">151</span><span id="line-151">     *         may be null to represent an open bound.</span>
-<span class="source-line-no">152</span><span id="line-152">     */</span>
-<span class="source-line-no">153</span><span id="line-153">    public static Time[] readTimePeriod(Input keyboard) {</span>
-<span class="source-line-no">154</span><span id="line-154">        System.out.println("Enter a time period (e.g. '2026/9/12, 6:00 - 2026/9/22, 11:59', '2026/9/12, 6:00 -', '- 2026/9/22, 11:59'), or press Enter for any time:");</span>
-<span class="source-line-no">155</span><span id="line-155">        String line = keyboard.readString();</span>
-<span class="source-line-no">156</span><span id="line-156"></span>
-<span class="source-line-no">157</span><span id="line-157">        // if the user typed nothing, both sides of the range should be unrestricted</span>
-<span class="source-line-no">158</span><span id="line-158">        if (line.isEmpty())</span>
-<span class="source-line-no">159</span><span id="line-159">            return new Time[] { null, null };</span>
-<span class="source-line-no">160</span><span id="line-160"></span>
-<span class="source-line-no">161</span><span id="line-161">        // find at what index the dash is typed</span>
-<span class="source-line-no">162</span><span id="line-162">        // all common dash characters are accepted</span>
-<span class="source-line-no">163</span><span id="line-163">        int dashIndex = -1;</span>
-<span class="source-line-no">164</span><span id="line-164">        char[] dashes = { '-', '–', '—' };</span>
-<span class="source-line-no">165</span><span id="line-165">        for (char d : dashes) {</span>
-<span class="source-line-no">166</span><span id="line-166">            dashIndex = line.indexOf(d);</span>
-<span class="source-line-no">167</span><span id="line-167">            if (dashIndex != -1)</span>
-<span class="source-line-no">168</span><span id="line-168">                break;</span>
-<span class="source-line-no">169</span><span id="line-169">        }</span>
-<span class="source-line-no">170</span><span id="line-170"></span>
-<span class="source-line-no">171</span><span id="line-171">        // if the user actually did type a dash...</span>
-<span class="source-line-no">172</span><span id="line-172">        if (dashIndex != -1) {</span>
-<span class="source-line-no">173</span><span id="line-173">            // convert the input into two time instances</span>
-<span class="source-line-no">174</span><span id="line-174">            String part1 = line.substring(0, dashIndex).trim();</span>
-<span class="source-line-no">175</span><span id="line-175">            String part2 = line.substring(dashIndex + 1).trim();</span>
-<span class="source-line-no">176</span><span id="line-176">            Time start = part1.isEmpty() ? null : Input.parseTime(part1);</span>
-<span class="source-line-no">177</span><span id="line-177">            Time end = part2.isEmpty() ? null : Input.parseTime(part2);</span>
-<span class="source-line-no">178</span><span id="line-178"></span>
-<span class="source-line-no">179</span><span id="line-179">            // and only parse a boundary if the user typed one properly</span>
-<span class="source-line-no">180</span><span id="line-180">            if (!part1.isEmpty() &amp;&amp; start == null) {</span>
-<span class="source-line-no">181</span><span id="line-181">                System.out.println("Invalid starting time. Use format YYYY/MM/DD HH:MM. Try again:");</span>
-<span class="source-line-no">182</span><span id="line-182">                return readTimePeriod(keyboard);</span>
-<span class="source-line-no">183</span><span id="line-183">            }</span>
-<span class="source-line-no">184</span><span id="line-184">            if (!part2.isEmpty() &amp;&amp; end == null) {</span>
-<span class="source-line-no">185</span><span id="line-185">                System.out.println("Invalid ending time. Use format YYYY/MM/DD HH:MM. Try again:");</span>
-<span class="source-line-no">186</span><span id="line-186">                return readTimePeriod(keyboard);</span>
-<span class="source-line-no">187</span><span id="line-187">            }</span>
-<span class="source-line-no">188</span><span id="line-188"></span>
-<span class="source-line-no">189</span><span id="line-189">            // ensure that start comes first</span>
-<span class="source-line-no">190</span><span id="line-190">            if (start != null &amp;&amp; end != null &amp;&amp; start.compareTo(end) &gt;= 0) {</span>
-<span class="source-line-no">191</span><span id="line-191">                System.out.println("Starting time must be before ending time. Try again:");</span>
-<span class="source-line-no">192</span><span id="line-192">                return readTimePeriod(keyboard);</span>
-<span class="source-line-no">193</span><span id="line-193">            }</span>
-<span class="source-line-no">194</span><span id="line-194"></span>
-<span class="source-line-no">195</span><span id="line-195">            return new Time[] { start, end };</span>
-<span class="source-line-no">196</span><span id="line-196">        }</span>
-<span class="source-line-no">197</span><span id="line-197"></span>
-<span class="source-line-no">198</span><span id="line-198">        // if the user didn't input a dash...</span>
-<span class="source-line-no">199</span><span id="line-199">        // then a single valid time is treated as the lower bound with no upper bound</span>
-<span class="source-line-no">200</span><span id="line-200">        Time single = Input.parseTime(line);</span>
-<span class="source-line-no">201</span><span id="line-201">        if (single != null)</span>
-<span class="source-line-no">202</span><span id="line-202">            return new Time[] { single, null };</span>
-<span class="source-line-no">203</span><span id="line-203"></span>
-<span class="source-line-no">204</span><span id="line-204">        // if we got here then nothing else worked</span>
-<span class="source-line-no">205</span><span id="line-205">        System.out.println("Invalid time period. Expected 'start - end', 'start -', '- end', or press Enter to skip. Try again:");</span>
-<span class="source-line-no">206</span><span id="line-206">        return readTimePeriod(keyboard);</span>
-<span class="source-line-no">207</span><span id="line-207">    }</span>
-<span class="source-line-no">208</span><span id="line-208"></span>
-<span class="source-line-no">209</span><span id="line-209"></span>
-<span class="source-line-no">210</span><span id="line-210"></span>
-<span class="source-line-no">211</span><span id="line-211">    /**</span>
-<span class="source-line-no">212</span><span id="line-212">     * Default constructor for DayPlannerUtils.</span>
-<span class="source-line-no">213</span><span id="line-213">     */</span>
-<span class="source-line-no">214</span><span id="line-214">    private DayPlannerUtils() {}</span>
-<span class="source-line-no">215</span><span id="line-215">}</span>
+<span class="source-line-no">076</span><span id="line-76">        // check end time</span>
+<span class="source-line-no">077</span><span id="line-77">        // a must end on or before the upper bound</span>
+<span class="source-line-no">078</span><span id="line-78">        if (searchEnd != null &amp;&amp; act.getEndTime().compareTo(searchEnd) &gt; 0)</span>
+<span class="source-line-no">079</span><span id="line-79">            return false;</span>
+<span class="source-line-no">080</span><span id="line-80"></span>
+<span class="source-line-no">081</span><span id="line-81">        return true;</span>
+<span class="source-line-no">082</span><span id="line-82">    }</span>
+<span class="source-line-no">083</span><span id="line-83">    </span>
+<span class="source-line-no">084</span><span id="line-84"></span>
+<span class="source-line-no">085</span><span id="line-85">    </span>
+<span class="source-line-no">086</span><span id="line-86">    /**</span>
+<span class="source-line-no">087</span><span id="line-87">     * Prompts the user for a time period filter and parses the start and end times.</span>
+<span class="source-line-no">088</span><span id="line-88">     * A blank response means both bounds are open; a single hyphen may introduce</span>
+<span class="source-line-no">089</span><span id="line-89">     * either one-sided range, for example {@code 2026/09/12 06:00 -}.</span>
+<span class="source-line-no">090</span><span id="line-90">     * </span>
+<span class="source-line-no">091</span><span id="line-91">     * @param keyboard Input instance to use to prompt the user</span>
+<span class="source-line-no">092</span><span id="line-92">     * @return A two-element array {@code {searchStart, searchEnd}}; either element</span>
+<span class="source-line-no">093</span><span id="line-93">     *         may be null to represent an open bound.</span>
+<span class="source-line-no">094</span><span id="line-94">     */</span>
+<span class="source-line-no">095</span><span id="line-95">    public static Time[] readTimePeriod(Input keyboard) {</span>
+<span class="source-line-no">096</span><span id="line-96">        System.out.println("Enter a time period (e.g. '2026/9/12, 6:00 - 2026/9/22, 11:59', '2026/9/12, 6:00 -', '- 2026/9/22, 11:59'), or press Enter for any time:");</span>
+<span class="source-line-no">097</span><span id="line-97">        String line = keyboard.readString();</span>
+<span class="source-line-no">098</span><span id="line-98"></span>
+<span class="source-line-no">099</span><span id="line-99">        // if the user typed nothing, both sides of the range should be unrestricted</span>
+<span class="source-line-no">100</span><span id="line-100">        if (line.isEmpty())</span>
+<span class="source-line-no">101</span><span id="line-101">            return new Time[] { null, null };</span>
+<span class="source-line-no">102</span><span id="line-102"></span>
+<span class="source-line-no">103</span><span id="line-103">        // find at what index the dash is typed</span>
+<span class="source-line-no">104</span><span id="line-104">        // all common dash characters are accepted</span>
+<span class="source-line-no">105</span><span id="line-105">        int dashIndex = -1;</span>
+<span class="source-line-no">106</span><span id="line-106">        char[] dashes = { '-', '–', '—' };</span>
+<span class="source-line-no">107</span><span id="line-107">        for (char d : dashes) {</span>
+<span class="source-line-no">108</span><span id="line-108">            dashIndex = line.indexOf(d);</span>
+<span class="source-line-no">109</span><span id="line-109">            if (dashIndex != -1)</span>
+<span class="source-line-no">110</span><span id="line-110">                break;</span>
+<span class="source-line-no">111</span><span id="line-111">        }</span>
+<span class="source-line-no">112</span><span id="line-112"></span>
+<span class="source-line-no">113</span><span id="line-113">        // if the user actually did type a dash...</span>
+<span class="source-line-no">114</span><span id="line-114">        if (dashIndex != -1) {</span>
+<span class="source-line-no">115</span><span id="line-115">            // convert the input into two time instances</span>
+<span class="source-line-no">116</span><span id="line-116">            String part1 = line.substring(0, dashIndex).trim();</span>
+<span class="source-line-no">117</span><span id="line-117">            String part2 = line.substring(dashIndex + 1).trim();</span>
+<span class="source-line-no">118</span><span id="line-118">            Time start = part1.isEmpty() ? null : Input.parseTime(part1);</span>
+<span class="source-line-no">119</span><span id="line-119">            Time end = part2.isEmpty() ? null : Input.parseTime(part2);</span>
+<span class="source-line-no">120</span><span id="line-120"></span>
+<span class="source-line-no">121</span><span id="line-121">            // and only parse a boundary if the user typed one properly</span>
+<span class="source-line-no">122</span><span id="line-122">            if (!part1.isEmpty() &amp;&amp; start == null) {</span>
+<span class="source-line-no">123</span><span id="line-123">                System.out.println("Invalid starting time. Use format YYYY/MM/DD HH:MM. Try again:");</span>
+<span class="source-line-no">124</span><span id="line-124">                return readTimePeriod(keyboard);</span>
+<span class="source-line-no">125</span><span id="line-125">            }</span>
+<span class="source-line-no">126</span><span id="line-126">            if (!part2.isEmpty() &amp;&amp; end == null) {</span>
+<span class="source-line-no">127</span><span id="line-127">                System.out.println("Invalid ending time. Use format YYYY/MM/DD HH:MM. Try again:");</span>
+<span class="source-line-no">128</span><span id="line-128">                return readTimePeriod(keyboard);</span>
+<span class="source-line-no">129</span><span id="line-129">            }</span>
+<span class="source-line-no">130</span><span id="line-130"></span>
+<span class="source-line-no">131</span><span id="line-131">            // ensure that start comes first</span>
+<span class="source-line-no">132</span><span id="line-132">            if (start != null &amp;&amp; end != null &amp;&amp; start.compareTo(end) &gt;= 0) {</span>
+<span class="source-line-no">133</span><span id="line-133">                System.out.println("Starting time must be before ending time. Try again:");</span>
+<span class="source-line-no">134</span><span id="line-134">                return readTimePeriod(keyboard);</span>
+<span class="source-line-no">135</span><span id="line-135">            }</span>
+<span class="source-line-no">136</span><span id="line-136"></span>
+<span class="source-line-no">137</span><span id="line-137">            return new Time[] { start, end };</span>
+<span class="source-line-no">138</span><span id="line-138">        }</span>
+<span class="source-line-no">139</span><span id="line-139"></span>
+<span class="source-line-no">140</span><span id="line-140">        // if the user didn't input a dash...</span>
+<span class="source-line-no">141</span><span id="line-141">        // then a single valid time is treated as the lower bound with no upper bound</span>
+<span class="source-line-no">142</span><span id="line-142">        Time single = Input.parseTime(line);</span>
+<span class="source-line-no">143</span><span id="line-143">        if (single != null)</span>
+<span class="source-line-no">144</span><span id="line-144">            return new Time[] { single, null };</span>
+<span class="source-line-no">145</span><span id="line-145"></span>
+<span class="source-line-no">146</span><span id="line-146">        // if we got here then nothing else worked</span>
+<span class="source-line-no">147</span><span id="line-147">        System.out.println("Invalid time period. Expected 'start - end', 'start -', '- end', or press Enter to skip. Try again:");</span>
+<span class="source-line-no">148</span><span id="line-148">        return readTimePeriod(keyboard);</span>
+<span class="source-line-no">149</span><span id="line-149">    }</span>
+<span class="source-line-no">150</span><span id="line-150"></span>
+<span class="source-line-no">151</span><span id="line-151"></span>
+<span class="source-line-no">152</span><span id="line-152"></span>
+<span class="source-line-no">153</span><span id="line-153">    /**</span>
+<span class="source-line-no">154</span><span id="line-154">     * Default constructor for DayPlannerUtils.</span>
+<span class="source-line-no">155</span><span id="line-155">     */</span>
+<span class="source-line-no">156</span><span id="line-156">    private DayPlannerUtils() {}</span>
+<span class="source-line-no">157</span><span id="line-157">}</span>
 
 
 
