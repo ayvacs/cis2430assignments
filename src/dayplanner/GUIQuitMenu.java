@@ -10,13 +10,15 @@ import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.UIManager;
 import javax.swing.border.Border;
 
 /**
  * Represents the Swing GUI quit menu..
  */
 public class GUIQuitMenu extends JFrame {
-    private static final Dimension DIMS = new Dimension(300, 150);
+    private static final Dimension DIMS = new Dimension(450, 250);
 	private static final String TITLE = "Exit DayPlanner";
 	private static final int CLOSE = JFrame.DO_NOTHING_ON_CLOSE;
 	private static final Color BACKGROUND = new Color(222, 153, 153);
@@ -52,8 +54,15 @@ public class GUIQuitMenu extends JFrame {
             + "</html>";
 
         JLabel warningLabel = new JLabel(warningText);
+        warningLabel.setIcon(UIManager.getIcon("OptionPane.warningIcon"));
+        warningLabel.setIconTextGap(24);
         warningLabel.setBorder(PADDING);
-        add(warningLabel);
+
+        JPanel labelPanel = new JPanel();
+        labelPanel.setOpaque(false);
+        labelPanel.setBorder(PADDING);
+        labelPanel.add(warningLabel);
+        add(labelPanel);
 
 
         // ==============================
@@ -68,16 +77,20 @@ public class GUIQuitMenu extends JFrame {
             }
         };
         
-        JButton closeButton = new JButton("Close");
+        JButton closeButton = new JButton("YES - Save and exit");
         closeButton.setActionCommand("CLOSE");
         closeButton.addActionListener(buttonEvent);
 
-        JButton cancelButton = new JButton("Cancel");
+        JButton cancelButton = new JButton("NO - Do not exit");
         cancelButton.setActionCommand("CANCEL");
         cancelButton.addActionListener(buttonEvent);
 
-        add(closeButton);
-        add(cancelButton);
+        JPanel buttonPanel = new JPanel();
+        buttonPanel.setOpaque(false);
+        buttonPanel.setBorder(PADDING);
+        buttonPanel.add(closeButton);
+        buttonPanel.add(cancelButton);
+        add(buttonPanel);
 
 
         // ==============================

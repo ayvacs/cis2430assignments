@@ -56,6 +56,7 @@ public class GUIDayPlanner extends JFrame {
         refreshWelcomeText(welcomeText, activities);
 
         GUICommandMenu dropdown = new GUICommandMenu(this);
+        dropdown.setBorder(PADDING);
         dropdown.addActionListener(e -> {
             refreshWelcomeText(welcomeText, activities);
         });
@@ -76,15 +77,19 @@ public class GUIDayPlanner extends JFrame {
      * error saving the list.
      */
     public void quit() {
+        String successMsg = "The list was saved successfully. Now quitting DayPlanner. Goodbye!";
         String errorMsg = "There was an error saving the list. Click \"OK\" to exit DayPlanner.";
         
-        boolean errorOccurred = DayPlanner.quit();
-        dispose();
+        boolean errorOccurred = DayPlanner.quit(false);
+        String msg = errorOccurred
+            ? errorMsg
+            : successMsg;
+        int mode = errorOccurred 
+            ? JOptionPane.ERROR_MESSAGE
+            : JOptionPane.INFORMATION_MESSAGE;
 
-        if (errorOccurred)
-            JOptionPane.showMessageDialog(
-                null, errorMsg,
-                null, JOptionPane.ERROR_MESSAGE);
+        JOptionPane.showMessageDialog(null, msg, null, mode);
+        dispose();
 
         System.exit(0);
     }
@@ -104,12 +109,11 @@ public class GUIDayPlanner extends JFrame {
      */
     public void refreshWelcomeText(JLabel welcomeText, ActivityList activities) {
         String text = ("<html>"
-                    + DayPlannerUtils.getGreeting(activities.size())
-                    + "\n"
-                    + "Choose a command from the menu to the left."
-                    + "</html>")
-            .replaceAll("\n", "<br>");
-
+                     + DayPlannerUtils.getGreeting(activities.size())
+                     + "\n"
+                     + "Choose a command from the menu to the left."
+                     + "</html>").replaceAll("\n", "<br>");
+                     
         welcomeText.setText(text);
     }
 }

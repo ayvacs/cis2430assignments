@@ -53,7 +53,7 @@ public class DayPlanner {
             doLoop = commandLoop();
 
         // The above loop only finishes when the user wants to quit
-        quit();
+        quit(true);
         */
     }
 
@@ -61,15 +61,19 @@ public class DayPlanner {
     /**
      * Saves the list and exits the program.
      * 
+     * @param print Whether to print output.
      * @return True if there was a RAS save failure, false otherwise.
      */
-    public static boolean quit() {
+    public static boolean quit(boolean print) {
         // Attempt to save the list in RAS format
         boolean errors = saveToRAS();
-        if (errors)    System.out.println("\nError saving the list.");
-        else           System.out.println("\nThe list was saved successfully.");
 
-        System.out.println("\nNow quitting DayPlanner. Goodbye!");
+        if (print) {
+            if (errors)    System.out.println("\nError saving the list.");
+            else           System.out.println("\nThe list was saved successfully.");
+            System.out.println("\nNow quitting DayPlanner. Goodbye!");
+        }
+
         return errors;
     }
 
