@@ -27,6 +27,7 @@ public class GUICommandMenu extends JComboBox<String> {
             // Execute the desired task.
             switch (option) {
                 case ADD:
+                    new GUIAddWindow();
                     break;
                 case SEARCH:
                     break;
