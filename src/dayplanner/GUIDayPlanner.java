@@ -77,20 +77,18 @@ public class GUIDayPlanner extends JFrame {
      * error saving the list.
      */
     public void quit() {
-        String successMsg = "The list was saved successfully. Now quitting DayPlanner. Goodbye!";
-        String errorMsg = "There was an error saving the list. Click \"OK\" to exit DayPlanner.";
-        
         boolean errorOccurred = DayPlanner.quit(false);
+
         String msg = errorOccurred
-            ? errorMsg
-            : successMsg;
+            ? "<html>There was an error saving the list.<br>Click \"OK\" to exit DayPlanner.</html>"
+            : "<html>The list was saved successfully.<br>Now quitting DayPlanner. Goodbye!</html>";
         int mode = errorOccurred 
             ? JOptionPane.ERROR_MESSAGE
             : JOptionPane.INFORMATION_MESSAGE;
 
         JOptionPane.showMessageDialog(null, msg, null, mode);
+        
         dispose();
-
         System.exit(0);
     }
 
