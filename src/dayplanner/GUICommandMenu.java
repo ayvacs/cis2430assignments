@@ -37,6 +37,7 @@ public class GUICommandMenu extends JComboBox<String> {
                     new GUIAddWindow(activities);
                     break;
                 case SEARCH:
+                    new GUISearchWindow(activities);
                     break;
                 case QUIT:
                     new GUIQuitMenu(gdp);

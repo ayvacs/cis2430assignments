@@ -1,47 +1,14 @@
 package dayplanner;
 
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Component;
-import java.awt.Dimension;
-import java.awt.GridLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.ArrayList;
-
-import javax.swing.BorderFactory;
-import javax.swing.Box;
-import javax.swing.BoxLayout;
-import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTextArea;
 import javax.swing.JTextField;
-import javax.swing.SwingUtilities;
-import javax.swing.border.Border;
 
-/** 
- * Represents the Swing GUI add window.
+/**
+ * Represents the Swing GUI add window. Extends {@link GUIWindow} to share
+ * common window configuration, layout, and component handling with other GUI
+ * windows such as {@link GUISearchWindow}.
  */
-public class GUIAddWindow extends JFrame {
-    private static final Dimension DIMS = new Dimension(800, 400);
-    private static final String TITLE = "DayPlanner - Add";
-    private static final int CLOSE = JFrame.DISPOSE_ON_CLOSE;
-    private static final Color BACKGROUND = new Color(250, 250, 250);
-    private static final Border PADDING = BorderFactory.createEmptyBorder(12, 12, 12, 12);
-
-    /**
-     * Message box
-     */
-    private JTextArea messages = null;
-
-    /**
-     * Scroll pane containing the message box
-     */
-    private JScrollPane scrollPane = null;
-
+public class GUIAddWindow extends GUIWindow {
 
     /**
      * Create a new Swing GUI add window.
@@ -49,220 +16,44 @@ public class GUIAddWindow extends JFrame {
      * @param activities Instantiated ActivityList.
      */
     public GUIAddWindow(ActivityList activities) {
-        // ==============================
-        // Window Setup
-        // ==============================
+        super(activities);
+    }
 
-        super();
-        setSize(DIMS);
-        setTitle(TITLE);
-        setDefaultCloseOperation(CLOSE);
-        getContentPane().setBackground(BACKGROUND);
-        setLocationRelativeTo(null);
-        setLayout(new BorderLayout(12, 12));
+    @Override
+    public String getWindowTitle() {
+        return "DayPlanner - Add";
+    }
 
+    @Override
+    public String getHeaderText() {
+        return "<html><b>Adding an activity:</b></html>";
+    }
 
-        // ==============================
-        // Contents
-        // ==============================
+    @Override
+    public String getActionButtonLabel() {
+        return "Add";
+    }
 
-        // ------------------------------
-        // Center Panel
-        // contains Text Fields.
-        // ------------------------------
+    @Override
+    public String getActionButtonCommand() {
+        return "ADD";
+    }
 
-        JPanel centerPanel = new JPanel();
-        centerPanel.setLayout(new GridLayout(7, 2, 8, 8));
-        centerPanel.setBorder(PADDING);
-        centerPanel.add(new JLabel("<html><b>Adding an activity:</b></html>"));
-        centerPanel.add(Box.createGlue()); // skip this grid cell
-
-        // ArrayList that contains all of the JTextField instances in this panel.
-        ArrayList<JTextField> centerFields = new ArrayList<JTextField>();
-
-        centerPanel.add(new JLabel(
-            "<html>Type <code>('home', 'school', or 'other')</code></html>"));
-        JTextField typeField = new JTextField();
-        centerPanel.add(typeField);
-        centerFields.add(typeField);
-
-        centerPanel.add(new JLabel("Title:"));
-        JTextField titleField = new JTextField();
-        centerPanel.add(titleField);
-        centerFields.add(titleField);
-        
-        centerPanel.add(new JLabel(
-            "<html>Starting time <code>(YYYY/MM/DD HH:MM)</code>:</html>"));
-        JTextField sTimeField = new JTextField();
-        centerPanel.add(sTimeField);
-        centerFields.add(sTimeField);
-        
-        centerPanel.add(new JLabel(
-            "<html>Ending time <code>(YYYY/MM/DD HH:MM)</code>:</html>"));
-        JTextField eTimeField = new JTextField();
-        centerPanel.add(eTimeField);
-        centerFields.add(eTimeField);
-        
-        centerPanel.add(new JLabel(
-            "<html>Comment <i>(optional)</i>:</html>"));
-        JTextField commentField = new JTextField();
-        centerPanel.add(commentField);
-        centerFields.add(commentField);
-        
-        centerPanel.add(new JLabel(
-            "<html>Location <i>(if creating Other Activity only)</i>:</html>"));
-        JTextField locationField = new JTextField();
-        centerPanel.add(locationField);
-        centerFields.add(locationField);
-        
-
-        // ------------------------------
-        // East Panel
-        // contains Buttons.
-        // ------------------------------
-
-        JPanel eastPanel = new JPanel();
-        eastPanel.setBorder(PADDING);
-        eastPanel.setLayout(new BoxLayout(eastPanel, BoxLayout.Y_AXIS));
-
-        // This is the function that gets called when we click the RESET or ADD buttons.
-        ActionListener buttonEvent = new ActionListener() {
-            public void actionPerformed(ActionEvent event) {
-               String action = event.getActionCommand();
-
-               // RESET: set all text fields to NULL.
-               if (action.equals("RESET"))
-                   for (JTextField tf : centerFields)
-                       tf.setText(null);
-
-               // ADD: Pass all of the text field instances.
-               else if (action.equals("ADD"))
-                   tryCreate(activities, centerFields);
-            }
+    @Override
+    public String[] getFieldLabels() {
+        return new String[] {
+            "<html>Type <code>('home', 'school', or 'other')</code></html>",
+            "Title:",
+            "<html>Starting time <code>(YYYY/MM/DD HH:MM)</code>:</html>",
+            "<html>Ending time <code>(YYYY/MM/DD HH:MM)</code>:</html>",
+            "<html>Comment <i>(optional)</i>:</html>",
+            "<html>Location <i>(if creating Other Activity only)</i>:</html>"
         };
-
-        JButton resetButton = new JButton("Reset");
-        resetButton.setActionCommand("RESET");
-        resetButton.addActionListener(buttonEvent);
-        eastPanel.add(resetButton);
-
-        JButton addButton = new JButton("Add");
-        addButton.setActionCommand("ADD");
-        addButton.addActionListener(buttonEvent);
-        eastPanel.add(addButton);
-
-        // ------------------------------
-        // South Panel
-        // contains Message box.
-        // ------------------------------
-
-        JPanel southPanel = new JPanel();
-        southPanel.setLayout(new BoxLayout(southPanel, BoxLayout.Y_AXIS));
-        southPanel.setBorder(PADDING);
-
-        JLabel messageLabel = new JLabel(
-            "<html><b>Messages:</b></html>");
-        messageLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
-        southPanel.add(messageLabel);
-        southPanel.add(Box.createVerticalStrut(6));
-
-        messages = new JTextArea(5, 40);
-        messages.setEditable(false);
-        messages.setLineWrap(true);
-        messages.setWrapStyleWord(true);
-        messages.setBackground(Color.WHITE);
-
-        scrollPane = new JScrollPane(messages);
-        scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
-        scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-        scrollPane.setPreferredSize(new Dimension(760, 100));
-        scrollPane.setMaximumSize(new Dimension(Integer.MAX_VALUE, 110));
-        scrollPane.setAlignmentX(Component.LEFT_ALIGNMENT);
-        southPanel.add(scrollPane);
-
-        
-        // ==============================
-        // End
-        // ==============================
-
-        add(centerPanel, BorderLayout.CENTER);
-        add(eastPanel, BorderLayout.EAST);
-        add(southPanel, BorderLayout.SOUTH);
-        setVisible(true);
     }
 
-    /**
-     * Add a message to the top of the message box and scroll to the top.
-     * Does nothing if the text box hasn't been initialized yet or if the text is
-     * blank.
-     * 
-     * @param text Text to add.
-     */
-    public void addMessage(String text) {
-        if (messages == null || text.isBlank())
-            return;
-
-        StringBuilder sb = new StringBuilder();
-        sb.append("> ");
-        sb.append(text);
-        if (!messages.getText().isEmpty()) {
-            sb.append("\n\n");
-            sb.append(messages.getText());
-        }
-
-        messages.setText(sb.toString());
-        messages.setCaretPosition(0);
-        if (scrollPane != null) {
-            SwingUtilities.invokeLater(() -> {
-                scrollPane.getVerticalScrollBar().setValue(0);
-            });
-        }
-    }
-
-    /**
-     * Validates and parses a time string using {@link Input#parseTime(String)} and
-     * {@link Time#getValidationError(int, int, int, int, int)}.
-     * 
-     * @param timeStr   Raw time string from user input.
-     * @param fieldName Display name of the field (e.g. "Starting time").
-     * @return Parsed {@link Time} instance, or {@code null} if invalid (with error
-     *         added to messages).
-     */
-    private Time parseAndValidateTime(String timeStr, String fieldName) {
-        if (timeStr == null || timeStr.isBlank()) {
-            addMessage(fieldName + " cannot be empty. Expected format: YYYY/MM/DD HH:MM.");
-            return null;
-        }
-
-        Time time = Input.parseTime(timeStr);
-        if (time != null)
-            return time;
-
-        String[] components = timeStr.trim().split("[/:,\\s]+");
-        if (components.length < 5) {
-            addMessage("Invalid " + fieldName.toLowerCase() + " format. Expected: YYYY/MM/DD HH:MM (e.g. 2026/09/10 17:30).");
-            return null;
-        }
-
-        try {
-
-            int y = Integer.parseInt(components[0]);
-            int m = Integer.parseInt(components[1]);
-            int d = Integer.parseInt(components[2]);
-            int h = Integer.parseInt(components[3]);
-            int min = Integer.parseInt(components[4]);
-
-            String err = Time.getValidationError(y, m, d, h, min);
-            if (err != null)
-                addMessage("Invalid " + fieldName.toLowerCase() + ": " + err);
-            else
-                addMessage("Invalid " + fieldName.toLowerCase() + " values.");
-
-        } catch (NumberFormatException e) {
-            addMessage(fieldName + " components must be integers.");
-        }
-
-        return null;
+    @Override
+    public boolean executeAction() {
+        return tryCreate(activities, centerFields);
     }
 
     /**
@@ -273,7 +64,7 @@ public class GUIAddWindow extends JFrame {
      *                     title, start time, end time, comment, location.
      * @return true if activity was created and added, false otherwise.
      */
-    private boolean tryCreate(ActivityList activities, ArrayList<JTextField> centerFields) {
+    public boolean tryCreate(ActivityList activities, ArrayList<JTextField> centerFields) {
         if (activities == null || centerFields == null || centerFields.size() < 6) {
             addMessage("Internal error: missing form fields.");
             return false;
