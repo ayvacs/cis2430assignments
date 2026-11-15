@@ -60,9 +60,8 @@ public class GUIAddWindow extends JFrame {
 
         // ------------------------------
         // Center Panel
+        // contains Text Fields.
         // ------------------------------
-
-        ArrayList<JTextField> centerFields = new ArrayList<JTextField>();
 
         JPanel centerPanel = new JPanel();
         centerPanel.setLayout(new GridLayout(7, 2, 8, 8));
@@ -70,8 +69,11 @@ public class GUIAddWindow extends JFrame {
         centerPanel.add(new JLabel("<html><b>Adding an activity:</b></html>"));
         centerPanel.add(Box.createGlue()); // skip this grid cell
 
-        centerPanel.add(new JLabel("<html>Type "
-            + " <code>('home', 'school', or 'other')</code></html>"));
+        // ArrayList that contains all of the JTextField instances in this panel.
+        ArrayList<JTextField> centerFields = new ArrayList<JTextField>();
+
+        centerPanel.add(new JLabel(
+            "<html>Type <code>('home', 'school', or 'other')</code></html>"));
         JTextField typeField = new JTextField();
         centerPanel.add(typeField);
         centerFields.add(typeField);
@@ -81,26 +83,26 @@ public class GUIAddWindow extends JFrame {
         centerPanel.add(titleField);
         centerFields.add(titleField);
         
-        centerPanel.add(new JLabel("<html>Starting time "
-            + "<code>(YYYY/MM/DD HH:MM)</code>:</html>"));
+        centerPanel.add(new JLabel(
+            "<html>Starting time <code>(YYYY/MM/DD HH:MM)</code>:</html>"));
         JTextField sTimeField = new JTextField();
         centerPanel.add(sTimeField);
         centerFields.add(sTimeField);
         
-        centerPanel.add(new JLabel("<html>Ending time "
-            + "<code>(YYYY/MM/DD HH:MM)</code>:</html>"));
+        centerPanel.add(new JLabel(
+            "<html>Ending time <code>(YYYY/MM/DD HH:MM)</code>:</html>"));
         JTextField eTimeField = new JTextField();
         centerPanel.add(eTimeField);
         centerFields.add(eTimeField);
         
-        centerPanel.add(new JLabel("<html>Comment "
-            + "<i>(optional)</i>:</html>"));
+        centerPanel.add(new JLabel(
+            "<html>Comment <i>(optional)</i>:</html>"));
         JTextField commentField = new JTextField();
         centerPanel.add(commentField);
         centerFields.add(commentField);
         
-        centerPanel.add(new JLabel("<html>Location "
-            + "<i>(if creating Other Activity only)</i>:</html>"));
+        centerPanel.add(new JLabel(
+            "<html>Location <i>(if creating Other Activity only)</i>:</html>"));
         JTextField locationField = new JTextField();
         centerPanel.add(locationField);
         centerFields.add(locationField);
@@ -108,12 +110,14 @@ public class GUIAddWindow extends JFrame {
 
         // ------------------------------
         // East Panel
+        // contains Buttons.
         // ------------------------------
 
         JPanel eastPanel = new JPanel();
         eastPanel.setBorder(PADDING);
         eastPanel.setLayout(new BoxLayout(eastPanel, BoxLayout.Y_AXIS));
 
+        // This is the function that gets called when we click the RESET or ADD buttons.
         ActionListener buttonEvent = new ActionListener() {
             public void actionPerformed(ActionEvent event) {
                String action = event.getActionCommand();
@@ -144,12 +148,14 @@ public class GUIAddWindow extends JFrame {
 
         // ------------------------------
         // South Panel
+        // contains Message box.
         // ------------------------------
 
         JPanel southPanel = new JPanel();
         southPanel.setLayout(new BoxLayout(southPanel, BoxLayout.Y_AXIS));
         southPanel.setBorder(PADDING);
-        southPanel.add(new JLabel("<html><b>Messages:</b></html>"));
+        southPanel.add(new JLabel(
+            "<html><b>Messages</b> <i>(newer ones are placed the top)</i>:</html>"));
 
         messages = new JTextArea();
         messages.setBackground(southPanel.getBackground());
@@ -176,8 +182,13 @@ public class GUIAddWindow extends JFrame {
         if (messages == null || text.isBlank())
             return;
 
-        text = "<html>" + text + "<br>" + messages.getText() + "</html>";
-        messages.setText(text);
+        StringBuilder sb = new StringBuilder();
+        sb.append("> ");
+        sb.append(text);
+        sb.append("\n");
+        sb.append(messages.getText());
+
+        messages.setText(sb.toString());
     }
 
     /**
@@ -188,24 +199,33 @@ public class GUIAddWindow extends JFrame {
      *                     title, start time, end time, comment.
      */
     private boolean tryCreate(ActivityList activities, ArrayList<JTextField> centerFields) {
+        // Get inputs
         ActivityType type = ActivityType.parse(centerFields.get(0).getText());
-        if (type == null)
-            return false;
-
         String title = centerFields.get(1).getText();
         Time sTime = new Time(centerFields.get(2).getText());
         Time eTime = new Time(centerFields.get(3).getText());
         String comment = centerFields.get(4).getText();
 
+        // Input validation
+        if (type == null
+         || title == null || title.isBlank()
+         || sTime == null
+         || eTime == null || sTime.compareTo(eTime) > 0)
+            return false;
+
+        // Instantiate
         if (type.equals(ActivityType.HOME)) {
-            activities.add(new HomeActivity(title, sTime, eTime, comment));
+            activities.add(new HomeActivity(
+                title, sTime, eTime, comment));
             return true;
         } else if (type.equals(ActivityType.SCHOOL)) {
-            activities.add(new SchoolActivity(title, sTime, eTime, comment));
+            activities.add(new SchoolActivity(
+                title, sTime, eTime, comment));
             return true;
         } else if (type.equals(ActivityType.OTHER)) {
             String location = centerFields.get(5).getText();
-            activities.add(new OtherActivity(title, sTime, eTime, comment, location));
+            activities.add(new OtherActivity(
+                title, sTime, eTime, comment, location));
             return true;
         }
         
