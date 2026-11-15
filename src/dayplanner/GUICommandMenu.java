@@ -16,9 +16,10 @@ public class GUICommandMenu extends JComboBox<String> {
     /**
      * Create a new Swing GUI picker.
      * 
-     * @param gdp Refers to the Swing GUI window.
+     * @param gdp        Refers to the Swing GUI window.
+     * @param activities Instantiated ActivityList.
      */
-    public GUICommandMenu(GUIDayPlanner gdp) {
+    public GUICommandMenu(GUIDayPlanner gdp, ActivityList activities) {
         super(OPTIONS);
 
         addActionListener(e -> {
@@ -27,7 +28,7 @@ public class GUICommandMenu extends JComboBox<String> {
             // Execute the desired task.
             switch (option) {
                 case ADD:
-                    new GUIAddWindow();
+                    new GUIAddWindow(activities);
                     break;
                 case SEARCH:
                     break;

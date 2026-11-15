@@ -55,7 +55,7 @@ public class GUIDayPlanner extends JFrame {
         welcomeText.setBorder(PADDING);
         refreshWelcomeText(welcomeText, activities);
 
-        GUICommandMenu dropdown = new GUICommandMenu(this);
+        GUICommandMenu dropdown = new GUICommandMenu(this, activities);
         dropdown.setBorder(PADDING);
         dropdown.addActionListener(e -> {
             refreshWelcomeText(welcomeText, activities);
