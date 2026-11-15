@@ -23,7 +23,13 @@ public class GUICommandMenu extends JComboBox<String> {
         super(OPTIONS);
 
         addActionListener(e -> {
-            MenuOption option = MenuOption.parse(getSelectedIndex());
+            int index = getSelectedIndex();
+            if (index <= 0)
+                return;
+
+            MenuOption option = MenuOption.parse(index);
+            if (option == null)
+                return;
             
             // Execute the desired task.
             switch (option) {

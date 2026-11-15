@@ -22,14 +22,14 @@ import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 import javax.swing.border.Border;
 
-/**
+/** 
  * Represents the Swing GUI add window.
  */
 public class GUIAddWindow extends JFrame {
     private static final Dimension DIMS = new Dimension(800, 400);
-	private static final String TITLE = "DayPlanner - Add";
-	private static final int CLOSE = JFrame.DISPOSE_ON_CLOSE;
-	private static final Color BACKGROUND = new Color(250, 250, 250);
+    private static final String TITLE = "DayPlanner - Add";
+    private static final int CLOSE = JFrame.DISPOSE_ON_CLOSE;
+    private static final Color BACKGROUND = new Color(250, 250, 250);
     private static final Border PADDING = BorderFactory.createEmptyBorder(12, 12, 12, 12);
 
     /**
