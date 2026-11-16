@@ -13,14 +13,12 @@
  * </p>
  * <pre>
  * make jar
- * java -jar bin/DayPlanner.jar &lt;data file name&gt;
- * </pre>
+ * java -jar bin/DayPlanner.jar &lt;data file name&gt;</pre>
  * The data file is saved in the <code>dat</code> directory. A sample data file
  * called <code>sampleData.ras</code> is included. To load this example file,
  * execute the JAR from the terminal:
  * <pre>
- * java -jar bin/DayPlanner.jar sampleData.ras
- * </pre>
+ * java -jar bin/DayPlanner.jar sampleData.ras</pre>
  * <p>
  * Some cool special features of the program include:
  * </p>

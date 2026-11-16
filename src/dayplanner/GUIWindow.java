@@ -240,9 +240,8 @@ public abstract class GUIWindow extends JFrame {
      */
     public Time parseAndValidateTime(String timeStr, String fieldName, boolean required) {
         if (timeStr == null || timeStr.isBlank()) {
-            if (required) {
+            if (required)
                 addMessage(fieldName + " cannot be empty. Expected format: YYYY/MM/DD HH:MM.");
-            }
             return null;
         }
 

@@ -30,7 +30,6 @@ make               # Build everything (compile classes,
                    # generate javadoc, build JAR)
 
 make compile       # Compile source files to bin/
-make run           # Compile and execute via JVM
 make jar           # Compile and package jar
 make docs          # Generate HTML javadoc in docs/
 
