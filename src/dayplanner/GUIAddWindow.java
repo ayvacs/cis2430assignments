@@ -121,14 +121,19 @@ public class GUIAddWindow extends GUIWindow {
         }
 
         // 8. Instantiate and add
-        Activity act = switch (type) {
-            case HOME   -> new HomeActivity(title, sTime, eTime, comment);
-            case SCHOOL -> new SchoolActivity(title, sTime, eTime, comment);
-            case OTHER  -> new OtherActivity(title, sTime, eTime, comment, location);
-        };
+        try {
+            Activity act = switch (type) {
+                case HOME   -> new HomeActivity(title, sTime, eTime, comment);
+                case SCHOOL -> new SchoolActivity(title, sTime, eTime, comment);
+                case OTHER  -> new OtherActivity(title, sTime, eTime, comment, location);
+            };
 
-        activities.add(act);
-        addMessage("Added successfully: " + act.toString());
-        return true;
+            activities.add(act);
+            addMessage("Added successfully: " + act.toString());
+            return true;
+        } catch (IllegalArgumentException e) {
+            addMessage("Error creating activity: " + e.getMessage());
+            return false;
+        }
     }
 }

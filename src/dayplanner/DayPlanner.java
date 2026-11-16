@@ -27,9 +27,12 @@ public class DayPlanner {
     public static void main(String[] args) {
         // Get the data file name from args
         if (args.length != 1) {
-            System.out.println("\nThe program has halted because you did not specify a data file name.");
-            System.out.println("A sample file named 'sampleData.ras' is included. Specify it as the first execution argument:");
-            System.out.println("\tjava -jar bin/DayPlanner.jar sampleData.ras\n");
+            StringBuilder error = new StringBuilder();
+            error.append("The program has halted because you did not specify a data file name.");
+            error.append("\nA sample file named 'sampleData.ras' is included. Specify it as the first execution argument:");
+            error.append("\n\tjava -jar bin/DayPlanner.jar sampleData.ras");
+
+            System.out.println("\n"+error.toString()+"\n");
             return;
         }
         dataFileName = args[0];
@@ -43,6 +46,7 @@ public class DayPlanner {
         }
 
         // Now the the ActivityList is initialized we can Show the GUI
+        System.out.println("\n!!Showing GUI...\n");
         new GUIDayPlanner(activities);
 
         /*
@@ -99,14 +103,14 @@ public class DayPlanner {
         MenuOption option;
         while (true) {
             cmd = KEYBOARD.readCommand();
-            option = MenuOption.parse(cmd);
-
-            if (option == null) {
-                System.out.println("Invalid command: \"" + cmd + "\".");
-                System.out.println("Please enter 'add' (or 'a'), 'search' (or 's'), or 'quit' (or 'q'):");
-                continue;
-            } else {
+            try {
+                option = MenuOption.parse(cmd);
+                if (option == null)
+                    throw new IllegalArgumentException("Invalid command: \"" + cmd + "\".");
                 break;
+            } catch (IllegalArgumentException e) {
+                System.out.println(e.getMessage());
+                System.out.println("Please enter 'add' (or 'a'), 'search' (or 's'), or 'quit' (or 'q'):");
             }
         }
 
@@ -145,24 +149,28 @@ public class DayPlanner {
         while (true) {
             System.out.println("Enter the type of this activity.");
             System.out.println("For Home, type 'home' or 1. For School, type 'school' or 2. For Other, type 'other' or 3:");
-            type = ActivityType.parse(KEYBOARD.readString());
-
-            if (type == null) {
-                System.out.println("Invalid activity type. Try again:");
-                continue;
+            try {
+                type = ActivityType.parse(KEYBOARD.readString());
+                if (type == null)
+                    throw new IllegalArgumentException("Invalid activity type.");
+                break;
+            } catch (IllegalArgumentException e) {
+                System.out.println(e.getMessage() + " Try again:");
             }
-
-            break;
         }
 
         // 2. Title
         String title;
         while (true) {
             System.out.println("Enter a title.");
-            title = KEYBOARD.readString();
-            if (!title.isEmpty())
+            try {
+                title = KEYBOARD.readString();
+                if (title == null || title.isBlank())
+                    throw new IllegalArgumentException("Title cannot be empty.");
                 break;
-            System.out.println("Title cannot be empty. Try again:");
+            } catch (IllegalArgumentException e) {
+                System.out.println(e.getMessage() + " Try again:");
+            }
         }
 
         // 3. Start time
@@ -173,12 +181,14 @@ public class DayPlanner {
         Time endTime;
         while (true) {
             System.out.println("Enter an ending time.");
-            endTime = KEYBOARD.readTime();
-
-            if (startTime.compareTo(endTime) < 0)
+            try {
+                endTime = KEYBOARD.readTime();
+                if (startTime.compareTo(endTime) >= 0)
+                    throw new IllegalArgumentException("Ending time has to be after the starting time (" + startTime + ").");
                 break;
-
-            System.out.println("Ending time has to be after the starting time (" + startTime + "). Try again:");
+            } catch (IllegalArgumentException e) {
+                System.out.println(e.getMessage() + " Try again:");
+            }
         }
 
         // 5. Optional comment
@@ -187,7 +197,7 @@ public class DayPlanner {
         if (KEYBOARD.readBool()) {
             System.out.println("Enter a comment.");
             comment = KEYBOARD.readString();
-            if (comment.isEmpty())
+            if (comment != null && comment.isEmpty())
                 comment = null;
         }
 
@@ -196,24 +206,32 @@ public class DayPlanner {
         if (type == ActivityType.OTHER) {
             while (true) {
                 System.out.println("Enter a location.");
-                location = KEYBOARD.readString();
-                if (!location.isEmpty())
+                try {
+                    location = KEYBOARD.readString();
+                    if (location == null || location.isBlank())
+                        throw new IllegalArgumentException("Location cannot be empty for Other activities.");
                     break;
-                System.out.println("Location cannot be empty for Other activities. Try again:");
+                } catch (IllegalArgumentException e) {
+                    System.out.println(e.getMessage() + " Try again:");
+                }
             }
         }
 
         // 7. Instantiate and insert activity
-        Activity act = switch (type) {
-            case HOME   -> new HomeActivity(title, startTime, endTime, comment);
-            case SCHOOL -> new SchoolActivity(title, startTime, endTime, comment);
-            case OTHER  -> new OtherActivity(title, startTime, endTime, comment, location);
-            default     -> new Activity(title, startTime, endTime, comment);
-        };
+        try {
+            Activity act = switch (type) {
+                case HOME   -> new HomeActivity(title, startTime, endTime, comment);
+                case SCHOOL -> new SchoolActivity(title, startTime, endTime, comment);
+                case OTHER  -> new OtherActivity(title, startTime, endTime, comment, location);
+                default     -> new Activity(title, startTime, endTime, comment);
+            };
 
-        if (act != null) {
-            activities.add(act);
-            System.out.println("Successfully created the new activity:\n\t" + act.toString());
+            if (act != null) {
+                activities.add(act);
+                System.out.println("Successfully created the new activity:\n\t" + act.toString());
+            }
+        } catch (IllegalArgumentException e) {
+            System.out.println("Error creating activity: " + e.getMessage());
         }
     }
 
@@ -231,14 +249,17 @@ public class DayPlanner {
         while (true) {
             System.out.println("Enter activity type ('home', 'school', 'other'), or press Enter to search all types:");
             String input = KEYBOARD.readString();
-            if (input.isEmpty())
+            if (input == null || input.isEmpty())
                 break;
 
-            type = ActivityType.parse(input);
-            if (type != null)
+            try {
+                type = ActivityType.parse(input);
+                if (type == null)
+                    throw new IllegalArgumentException("Invalid activity type: \"" + input + "\".");
                 break;
-
-            System.out.println("Invalid activity type: \"" + input + "\". Please enter 'home', 'school', 'other', or press Enter to skip:");
+            } catch (IllegalArgumentException e) {
+                System.out.println(e.getMessage() + " Please enter 'home', 'school', 'other', or press Enter to skip:");
+            }
         }
 
         // FILTER BY KEYWORD

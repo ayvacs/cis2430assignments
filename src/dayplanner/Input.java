@@ -62,14 +62,12 @@ public class Input {
             if (SCANNER.hasNextLine())
                 line = SCANNER.nextLine().trim();
 
-            if (line != null && line.matches("[-+]?[0-9]+")) {
-                try {
-                    input = Integer.parseInt(line);
-                    break;
-                } catch (NumberFormatException e) {
-                    System.out.println("\nInteger value out of range. Try again:");
-                }
-            } else {
+            try {
+                if (line == null || line.isEmpty())
+                    throw new NumberFormatException("Empty input");
+                input = Integer.parseInt(line);
+                break;
+            } catch (NumberFormatException e) {
                 System.out.println("\nInvalid integer. Try again:");
             }
         } while (true);
@@ -122,23 +120,23 @@ public class Input {
             if (SCANNER.hasNextLine())
                 line = SCANNER.nextLine().trim();
 
-            if (line.isEmpty()) {
-                System.out.println("\nInput cannot be empty. Try typing Yes or No.");
-                continue;
-            }
+            try {
+                if (line == null || line.isEmpty())
+                    throw new IllegalArgumentException("Input cannot be empty. Try typing Yes or No.");
 
-            input = Character.toUpperCase(line.charAt(0));
-
-            if (input == 'Y') {
-                ret = true;
-                break;
+                input = Character.toUpperCase(line.charAt(0));
+                if (input == 'Y') {
+                    ret = true;
+                    break;
+                } else if (input == 'N') {
+                    ret = false;
+                    break;
+                } else {
+                    throw new IllegalArgumentException("Invalid boolean. Try again; try typing Yes or No.");
+                }
+            } catch (IllegalArgumentException e) {
+                System.out.println("\n" + e.getMessage());
             }
-            else if (input == 'N') {
-                ret = false;
-                break;
-            }
-            else
-                System.out.println("\nInvalid boolean. Try again; try typing Yes or No.");
         } while (true);
         
         System.out.println(" ");
@@ -169,13 +167,10 @@ public class Input {
             int h = Integer.parseInt(components[3]);
             int min = Integer.parseInt(components[4]);
 
-            if (Time.isValidTime(y, m, d, h, min))
-                return new Time(y, m, d, h, min);
-        } catch (NumberFormatException e) {
+            return new Time(y, m, d, h, min);
+        } catch (IllegalArgumentException e) {
             return null;
         }
-
-        return null;
     }
 
     /**
@@ -192,15 +187,9 @@ public class Input {
             if (SCANNER.hasNextLine())
                 line = SCANNER.nextLine().trim();
 
-            if (line.isEmpty()) {
+            if (line == null || line.isEmpty()) {
                 System.out.println("\nTime cannot be empty. Please enter format YYYY/MM/DD HH:MM (e.g. 2026/9/10 17:30). Try again:");
                 continue;
-            }
-
-            Time parsed = parseTime(line);
-            if (parsed != null) {
-                System.out.print("\n");
-                return parsed;
             }
 
             // Detailed validation error feedback
@@ -217,14 +206,13 @@ public class Input {
                 int h = Integer.parseInt(components[3]);
                 int min = Integer.parseInt(components[4]);
 
-                String err = Time.getValidationError(y, m, d, h, min);
-                if (err != null) {
-                    System.out.println("\nInvalid time: " + err + " Try again:");
-                } else {
-                    System.out.println("\nInvalid time values. Try again:");
-                }
+                Time parsed = new Time(y, m, d, h, min);
+                System.out.print("\n");
+                return parsed;
             } catch (NumberFormatException e) {
                 System.out.println("\nTime components must be integers. Try again:");
+            } catch (IllegalArgumentException e) {
+                System.out.println("\nInvalid time: " + e.getMessage() + " Try again:");
             }
         } while (true);
     }

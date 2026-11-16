@@ -26,7 +26,7 @@ package dayplanner;
  * There are also static methods for dealing with Time instances.
  * </p>
  */
-public class Time implements Comparable<Time> {
+public class Time implements Comparable<Object> {
     /*
      * Static Constants
      */
@@ -157,34 +157,28 @@ public class Time implements Comparable<Time> {
      */
     public Time() {
         // Assume default values
-        setYear(MIN_YEAR);
-        setMonth(MIN_MONTH);
-        setDay(MIN_DAY);
-        setHour(MIN_HOUR);
-        setMinute(MIN_MINUTE);
+        this.year = MIN_YEAR;
+        this.month = MIN_MONTH;
+        this.day = MIN_DAY;
+        this.hour = MIN_HOUR;
+        this.minute = MIN_MINUTE;
     }
 
     /**
      * <p>
      * Constructs a <code>Time</code> with specified components.
      * </p>
-     * <p>
-     * Invalid components are ignored by individual setters, leaving the current or
-     * default component unchanged. Use
-     * {@link #isValidTime(int, int, int, int, int)} when all components must be
-     * accepted together.
-     * </p>
      * 
-     * @param year   The year.
-     * @param month  The month.
-     * @param day    The day.
-     * @param hour   The hour.
-     * @param minute The minute.
+     * @param year   The year (1-9999).
+     * @param month  The month (1-12).
+     * @param day    The day (1 to max days in month).
+     * @param hour   The hour (0-23).
+     * @param minute The minute (0-59).
+     * @throws IllegalArgumentException If any component is outside its valid range.
      */
-    public Time(int year, int month, int day, int hour, int minute) {
-        // Assume default values
+    public Time(int year, int month, int day, int hour, int minute)
+    throws IllegalArgumentException {
         this();
-
         setYear(year);
         setMonth(month);
         setDay(day);
@@ -194,42 +188,43 @@ public class Time implements Comparable<Time> {
 
     /**
      * Constructs a <code>Time</code> by parsing a string in YYYY/MM/DD HH:MM
-     * format. Invalid components default to their minimum allowed values.
+     * format.
      * 
      * @param formatString String containing at least five numeric components, such
      *                     as {@code 2026/09/15 14:30}; separators may be slash,
      *                     colon, comma, or whitespace.
+     * @throws IllegalArgumentException If the string is null, empty, has fewer than
+     *                                  5 components, or contains invalid values.
      */
-    public Time(String formatString) {
-        // Assume default values
-        this();
-
+    public Time(String formatString)
+    throws IllegalArgumentException {
         if (formatString == null || formatString.trim().isEmpty())
-            return;
+            throw new IllegalArgumentException("Time string cannot be null or empty.");
 
         // Split up components by slashes, colons, commas, or whitespace
         String[] components = formatString.trim().split("[/:,\\s]+");
 
-        if (components.length >= 5) {
-            try {
-                int y = Integer.parseInt(components[0]);
-                int m = Integer.parseInt(components[1]);
-                int d = Integer.parseInt(components[2]);
-                int h = Integer.parseInt(components[3]);
-                int min = Integer.parseInt(components[4]);
+        if (components.length < 5)
+            throw new IllegalArgumentException("Invalid time format: expected at least 5 components in '" + formatString + "'.");
 
-                if (isValidTime(y, m, d, h, min)) {
-                    setYear(y);
-                    setMonth(m);
-                    setDay(d);
-                    setHour(h);
-                    setMinute(min);
-                } else {
-                    System.out.println("One or more fields were not properly entered; defaulting to " + toString() + ".");
-                }
-            } catch (Exception e) {
-                System.out.println("One or more fields were not properly entered; defaulting to " + toString() + ".");
-            }
+        try {
+            int y = Integer.parseInt(components[0]);
+            int m = Integer.parseInt(components[1]);
+            int d = Integer.parseInt(components[2]);
+            int h = Integer.parseInt(components[3]);
+            int min = Integer.parseInt(components[4]);
+
+            String error = getValidationError(y, m, d, h, min);
+            if (error != null)
+                throw new IllegalArgumentException(error);
+
+            this.year = y;
+            this.month = m;
+            this.day = d;
+            this.hour = h;
+            this.minute = min;
+        } catch (NumberFormatException e) {
+            throw new IllegalArgumentException("Time components must be integers in '" + formatString + "'.", e);
         }
     }
 
@@ -243,20 +238,34 @@ public class Time implements Comparable<Time> {
      * Sets the year if within the valid range (1-9999).
      * 
      * @param year The new year.
+     * @throws IllegalArgumentException If year is not between 1 and 9999, or if
+     *                                  the current day becomes invalid for the new year.
      */
-    public void setYear(int year) {
-        if (year >= MIN_YEAR && year <= MAX_YEAR)
-            this.year = year;
+    public void setYear(int year)
+    throws IllegalArgumentException {
+        if (year < MIN_YEAR || year > MAX_YEAR)
+            throw new IllegalArgumentException("Year (" + year + ") must be a positive integer between " + MIN_YEAR + " and " + MAX_YEAR + ".");
+        int maxDays = maxDaysInMonth(year, getMonth());
+        if (getDay() > maxDays)
+            throw new IllegalArgumentException("Day (" + getDay() + ") is invalid for month " + getMonth() + " in year " + year + ".");
+        this.year = year;
     }
 
     /**
      * Sets the month if within the valid range (1-12).
      * 
      * @param month The new month.
+     * @throws IllegalArgumentException If month is not between 1 and 12, or if
+     *                                  the current day becomes invalid for the new month.
      */
-    public void setMonth(int month) {
-        if (month >= MIN_MONTH && month <= MAX_MONTH)
-            this.month = month;
+    public void setMonth(int month)
+    throws IllegalArgumentException {
+        if (month < MIN_MONTH || month > MAX_MONTH)
+            throw new IllegalArgumentException("Month (" + month + ") must be between " + MIN_MONTH + " and " + MAX_MONTH + ".");
+        int maxDays = maxDaysInMonth(getYear(), month);
+        if (getDay() > maxDays)
+            throw new IllegalArgumentException("Day (" + getDay() + ") is invalid for month " + month + " in year " + getYear() + ".");
+        this.month = month;
     }
 
     /**
@@ -264,33 +273,41 @@ public class Time implements Comparable<Time> {
      * year and month first when changing to a date with a different month length.
      * 
      * @param day The new day.
+     * @throws IllegalArgumentException If day is not between 1 and the maximum
+     *                                  days for the current month and year.
      */
-    public void setDay(int day) {
+    public void setDay(int day)
+    throws IllegalArgumentException {
         int maxDays = maxDaysInMonth(getYear(), getMonth());
-        
-        // If valid, populate the field.
-        if (day >= MIN_DAY && day <= maxDays)
-            this.day = day;
+        if (day < MIN_DAY || day > maxDays)
+            throw new IllegalArgumentException("Day (" + day + ") is invalid: month " + getMonth() + " has max " + maxDays + " days.");
+        this.day = day;
     }
 
     /**
      * Sets the hour if within the valid range (0-23).
      * 
      * @param hour The new hour.
+     * @throws IllegalArgumentException If hour is not between 0 and 23.
      */
-    public void setHour(int hour) {
-        if (hour >= MIN_HOUR && hour <= MAX_HOUR)
-            this.hour = hour;
+    public void setHour(int hour)
+    throws IllegalArgumentException {
+        if (hour < MIN_HOUR || hour > MAX_HOUR)
+            throw new IllegalArgumentException("Hour (" + hour + ") must be between " + MIN_HOUR + " and " + MAX_HOUR + ".");
+        this.hour = hour;
     }
 
     /**
      * Sets the minute if within the valid range (0-59).
      * 
      * @param minute The new minute.
+     * @throws IllegalArgumentException If minute is not between 0 and 59.
      */
-    public void setMinute(int minute) {
-        if (minute >= MIN_MINUTE && minute <= MAX_MINUTE)
-            this.minute = minute;
+    public void setMinute(int minute)
+    throws IllegalArgumentException {
+        if (minute < MIN_MINUTE || minute > MAX_MINUTE)
+            throw new IllegalArgumentException("Minute (" + minute + ") must be between " + MIN_MINUTE + " and " + MAX_MINUTE + ".");
+        this.minute = minute;
     }
 
 
@@ -372,37 +389,76 @@ public class Time implements Comparable<Time> {
 
     /**
      * <p>
-     * Compares this time with another time chronologically.
+     * Compares this time with another object chronologically.
      * </p>
      * <p>
      * Fields are compared in order: year, then month, then day, then hour, then
      * minute. The first field that differs determines the result.
      * </p>
      * 
+     * @param other The other object to compare with.
+     * @return A negative integer, zero, or a positive integer as this time
+     *         precedes, equals, or follows {@code other}.
+     * @throws NullPointerException If {@code other} is {@code null}.
+     * @throws ClassCastException   If {@code other} is not an instance of
+     *                              {@link Time}.
+     */
+    @Override
+    public int compareTo(Object other)
+    throws NullPointerException, ClassCastException {
+        if (other == null)
+            throw new NullPointerException("Cannot compare Time to null");
+        if (!(other instanceof Time))
+            throw new ClassCastException("Cannot compare Time to an object of class " + other.getClass().getName());
+
+        Time o = (Time) other;
+
+        if (getYear() != o.getYear())
+            return getYear() - o.getYear();
+        
+        if (getMonth() != o.getMonth())
+            return getMonth() - o.getMonth();
+        
+        if (getDay() != o.getDay())
+            return getDay() - o.getDay();
+        
+        if (getHour() != o.getHour())
+            return getHour() - o.getHour();
+
+        return getMinute() - o.getMinute();
+    }
+
+    /**
+     * Compares this time with another time chronologically.
+     * 
      * @param other The other time to compare with.
      * @return A negative integer, zero, or a positive integer as this time
      *         precedes, equals, or follows {@code other}.
      * @throws NullPointerException If {@code other} is {@code null}.
      */
-    @Override
     public int compareTo(Time other)
     throws NullPointerException {
-        if (other == null)
-            throw new NullPointerException("Cannot compare Time to null");
+        return compareTo((Object) other);
+    }
 
-        if (getYear() != other.getYear())
-            return getYear() - other.getYear();
-        
-        if (getMonth() != other.getMonth())
-            return getMonth() - other.getMonth();
-        
-        if (getDay() != other.getDay())
-            return getDay() - other.getDay();
-        
-        if (getHour() != other.getHour())
-            return getHour() - other.getHour();
-
-        return getMinute() - other.getMinute();
+    /**
+     * Determines whether a time period from {@code start} to {@code end} is valid.
+     * Uses {@link #compareTo(Object)} to verify that {@code start} is strictly
+     * before {@code end}.
+     * 
+     * @param start The start time.
+     * @param end   The end time.
+     * @return {@code true} if both times are non-null and {@code start} is strictly
+     *         before {@code end}; {@code false} otherwise.
+     */
+    public static boolean isValidPeriod(Time start, Time end) {
+        if (start == null || end == null)
+            return false;
+        try {
+            return start.compareTo(end) < 0;
+        } catch (ClassCastException | NullPointerException e) {
+            return false;
+        }
     }
 
     /**

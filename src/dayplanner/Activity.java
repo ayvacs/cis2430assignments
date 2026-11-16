@@ -11,11 +11,12 @@ package dayplanner;
  * and {@link OtherActivity}.
  * </p>
  * <p>
- * The class stores its {@link Time} references directly and does not enforce
- * that the end follows the start; callers creating activities directly should
- * validate that rule themselves. For example:
+ * The class stores its {@link Time} references directly and enforces
+ * that the title is non-null and non-blank, start and end times are non-null,
+ * and the start time is strictly before the end time. Any violation of these
+ * invariant conditions causes an {@link IllegalArgumentException} to be thrown.
+ * For example:
  * </p>
- * 
  * <pre>
  * Time start = new Time(2026, 10, 20, 14, 30);
  * Time end = new Time(2026, 10, 20, 16, 30);
@@ -33,21 +34,27 @@ public class Activity implements Comparable<Activity> {
     /*
      * Constructors
      */
+
+    /**
+     * Protected default constructor for serialization and subclass initialization.
+     */
+    protected Activity() {}
    
     /**
      * <p>
      * Constructs an <code>Activity</code> with a title, start time, and end time.
      * </p>
-     * <p>
-     * Null or blank required values are ignored by their setters; construction
-     * therefore does not throw for those values.
-     * </p>
      * 
      * @param title     The activity title.
      * @param startTime The start time.
      * @param endTime   The end time.
+     * @throws IllegalArgumentException If title is null or blank, if startTime or
+     *                                  endTime is null, or if startTime is not
+     *                                  strictly before endTime.
      */
-    public Activity(String title, Time startTime, Time endTime) {
+    public Activity(String title, Time startTime, Time endTime)
+    throws IllegalArgumentException {
+        // Input validation is managed by the setters.
         setTitle(title);
         setStartTime(startTime);
         setEndTime(endTime);
@@ -58,16 +65,18 @@ public class Activity implements Comparable<Activity> {
      * Constructs an <code>Activity</code> with a title, start time, end time, and
      * comment.
      * </p>
-     * <p>
-     * A null or blank comment is ignored, leaving the comment unset.
-     * </p>
      * 
      * @param title     The activity title.
      * @param startTime The start time.
      * @param endTime   The end time.
      * @param comment   The activity comment.
+     * @throws IllegalArgumentException If title is null or blank, if startTime or
+     *                                  endTime is null, or if startTime is not
+     *                                  strictly before endTime.
      */
-    public Activity(String title, Time startTime, Time endTime, String comment) {
+    public Activity(String title, Time startTime, Time endTime, String comment)
+    throws IllegalArgumentException {
+        // Input validation is managed by the setters.
         this(title, startTime, endTime);
         setComment(comment);
     }
@@ -84,10 +93,6 @@ public class Activity implements Comparable<Activity> {
      * <li>end time,</li>
      * <li>comment (<code>NIL</code> is treated as no comment).</li>
      * </ol>
-     * <p>
-     * Missing or empty fields retain defaults; malformed time fields may likewise
-     * leave their defaults in place. This is a parser intended for data loading.
-     * </p>
      * 
      * @param ras RAS entry, such as
      *            {@code <HomeActivity,Laundry,2026/10/20 09:00,2026/10/20 10:00,NIL>}.
@@ -95,9 +100,6 @@ public class Activity implements Comparable<Activity> {
      */
     public Activity(String ras)
     throws RasException {
-        // declare default values
-        this("", new Time(), new Time());
-
         RasParser.populate(this, ras);
     }
 
@@ -165,44 +167,63 @@ public class Activity implements Comparable<Activity> {
     /**
      * Sets the title of this activity.
      * 
-     * @param title The new title; ignored if {@code null} or blank, leaving the old
-     *              title unchanged.
+     * @param title The new title.
+     * @throws IllegalArgumentException If title is null or blank.
      */
-    public void setTitle(String title) {
-        if (title != null && !title.isBlank())
-            this.title = title;
+    public void setTitle(String title)
+    throws IllegalArgumentException {
+        if (title == null || title.isBlank())
+            throw new IllegalArgumentException("Title cannot be null or blank.");
+        
+        this.title = title;
     }
 
     /**
      * Sets the start time of this activity.
      * 
-     * @param startTime The new start time; ignored if {@code null}. The reference
-     *                  is stored directly.
+     * @param startTime The new start time.
+     * @throws IllegalArgumentException If startTime is null, or if an endTime is
+     *                                  already set and startTime is not strictly
+     *                                  before endTime.
      */
-    public void setStartTime(Time startTime) {
-        if (startTime != null)
-            this.startTime = startTime;
+    public void setStartTime(Time startTime)
+    throws IllegalArgumentException {
+        if (startTime == null)
+            throw new IllegalArgumentException("Start time cannot be null.");
+        if (this.endTime != null
+            && startTime.compareTo(this.endTime) >= 0)
+            throw new IllegalArgumentException("Start time (" + startTime + ") must be before end time (" + this.endTime + ").");
+        
+        this.startTime = startTime;
     }
 
     /**
      * Sets the end time of this activity.
      * 
-     * @param endTime The new end time; ignored if {@code null}; no ordering check
-     *                is performed.
+     * @param endTime The new end time.
+     * @throws IllegalArgumentException If endTime is null, or if a startTime is
+     *                                  already set and endTime is not strictly after startTime.
      */
-    public void setEndTime(Time endTime) {
-        if (endTime != null)
-            this.endTime = endTime;
+    public void setEndTime(Time endTime)
+    throws IllegalArgumentException {
+        if (endTime == null)
+            throw new IllegalArgumentException("End time cannot be null.");
+        if (this.startTime != null
+            && this.startTime.compareTo(endTime) >= 0)
+            throw new IllegalArgumentException("End time (" + endTime + ") must be after start time (" + this.startTime + ").");
+        
+        this.endTime = endTime;
     }
 
     /**
      * Sets the comment for this activity.
      * 
-     * @param comment The new comment; ignored if {@code null} or blank. A blank
-     *                value does not clear an existing comment.
+     * @param comment The new comment; null or blank values clear the comment.
      */
     public void setComment(String comment) {
-        if (comment != null && !comment.isBlank())
+        if (comment == null || comment.isBlank())
+            this.comment = null;
+        else
             this.comment = comment;
     }
 
@@ -274,10 +295,12 @@ public class Activity implements Comparable<Activity> {
      *         otherwise.
      */
     public boolean equals(Activity other) {
-        // compare the class first
-        // this is necessary because HomeActivity etc. are subclasses of this one
-        // and when comparing activities of different classes (i.e. HomeActivity and SchoolActivity),
-        // the two should always be treated as unequal
+        /*
+         * compare the class first. this is necessary because HomeActivity etc. are
+         * subclasses of this one and when comparing activities of different classes
+         * (i.e. HomeActivity and SchoolActivity), the two should always be treated as
+         * unequal.
+         */
         if (other == null || (getClass() != other.getClass()))
             return false;
 
@@ -299,13 +322,12 @@ public class Activity implements Comparable<Activity> {
             : !getEndTime().equals(other.getEndTime()))
             return false;
         
-        // if we get here the only difference should be the comment
+        // compare comment
         String c1 = getComment();
         String c2 = other.getComment();
         if (c1 == null || c1.isBlank())
             return c2 == null || c2.isBlank();
-        else
-            return c1.equals(c2);
+        return c1.equals(c2);
     }
 
     /**
@@ -321,6 +343,7 @@ public class Activity implements Comparable<Activity> {
             return true;
         if (other == null || getClass() != other.getClass())
             return false;
+
         return equals((Activity) other);
     }
 
@@ -331,12 +354,20 @@ public class Activity implements Comparable<Activity> {
      * @return A negative integer, zero, or a positive integer as this activity's
      *         start time precedes, equals, or follows the other activity's start
      *         time. Equal start times compare as zero even if other fields differ.
+     * @throws NullPointerException If {@code other} is {@code null}.
      */
     @Override
-    public int compareTo(Activity other) {
-        // since we are comparing based on a Time,
-        // which has its own compareTo method,
-        // we can just piggyback off of that method :)
-        return getStartTime().compareTo(other.getStartTime());
+    public int compareTo(Activity other)
+    throws NullPointerException {
+        if (other == null)
+            throw new NullPointerException("Cannot compare Activity to null");
+
+        /*
+         * since we are comparing based on a Time,
+         * which has its own compareTo method,
+         * we can just use that method :)
+         */
+        return getStartTime().compareTo(
+            other.getStartTime());
     }
 }

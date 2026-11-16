@@ -24,8 +24,12 @@ public class SchoolActivity extends Activity {
      * @param title     The activity title.
      * @param startTime The start time.
      * @param endTime   The end time.
+     * @throws IllegalArgumentException If title is null or blank, if startTime or
+     *                                  endTime is null, or if startTime is not
+     *                                  strictly before endTime.
      */
-    public SchoolActivity(String title, Time startTime, Time endTime) {
+    public SchoolActivity(String title, Time startTime, Time endTime)
+    throws IllegalArgumentException {
         super(title, startTime, endTime);
     }
 
@@ -38,8 +42,12 @@ public class SchoolActivity extends Activity {
      * @param endTime   The end time.
      * @param comment   Optional note; null or blank values are treated as no
      *                  comment.
+     * @throws IllegalArgumentException If title is null or blank, if startTime or
+     *                                  endTime is null, or if startTime is not
+     *                                  strictly before endTime.
      */
-    public SchoolActivity(String title, Time startTime, Time endTime, String comment) {
+    public SchoolActivity(String title, Time startTime, Time endTime, String comment)
+    throws IllegalArgumentException {
         super(title, startTime, endTime, comment);
     }
 

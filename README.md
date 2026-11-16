@@ -96,19 +96,36 @@ Saves the activity list to disk in RAS format and exits.
 
 The DayPlanner consists of the following classes in the `dayplanner` package:
 
-* `Time`: Represents an instant in time with minute precision (`year`, `month`, `day`, `hour`, `minute`). Implements `Comparable<Time>` for chronological ordering and defensive range validation (including leap year calculations).
-* `Activity`: Abstract base class holding common attributes: `title`, `startTime`, `endTime`, `comment`. Implements `Comparable<Activity>` to sort by starting time, accessors, mutators, and also overrides `equals` and `toString`.
+* `Time`: Represents an instant in time with minute precision (`year`, `month`, `day`, `hour`, `minute`). Implements the `Comparable` interface (`compareTo(Object)`) for chronological ordering and time period validation, properly throwing `NullPointerException` when passed `null` and `ClassCastException` for mismatched object classes. Constructors and mutator methods strictly enforce valid ranges and leap year calendar rules, throwing `IllegalArgumentException` whenever invariants are violated.
+* `Activity`: Abstract base class holding common attributes: `title`, `startTime`, `endTime`, `comment`. Enforces class invariants (non-null and non-blank title, non-null timestamps, and start time strictly preceding end time), throwing `IllegalArgumentException` in constructors and mutator methods on invariant violations. Implements `Comparable<Activity>` to sort by starting time, accessors, mutators, and also overrides `equals` and `toString`.
     * `HomeActivity`: Subclass of `Activity` representing home activities.
     * `SchoolActivity`: Subclass of `Activity` representing school activities.
-    * `OtherActivity`: Subclass of `Activity` representing miscellaneous activities, adding the `location` attribute, accessors, mutators, and custom `toString`.
-* `ActivityList`: Wrapper around an `ArrayList<Activity>`, extending `AbstractList<Activity>`. It maintains a `HashMap` title index whose values are activity positions. The index is built as activities load, updated when activities are added, and rebuilt after indexed insertions, removals, or replacements.
+    * `OtherActivity`: Subclass of `Activity` representing miscellaneous activities, adding the `location` attribute (enforced non-null and non-blank via `IllegalArgumentException` in constructors and mutators), accessors, mutators, and custom `toString`.
+* `ActivityList`: Wrapper around an `ArrayList<Activity>`, extending `AbstractList<Activity>`. Enforces non-null activities in mutators and insertion methods with `IllegalArgumentException`. Maintains a `HashMap` title index whose values are activity positions.
 * `ActivityType`: Enum denoting all valid types of Activities.
-* `Input`: Wrapper around `Scanner` with defensive validation methods for integers, booleans, commands, and timestamps.
-* `DayPlanner`: The main application class which manages the user menu.
+* `Input`: Wrapper around `Scanner` utilizing exception handling (`NumberFormatException`, `IllegalArgumentException`) to catch invalid input and re-prompt the user to retry entering valid data.
+* `DayPlanner`: The main application class which manages the user menu and handles command/creation exceptions with recovery loops.
 * `DayPlannerUtils`: Utility methods for `DayPlanner`.
 * `MenuOption`: Enum denoting all valid menu options.
-* `RasParser`: Utiltiy methods for serialization/deserialization.
+* `RasParser`: Utility methods for serialization/deserialization.
 * `RasException`: Exception denoting something went wrong with serialization/deserialization.
+
+## Exception Handling & Class Invariants
+
+The application handles errors and invariant violations via structured Java exceptions:
+
+1. **Class Invariants**:
+   * `Time`: Enforces year (1–9999), month (1–12), day (1 to month maximum, accounting for leap years), hour (0–23), and minute (0–59). Any attempt to construct or mutate a `Time` instance with out-of-range values throws an `IllegalArgumentException`.
+   * `Time.compareTo`: Implements the `Comparable` interface. Compares chronologically, throwing `NullPointerException` if the argument is `null` and `ClassCastException` if the argument is not an instance of `Time`.
+   * `Activity` and subclasses: Enforce mandatory non-blank `title`, non-null `startTime` and `endTime`, and chronological ordering (`startTime` must be strictly before `endTime`). Mutator methods (`setTitle`, `setStartTime`, `setEndTime`) and constructors throw `IllegalArgumentException` on violation.
+   * `OtherActivity`: Enforces mandatory non-blank `location`, throwing `IllegalArgumentException` in constructors and `setLocation`.
+   * `ActivityList`: Enforces non-null elements in `add` and `set` methods, throwing `IllegalArgumentException`.
+
+2. **Input Validation & Recovery**:
+   * `Input.readInt()`: Catches `NumberFormatException` when parsing integers, re-prompting the user until a valid integer is supplied.
+   * `Input.readTime()`: Uses `Time` constructors and mutators inside `try-catch` blocks, catching `NumberFormatException` (for non-integer components) and `IllegalArgumentException` (for invalid dates or times), allowing the user to re-enter the timestamp.
+   * `Input.readBool()`: Catches invalid boolean selections and re-prompts.
+   * `DayPlanner`: Wraps menu command parsing and activity field input in `try-catch` loops so incorrect entries are reported with clear messages and the user is prompted to try again.
 
 The Tester consists of one class:
 

@@ -66,17 +66,21 @@ public final class RasParser {
         String comment = optional(fields, 4);
 
         // instantiate the appropriate class
-        return switch (fields[0]) {
-            case "HomeActivity"
-                -> new HomeActivity(title, sTime, eTime, comment);
-            case "SchoolActivity"
-                -> new SchoolActivity(title, sTime, eTime, comment);
-            default -> {
-                if (fields[5].isBlank())
-                    throw new RasException("location is empty");
-                yield new OtherActivity(title, sTime, eTime, comment, desanitize(fields[5]));
-            }
-        };
+        try {
+            return switch (fields[0]) {
+                case "HomeActivity"
+                    -> new HomeActivity(title, sTime, eTime, comment);
+                case "SchoolActivity"
+                    -> new SchoolActivity(title, sTime, eTime, comment);
+                default -> {
+                    if (fields[5].isBlank())
+                        throw new RasException("location is empty");
+                    yield new OtherActivity(title, sTime, eTime, comment, desanitize(fields[5]));
+                }
+            };
+        } catch (IllegalArgumentException e) {
+            throw new RasException("invariant violation in activity data: " + e.getMessage());
+        }
     }
 
     /**
@@ -158,17 +162,21 @@ public final class RasParser {
 
         String comment = optional(f, 4);
 
-        if (activity != null) {
-            activity.setTitle(desanitize(f[1]));
-            activity.setStartTime(start);
-            activity.setEndTime(end);
-            activity.setComment(comment);
-            if (other) {
-                if (f[5].isBlank())
-                    throw new RasException("location is empty");
-                if (activity instanceof OtherActivity o)
-                    o.setLocation(desanitize(f[5]));
+        try {
+            if (activity != null) {
+                activity.setTitle(desanitize(f[1]));
+                activity.setStartTime(start);
+                activity.setEndTime(end);
+                activity.setComment(comment);
+                if (other) {
+                    if (f[5].isBlank())
+                        throw new RasException("location is empty");
+                    if (activity instanceof OtherActivity o)
+                        o.setLocation(desanitize(f[5]));
+                }
             }
+        } catch (IllegalArgumentException e) {
+            throw new RasException("invariant violation in activity data: " + e.getMessage());
         }
     }
 

@@ -263,14 +263,11 @@ public abstract class GUIWindow extends JFrame {
             int h = Integer.parseInt(components[3]);
             int min = Integer.parseInt(components[4]);
 
-            String err = Time.getValidationError(y, m, d, h, min);
-            if (err != null)
-                addMessage("Invalid " + fieldName.toLowerCase() + ": " + err);
-            else
-                addMessage("Invalid " + fieldName.toLowerCase() + " values.");
-
+            return new Time(y, m, d, h, min);
         } catch (NumberFormatException e) {
             addMessage(fieldName + " components must be integers.");
+        } catch (IllegalArgumentException e) {
+            addMessage("Invalid " + fieldName.toLowerCase() + ": " + e.getMessage());
         }
 
         return null;

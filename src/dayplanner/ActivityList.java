@@ -80,11 +80,14 @@ public class ActivityList extends AbstractList<Activity> {
 
         } catch (Exception e) {
 
-            System.out.println("\nThe program has halted because the following exception occurred.");
-            e.printStackTrace();
-            System.out.println("\nIt probably occurred because you used a data file of incorrect format.");
-            System.out.println("A sample file named 'sampleData.ras' is included. Specify it as the first execution argument:");
-            System.out.println("\tjava -jar bin/DayPlanner.jar sampleData.ras\n");
+            StringBuilder error = new StringBuilder();
+            error.append("The program has halted because the following exception occurred.");
+            error.append("\n"+e.getStackTrace());
+            error.append("\nIt probably occurred because you used a data file of incorrect format.");
+            error.append("\nA sample file named 'sampleData.ras' is included. Specify it as the first execution argument:");
+            error.append("\n\tjava -jar bin/DayPlanner.jar sampleData.ras");
+
+            System.out.println("\n" + error.toString() + "\n");
             System.exit(1);
 
         }
@@ -113,10 +116,13 @@ public class ActivityList extends AbstractList<Activity> {
             ln++;
             if (line == null || line.isBlank())
                 continue;
+
             try {
                 add(activityFromRAS(line));
             } catch (RasException e) {
                 System.out.println("Skipping line " + ln + " due to RAS formatting error:\n" + e.getMessage());
+            } catch (IllegalArgumentException e) {
+                System.out.println("Skipping line " + ln + " due to invalid activity data:\n" + e.getMessage());
             }
         }
     }
@@ -148,12 +154,14 @@ public class ActivityList extends AbstractList<Activity> {
      * @return A newline-separated RAS representation of all activities.
      */
     public String toRAS() {
-        String ret = "";
+        StringBuilder sb = new StringBuilder();
 
-        for (Activity a : this)
-            ret += RasParser.serialize(a) + "\n";
+        for (Activity a : this) {
+            sb.append(RasParser.serialize(a));
+            sb.append("\n");
+        }
 
-        return ret;
+        return sb.toString();
     }
 
     /**
@@ -246,12 +254,15 @@ public class ActivityList extends AbstractList<Activity> {
      * @param activity The new activity to place at the index.
      * @return The activity previously at the specified index.
      * @throws IndexOutOfBoundsException If index is out of bounds.
+     * @throws IllegalArgumentException  If activity is null.
      */
     @Override
     public Activity set(int index, Activity activity)
-    throws IndexOutOfBoundsException {
+    throws IndexOutOfBoundsException, IllegalArgumentException {
         if (index < 0 || index >= size())
             throw new IndexOutOfBoundsException("Index " + index + ", Size " + size());
+        if (activity == null)
+            throw new IllegalArgumentException("Activity cannot be null.");
 
         Activity previous = array.set(index, activity);
         rebuildTitleIndex();
@@ -271,11 +282,14 @@ public class ActivityList extends AbstractList<Activity> {
      * @param index    Index at which the activity is to be inserted.
      * @param activity The activity to insert.
      * @throws IndexOutOfBoundsException If index is out of bounds.
+     * @throws IllegalArgumentException  If activity is null.
      */
     public void add(int index, Activity activity)
-    throws IndexOutOfBoundsException {
+    throws IndexOutOfBoundsException, IllegalArgumentException {
         if (index < 0 || index > size())
             throw new IndexOutOfBoundsException("Index " + index + ", Size " + size());
+        if (activity == null)
+            throw new IllegalArgumentException("Activity cannot be null.");
 
         array.add(index, activity);
         rebuildTitleIndex();
@@ -314,9 +328,13 @@ public class ActivityList extends AbstractList<Activity> {
      * the index.
      * 
      * @param activity The activity to append.
-     * @return Whether the element was added
+     * @return Whether the element was added.
+     * @throws IllegalArgumentException If activity is null.
      */
-    public boolean add(Activity activity) {
+    public boolean add(Activity activity)
+    throws IllegalArgumentException {
+        if (activity == null)
+            throw new IllegalArgumentException("Activity cannot be null.");
         int position = array.size();
         boolean added = array.add(activity);
         if (added)
@@ -372,7 +390,8 @@ public class ActivityList extends AbstractList<Activity> {
             return;
         for (String word : activity.getTitle().toLowerCase(Locale.ROOT).split("[^a-z0-9]+")) 
             if (!word.isEmpty())
-                titleIndex.computeIfAbsent(word, ignored -> new ArrayList<>()).add(position);
+                titleIndex.computeIfAbsent(word, ignored
+                    -> new ArrayList<>()).add(position);
     }
 
     /**
@@ -425,20 +444,20 @@ public class ActivityList extends AbstractList<Activity> {
      */
     @Override
     public String toString() {
-        String str = "---\n";
+
+        StringBuilder sb = new StringBuilder();
 
         if (isEmpty()) {
-            str += "(empty)\n";
+            sb.append("(empty)\n");
         } else {
             for (Activity a: this)
                 if (a == null || a.toString().isBlank())
-                    str += "(null)\n";
+                    sb.append("(null)\n");
                 else
-                    str += a.toString() + "\n";
+                    sb.append(a.toString() + "\n");
         }
 
-        str += "---";
-        return str;
+        return "---\n"+sb.toString()+"---";
     }
 
     /**
@@ -453,10 +472,9 @@ public class ActivityList extends AbstractList<Activity> {
         if (other == null || size() != other.size())
             return false;
 
-        for (int i = 0; i < size(); i++) {
+        for (int i = 0; i < size(); i++)
             if (!get(i).equals(other.get(i)))
                 return false;
-        }
 
         return true;
     }

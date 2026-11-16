@@ -28,11 +28,13 @@ public class OtherActivity extends Activity {
      * @param title     The activity title.
      * @param startTime The start time.
      * @param endTime   The end time.
-     * @param location  The activity location; this constructor does not reject null
-     *                  or blank values, although the app requires a nonblank
-     *                  location.
+     * @param location  The activity location.
+     * @throws IllegalArgumentException If title or location is null or blank,
+     *                                  if startTime or endTime is null, or if
+     *                                  startTime is not strictly before endTime.
      */
-    public OtherActivity(String title, Time startTime, Time endTime, String location) {
+    public OtherActivity(String title, Time startTime, Time endTime, String location)
+    throws IllegalArgumentException {
         super(title, startTime, endTime);
         setLocation(location);
     }
@@ -45,11 +47,13 @@ public class OtherActivity extends Activity {
      * @param startTime The start time.
      * @param endTime   The end time.
      * @param comment   The activity comment.
-     * @param location  The activity location; this constructor does not reject null
-     *                  or blank values, although the app requires a nonblank
-     *                  location.
+     * @param location  The activity location.
+     * @throws IllegalArgumentException If title or location is null or blank,
+     *                                  if startTime or endTime is null, or if
+     *                                  startTime is not strictly before endTime.
      */
-    public OtherActivity(String title, Time startTime, Time endTime, String comment, String location) {
+    public OtherActivity(String title, Time startTime, Time endTime, String comment, String location)
+    throws IllegalArgumentException {
         super(title, startTime, endTime, comment);
         setLocation(location);
     }
@@ -64,7 +68,6 @@ public class OtherActivity extends Activity {
     public OtherActivity(String ras)
     throws RasException {
         super(ras);
-        setLocation(RasParser.location(ras));
     }
 
 
@@ -86,8 +89,12 @@ public class OtherActivity extends Activity {
      * Sets the location of this activity.
      * 
      * @param location The new location.
+     * @throws IllegalArgumentException If location is null or blank.
      */
-    public void setLocation(String location) {
+    public void setLocation(String location)
+    throws IllegalArgumentException {
+        if (location == null || location.isBlank())
+            throw new IllegalArgumentException("Location cannot be null or blank.");
         this.location = location;
     }
 

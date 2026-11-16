@@ -27,8 +27,12 @@ public class HomeActivity extends Activity {
      * @param title     The activity title.
      * @param startTime The start time.
      * @param endTime   The end time.
+     * @throws IllegalArgumentException If title is null or blank, if startTime or
+     *                                  endTime is null, or if startTime is not
+     *                                  strictly before endTime.
      */
-    public HomeActivity(String title, Time startTime, Time endTime) {
+    public HomeActivity(String title, Time startTime, Time endTime)
+    throws IllegalArgumentException {
         super(title, startTime, endTime);
     }
 
@@ -41,8 +45,12 @@ public class HomeActivity extends Activity {
      * @param endTime   The end time.
      * @param comment   Optional note associated with the activity; null or blank
      *                  values are treated as no comment by {@link Activity}.
+     * @throws IllegalArgumentException If title is null or blank, if startTime or
+     *                                  endTime is null, or if startTime is not
+     *                                  strictly before endTime.
      */
-    public HomeActivity(String title, Time startTime, Time endTime, String comment) {
+    public HomeActivity(String title, Time startTime, Time endTime, String comment)
+    throws IllegalArgumentException {
         super(title, startTime, endTime, comment);
     }
 

@@ -129,12 +129,14 @@ public class DayPlannerUtils {
             }
 
             // ensure that start comes first
-            if (start != null && end != null && start.compareTo(end) >= 0) {
-                System.out.println("Starting time must be before ending time. Try again:");
+            try {
+                if (start != null && end != null && start.compareTo(end) >= 0)
+                    throw new IllegalArgumentException("Starting time must be before ending time.");
+                return new Time[] { start, end };
+            } catch (IllegalArgumentException e) {
+                System.out.println(e.getMessage() + " Try again:");
                 return readTimePeriod(keyboard);
             }
-
-            return new Time[] { start, end };
         }
 
         // if the user didn't input a dash...
