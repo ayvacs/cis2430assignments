@@ -13,238 +13,143 @@
 <div class="source-container">
 <pre><span class="source-line-no">001</span><span id="line-1">package dayplanner;</span>
 <span class="source-line-no">002</span><span id="line-2"></span>
-<span class="source-line-no">003</span><span id="line-3">import java.awt.BorderLayout;</span>
-<span class="source-line-no">004</span><span id="line-4">import java.awt.Color;</span>
-<span class="source-line-no">005</span><span id="line-5">import java.awt.Dimension;</span>
-<span class="source-line-no">006</span><span id="line-6">import java.awt.GridLayout;</span>
-<span class="source-line-no">007</span><span id="line-7">import java.awt.event.ActionEvent;</span>
-<span class="source-line-no">008</span><span id="line-8">import java.awt.event.ActionListener;</span>
-<span class="source-line-no">009</span><span id="line-9">import java.util.ArrayList;</span>
-<span class="source-line-no">010</span><span id="line-10"></span>
-<span class="source-line-no">011</span><span id="line-11">import javax.swing.BorderFactory;</span>
-<span class="source-line-no">012</span><span id="line-12">import javax.swing.Box;</span>
-<span class="source-line-no">013</span><span id="line-13">import javax.swing.BoxLayout;</span>
-<span class="source-line-no">014</span><span id="line-14">import javax.swing.JButton;</span>
-<span class="source-line-no">015</span><span id="line-15">import javax.swing.JFrame;</span>
-<span class="source-line-no">016</span><span id="line-16">import javax.swing.JLabel;</span>
-<span class="source-line-no">017</span><span id="line-17">import javax.swing.JPanel;</span>
-<span class="source-line-no">018</span><span id="line-18">import javax.swing.JTextArea;</span>
-<span class="source-line-no">019</span><span id="line-19">import javax.swing.JTextField;</span>
-<span class="source-line-no">020</span><span id="line-20">import javax.swing.border.Border;</span>
+<span class="source-line-no">003</span><span id="line-3">import java.util.ArrayList;</span>
+<span class="source-line-no">004</span><span id="line-4">import javax.swing.JTextField;</span>
+<span class="source-line-no">005</span><span id="line-5"></span>
+<span class="source-line-no">006</span><span id="line-6">/**</span>
+<span class="source-line-no">007</span><span id="line-7"> * Represents the Swing GUI add window. Extends {@link GUIWindow} to share</span>
+<span class="source-line-no">008</span><span id="line-8"> * common window configuration, layout, and component handling with other GUI</span>
+<span class="source-line-no">009</span><span id="line-9"> * windows such as {@link GUISearchWindow}.</span>
+<span class="source-line-no">010</span><span id="line-10"> */</span>
+<span class="source-line-no">011</span><span id="line-11">public class GUIAddWindow extends GUIWindow {</span>
+<span class="source-line-no">012</span><span id="line-12"></span>
+<span class="source-line-no">013</span><span id="line-13">    /**</span>
+<span class="source-line-no">014</span><span id="line-14">     * Create a new Swing GUI add window.</span>
+<span class="source-line-no">015</span><span id="line-15">     * </span>
+<span class="source-line-no">016</span><span id="line-16">     * @param activities Instantiated ActivityList.</span>
+<span class="source-line-no">017</span><span id="line-17">     */</span>
+<span class="source-line-no">018</span><span id="line-18">    public GUIAddWindow(ActivityList activities) {</span>
+<span class="source-line-no">019</span><span id="line-19">        super(activities);</span>
+<span class="source-line-no">020</span><span id="line-20">    }</span>
 <span class="source-line-no">021</span><span id="line-21"></span>
-<span class="source-line-no">022</span><span id="line-22">/**</span>
-<span class="source-line-no">023</span><span id="line-23"> * Represents the Swing GUI add window.</span>
-<span class="source-line-no">024</span><span id="line-24"> */</span>
-<span class="source-line-no">025</span><span id="line-25">public class GUIAddWindow extends JFrame {</span>
-<span class="source-line-no">026</span><span id="line-26">    private static final Dimension DIMS = new Dimension(800, 400);</span>
-<span class="source-line-no">027</span><span id="line-27">        private static final String TITLE = "DayPlanner - Add";</span>
-<span class="source-line-no">028</span><span id="line-28">        private static final int CLOSE = JFrame.DISPOSE_ON_CLOSE;</span>
-<span class="source-line-no">029</span><span id="line-29">        private static final Color BACKGROUND = new Color(250, 250, 250);</span>
-<span class="source-line-no">030</span><span id="line-30">    private static final Border PADDING = BorderFactory.createEmptyBorder(12, 12, 12, 12);</span>
+<span class="source-line-no">022</span><span id="line-22">    @Override</span>
+<span class="source-line-no">023</span><span id="line-23">    public String getWindowTitle() {</span>
+<span class="source-line-no">024</span><span id="line-24">        return "DayPlanner - Add";</span>
+<span class="source-line-no">025</span><span id="line-25">    }</span>
+<span class="source-line-no">026</span><span id="line-26"></span>
+<span class="source-line-no">027</span><span id="line-27">    @Override</span>
+<span class="source-line-no">028</span><span id="line-28">    public String getHeaderText() {</span>
+<span class="source-line-no">029</span><span id="line-29">        return "&lt;html&gt;&lt;b&gt;Adding an activity:&lt;/b&gt;&lt;/html&gt;";</span>
+<span class="source-line-no">030</span><span id="line-30">    }</span>
 <span class="source-line-no">031</span><span id="line-31"></span>
-<span class="source-line-no">032</span><span id="line-32">    /**</span>
-<span class="source-line-no">033</span><span id="line-33">     * Message box</span>
-<span class="source-line-no">034</span><span id="line-34">     */</span>
-<span class="source-line-no">035</span><span id="line-35">    private JTextArea messages = null;</span>
+<span class="source-line-no">032</span><span id="line-32">    @Override</span>
+<span class="source-line-no">033</span><span id="line-33">    public String getActionButtonLabel() {</span>
+<span class="source-line-no">034</span><span id="line-34">        return "Add";</span>
+<span class="source-line-no">035</span><span id="line-35">    }</span>
 <span class="source-line-no">036</span><span id="line-36"></span>
-<span class="source-line-no">037</span><span id="line-37"></span>
-<span class="source-line-no">038</span><span id="line-38">    /**</span>
-<span class="source-line-no">039</span><span id="line-39">     * Create a new Swing GUI add window.</span>
-<span class="source-line-no">040</span><span id="line-40">     * </span>
-<span class="source-line-no">041</span><span id="line-41">     * @param activities Instantiated ActivityList.</span>
-<span class="source-line-no">042</span><span id="line-42">     */</span>
-<span class="source-line-no">043</span><span id="line-43">    public GUIAddWindow(ActivityList activities) {</span>
-<span class="source-line-no">044</span><span id="line-44">        // ==============================</span>
-<span class="source-line-no">045</span><span id="line-45">        // Window Setup</span>
-<span class="source-line-no">046</span><span id="line-46">        // ==============================</span>
-<span class="source-line-no">047</span><span id="line-47"></span>
-<span class="source-line-no">048</span><span id="line-48">        super();</span>
-<span class="source-line-no">049</span><span id="line-49">        setSize(DIMS);</span>
-<span class="source-line-no">050</span><span id="line-50">        setTitle(TITLE);</span>
-<span class="source-line-no">051</span><span id="line-51">        setDefaultCloseOperation(CLOSE);</span>
-<span class="source-line-no">052</span><span id="line-52">        getContentPane().setBackground(BACKGROUND);</span>
-<span class="source-line-no">053</span><span id="line-53">        setLocationRelativeTo(null);</span>
-<span class="source-line-no">054</span><span id="line-54">        setLayout(new BorderLayout(12, 12));</span>
-<span class="source-line-no">055</span><span id="line-55"></span>
-<span class="source-line-no">056</span><span id="line-56"></span>
-<span class="source-line-no">057</span><span id="line-57">        // ==============================</span>
-<span class="source-line-no">058</span><span id="line-58">        // Contents</span>
-<span class="source-line-no">059</span><span id="line-59">        // ==============================</span>
-<span class="source-line-no">060</span><span id="line-60"></span>
-<span class="source-line-no">061</span><span id="line-61">        // ------------------------------</span>
-<span class="source-line-no">062</span><span id="line-62">        // Center Panel</span>
-<span class="source-line-no">063</span><span id="line-63">        // contains Text Fields.</span>
-<span class="source-line-no">064</span><span id="line-64">        // ------------------------------</span>
-<span class="source-line-no">065</span><span id="line-65"></span>
-<span class="source-line-no">066</span><span id="line-66">        JPanel centerPanel = new JPanel();</span>
-<span class="source-line-no">067</span><span id="line-67">        centerPanel.setLayout(new GridLayout(7, 2, 8, 8));</span>
-<span class="source-line-no">068</span><span id="line-68">        centerPanel.setBorder(PADDING);</span>
-<span class="source-line-no">069</span><span id="line-69">        centerPanel.add(new JLabel("&lt;html&gt;&lt;b&gt;Adding an activity:&lt;/b&gt;&lt;/html&gt;"));</span>
-<span class="source-line-no">070</span><span id="line-70">        centerPanel.add(Box.createGlue()); // skip this grid cell</span>
-<span class="source-line-no">071</span><span id="line-71"></span>
-<span class="source-line-no">072</span><span id="line-72">        // ArrayList that contains all of the JTextField instances in this panel.</span>
-<span class="source-line-no">073</span><span id="line-73">        ArrayList&lt;JTextField&gt; centerFields = new ArrayList&lt;JTextField&gt;();</span>
-<span class="source-line-no">074</span><span id="line-74"></span>
-<span class="source-line-no">075</span><span id="line-75">        centerPanel.add(new JLabel(</span>
-<span class="source-line-no">076</span><span id="line-76">            "&lt;html&gt;Type &lt;code&gt;('home', 'school', or 'other')&lt;/code&gt;&lt;/html&gt;"));</span>
-<span class="source-line-no">077</span><span id="line-77">        JTextField typeField = new JTextField();</span>
-<span class="source-line-no">078</span><span id="line-78">        centerPanel.add(typeField);</span>
-<span class="source-line-no">079</span><span id="line-79">        centerFields.add(typeField);</span>
-<span class="source-line-no">080</span><span id="line-80"></span>
-<span class="source-line-no">081</span><span id="line-81">        centerPanel.add(new JLabel("Title:"));</span>
-<span class="source-line-no">082</span><span id="line-82">        JTextField titleField = new JTextField();</span>
-<span class="source-line-no">083</span><span id="line-83">        centerPanel.add(titleField);</span>
-<span class="source-line-no">084</span><span id="line-84">        centerFields.add(titleField);</span>
-<span class="source-line-no">085</span><span id="line-85">        </span>
-<span class="source-line-no">086</span><span id="line-86">        centerPanel.add(new JLabel(</span>
-<span class="source-line-no">087</span><span id="line-87">            "&lt;html&gt;Starting time &lt;code&gt;(YYYY/MM/DD HH:MM)&lt;/code&gt;:&lt;/html&gt;"));</span>
-<span class="source-line-no">088</span><span id="line-88">        JTextField sTimeField = new JTextField();</span>
-<span class="source-line-no">089</span><span id="line-89">        centerPanel.add(sTimeField);</span>
-<span class="source-line-no">090</span><span id="line-90">        centerFields.add(sTimeField);</span>
-<span class="source-line-no">091</span><span id="line-91">        </span>
-<span class="source-line-no">092</span><span id="line-92">        centerPanel.add(new JLabel(</span>
-<span class="source-line-no">093</span><span id="line-93">            "&lt;html&gt;Ending time &lt;code&gt;(YYYY/MM/DD HH:MM)&lt;/code&gt;:&lt;/html&gt;"));</span>
-<span class="source-line-no">094</span><span id="line-94">        JTextField eTimeField = new JTextField();</span>
-<span class="source-line-no">095</span><span id="line-95">        centerPanel.add(eTimeField);</span>
-<span class="source-line-no">096</span><span id="line-96">        centerFields.add(eTimeField);</span>
-<span class="source-line-no">097</span><span id="line-97">        </span>
-<span class="source-line-no">098</span><span id="line-98">        centerPanel.add(new JLabel(</span>
-<span class="source-line-no">099</span><span id="line-99">            "&lt;html&gt;Comment &lt;i&gt;(optional)&lt;/i&gt;:&lt;/html&gt;"));</span>
-<span class="source-line-no">100</span><span id="line-100">        JTextField commentField = new JTextField();</span>
-<span class="source-line-no">101</span><span id="line-101">        centerPanel.add(commentField);</span>
-<span class="source-line-no">102</span><span id="line-102">        centerFields.add(commentField);</span>
-<span class="source-line-no">103</span><span id="line-103">        </span>
-<span class="source-line-no">104</span><span id="line-104">        centerPanel.add(new JLabel(</span>
-<span class="source-line-no">105</span><span id="line-105">            "&lt;html&gt;Location &lt;i&gt;(if creating Other Activity only)&lt;/i&gt;:&lt;/html&gt;"));</span>
-<span class="source-line-no">106</span><span id="line-106">        JTextField locationField = new JTextField();</span>
-<span class="source-line-no">107</span><span id="line-107">        centerPanel.add(locationField);</span>
-<span class="source-line-no">108</span><span id="line-108">        centerFields.add(locationField);</span>
-<span class="source-line-no">109</span><span id="line-109">        </span>
-<span class="source-line-no">110</span><span id="line-110"></span>
-<span class="source-line-no">111</span><span id="line-111">        // ------------------------------</span>
-<span class="source-line-no">112</span><span id="line-112">        // East Panel</span>
-<span class="source-line-no">113</span><span id="line-113">        // contains Buttons.</span>
-<span class="source-line-no">114</span><span id="line-114">        // ------------------------------</span>
-<span class="source-line-no">115</span><span id="line-115"></span>
-<span class="source-line-no">116</span><span id="line-116">        JPanel eastPanel = new JPanel();</span>
-<span class="source-line-no">117</span><span id="line-117">        eastPanel.setBorder(PADDING);</span>
-<span class="source-line-no">118</span><span id="line-118">        eastPanel.setLayout(new BoxLayout(eastPanel, BoxLayout.Y_AXIS));</span>
-<span class="source-line-no">119</span><span id="line-119"></span>
-<span class="source-line-no">120</span><span id="line-120">        // This is the function that gets called when we click the RESET or ADD buttons.</span>
-<span class="source-line-no">121</span><span id="line-121">        ActionListener buttonEvent = new ActionListener() {</span>
-<span class="source-line-no">122</span><span id="line-122">            public void actionPerformed(ActionEvent event) {</span>
-<span class="source-line-no">123</span><span id="line-123">               String action = event.getActionCommand();</span>
-<span class="source-line-no">124</span><span id="line-124"></span>
-<span class="source-line-no">125</span><span id="line-125">               // RESET: set all text fields to NULL.</span>
-<span class="source-line-no">126</span><span id="line-126">               if (action.equals("RESET"))</span>
-<span class="source-line-no">127</span><span id="line-127">                   for (JTextField tf : centerFields)</span>
-<span class="source-line-no">128</span><span id="line-128">                       tf.setText(null);</span>
-<span class="source-line-no">129</span><span id="line-129"></span>
-<span class="source-line-no">130</span><span id="line-130">               // ADD: Pass all of the text field instances.</span>
-<span class="source-line-no">131</span><span id="line-131">               else if (action.equals("ADD"))</span>
-<span class="source-line-no">132</span><span id="line-132">                   if (tryCreate(activities, centerFields))</span>
-<span class="source-line-no">133</span><span id="line-133">                       addMessage("Added successfully!");</span>
-<span class="source-line-no">134</span><span id="line-134">                   else</span>
-<span class="source-line-no">135</span><span id="line-135">                       addMessage("Error adding activity.");</span>
-<span class="source-line-no">136</span><span id="line-136">            }</span>
-<span class="source-line-no">137</span><span id="line-137">        };</span>
-<span class="source-line-no">138</span><span id="line-138"></span>
-<span class="source-line-no">139</span><span id="line-139">        JButton resetButton = new JButton("Reset");</span>
-<span class="source-line-no">140</span><span id="line-140">        resetButton.setActionCommand("RESET");</span>
-<span class="source-line-no">141</span><span id="line-141">        resetButton.addActionListener(buttonEvent);</span>
-<span class="source-line-no">142</span><span id="line-142">        eastPanel.add(resetButton);</span>
-<span class="source-line-no">143</span><span id="line-143"></span>
-<span class="source-line-no">144</span><span id="line-144">        JButton addButton = new JButton("Add");</span>
-<span class="source-line-no">145</span><span id="line-145">        addButton.setActionCommand("ADD");</span>
-<span class="source-line-no">146</span><span id="line-146">        addButton.addActionListener(buttonEvent);</span>
-<span class="source-line-no">147</span><span id="line-147">        eastPanel.add(addButton);</span>
-<span class="source-line-no">148</span><span id="line-148"></span>
-<span class="source-line-no">149</span><span id="line-149">        // ------------------------------</span>
-<span class="source-line-no">150</span><span id="line-150">        // South Panel</span>
-<span class="source-line-no">151</span><span id="line-151">        // contains Message box.</span>
-<span class="source-line-no">152</span><span id="line-152">        // ------------------------------</span>
-<span class="source-line-no">153</span><span id="line-153"></span>
-<span class="source-line-no">154</span><span id="line-154">        JPanel southPanel = new JPanel();</span>
-<span class="source-line-no">155</span><span id="line-155">        southPanel.setLayout(new BoxLayout(southPanel, BoxLayout.Y_AXIS));</span>
-<span class="source-line-no">156</span><span id="line-156">        southPanel.setBorder(PADDING);</span>
-<span class="source-line-no">157</span><span id="line-157">        southPanel.add(new JLabel(</span>
-<span class="source-line-no">158</span><span id="line-158">            "&lt;html&gt;&lt;b&gt;Messages&lt;/b&gt; &lt;i&gt;(newer ones are placed the top)&lt;/i&gt;:&lt;/html&gt;"));</span>
-<span class="source-line-no">159</span><span id="line-159"></span>
-<span class="source-line-no">160</span><span id="line-160">        messages = new JTextArea();</span>
-<span class="source-line-no">161</span><span id="line-161">        messages.setBackground(southPanel.getBackground());</span>
-<span class="source-line-no">162</span><span id="line-162">        southPanel.add(messages);</span>
-<span class="source-line-no">163</span><span id="line-163"></span>
-<span class="source-line-no">164</span><span id="line-164">        </span>
-<span class="source-line-no">165</span><span id="line-165">        // ==============================</span>
-<span class="source-line-no">166</span><span id="line-166">        // End</span>
-<span class="source-line-no">167</span><span id="line-167">        // ==============================</span>
-<span class="source-line-no">168</span><span id="line-168"></span>
-<span class="source-line-no">169</span><span id="line-169">        add(centerPanel, BorderLayout.CENTER);</span>
-<span class="source-line-no">170</span><span id="line-170">        add(eastPanel, BorderLayout.EAST);</span>
-<span class="source-line-no">171</span><span id="line-171">        add(southPanel, BorderLayout.SOUTH);</span>
-<span class="source-line-no">172</span><span id="line-172">        setVisible(true);</span>
-<span class="source-line-no">173</span><span id="line-173">    }</span>
-<span class="source-line-no">174</span><span id="line-174"></span>
-<span class="source-line-no">175</span><span id="line-175">    /**</span>
-<span class="source-line-no">176</span><span id="line-176">     * Add a message to the top of the message box. Does nothing if the text box</span>
-<span class="source-line-no">177</span><span id="line-177">     * hasn't been initialized yet or if the text is blank.</span>
-<span class="source-line-no">178</span><span id="line-178">     * </span>
-<span class="source-line-no">179</span><span id="line-179">     * @param text Text to add.</span>
-<span class="source-line-no">180</span><span id="line-180">     */</span>
-<span class="source-line-no">181</span><span id="line-181">    public void addMessage(String text) {</span>
-<span class="source-line-no">182</span><span id="line-182">        if (messages == null || text.isBlank())</span>
-<span class="source-line-no">183</span><span id="line-183">            return;</span>
-<span class="source-line-no">184</span><span id="line-184"></span>
-<span class="source-line-no">185</span><span id="line-185">        StringBuilder sb = new StringBuilder();</span>
-<span class="source-line-no">186</span><span id="line-186">        sb.append("&gt; ");</span>
-<span class="source-line-no">187</span><span id="line-187">        sb.append(text);</span>
-<span class="source-line-no">188</span><span id="line-188">        sb.append("\n");</span>
-<span class="source-line-no">189</span><span id="line-189">        sb.append(messages.getText());</span>
-<span class="source-line-no">190</span><span id="line-190"></span>
-<span class="source-line-no">191</span><span id="line-191">        messages.setText(sb.toString());</span>
-<span class="source-line-no">192</span><span id="line-192">    }</span>
-<span class="source-line-no">193</span><span id="line-193"></span>
-<span class="source-line-no">194</span><span id="line-194">    /**</span>
-<span class="source-line-no">195</span><span id="line-195">     * Input-validate and try to create an activity and add it to the list.</span>
-<span class="source-line-no">196</span><span id="line-196">     * </span>
-<span class="source-line-no">197</span><span id="line-197">     * @param activities   Instantiated ActivityList.</span>
-<span class="source-line-no">198</span><span id="line-198">     * @param centerFields All of the JTextField instances in the order: type,</span>
-<span class="source-line-no">199</span><span id="line-199">     *                     title, start time, end time, comment.</span>
-<span class="source-line-no">200</span><span id="line-200">     */</span>
-<span class="source-line-no">201</span><span id="line-201">    private boolean tryCreate(ActivityList activities, ArrayList&lt;JTextField&gt; centerFields) {</span>
-<span class="source-line-no">202</span><span id="line-202">        // Get inputs</span>
-<span class="source-line-no">203</span><span id="line-203">        ActivityType type = ActivityType.parse(centerFields.get(0).getText());</span>
-<span class="source-line-no">204</span><span id="line-204">        String title = centerFields.get(1).getText();</span>
-<span class="source-line-no">205</span><span id="line-205">        Time sTime = new Time(centerFields.get(2).getText());</span>
-<span class="source-line-no">206</span><span id="line-206">        Time eTime = new Time(centerFields.get(3).getText());</span>
-<span class="source-line-no">207</span><span id="line-207">        String comment = centerFields.get(4).getText();</span>
-<span class="source-line-no">208</span><span id="line-208"></span>
-<span class="source-line-no">209</span><span id="line-209">        // Input validation</span>
-<span class="source-line-no">210</span><span id="line-210">        if (type == null</span>
-<span class="source-line-no">211</span><span id="line-211">         || title == null || title.isBlank()</span>
-<span class="source-line-no">212</span><span id="line-212">         || sTime == null</span>
-<span class="source-line-no">213</span><span id="line-213">         || eTime == null || sTime.compareTo(eTime) &gt; 0)</span>
-<span class="source-line-no">214</span><span id="line-214">            return false;</span>
-<span class="source-line-no">215</span><span id="line-215"></span>
-<span class="source-line-no">216</span><span id="line-216">        // Instantiate</span>
-<span class="source-line-no">217</span><span id="line-217">        if (type.equals(ActivityType.HOME)) {</span>
-<span class="source-line-no">218</span><span id="line-218">            activities.add(new HomeActivity(</span>
-<span class="source-line-no">219</span><span id="line-219">                title, sTime, eTime, comment));</span>
-<span class="source-line-no">220</span><span id="line-220">            return true;</span>
-<span class="source-line-no">221</span><span id="line-221">        } else if (type.equals(ActivityType.SCHOOL)) {</span>
-<span class="source-line-no">222</span><span id="line-222">            activities.add(new SchoolActivity(</span>
-<span class="source-line-no">223</span><span id="line-223">                title, sTime, eTime, comment));</span>
-<span class="source-line-no">224</span><span id="line-224">            return true;</span>
-<span class="source-line-no">225</span><span id="line-225">        } else if (type.equals(ActivityType.OTHER)) {</span>
-<span class="source-line-no">226</span><span id="line-226">            String location = centerFields.get(5).getText();</span>
-<span class="source-line-no">227</span><span id="line-227">            activities.add(new OtherActivity(</span>
-<span class="source-line-no">228</span><span id="line-228">                title, sTime, eTime, comment, location));</span>
-<span class="source-line-no">229</span><span id="line-229">            return true;</span>
-<span class="source-line-no">230</span><span id="line-230">        }</span>
-<span class="source-line-no">231</span><span id="line-231">        </span>
-<span class="source-line-no">232</span><span id="line-232">        return false;</span>
-<span class="source-line-no">233</span><span id="line-233">    }</span>
-<span class="source-line-no">234</span><span id="line-234">}</span>
+<span class="source-line-no">037</span><span id="line-37">    @Override</span>
+<span class="source-line-no">038</span><span id="line-38">    public String getActionButtonCommand() {</span>
+<span class="source-line-no">039</span><span id="line-39">        return "ADD";</span>
+<span class="source-line-no">040</span><span id="line-40">    }</span>
+<span class="source-line-no">041</span><span id="line-41"></span>
+<span class="source-line-no">042</span><span id="line-42">    @Override</span>
+<span class="source-line-no">043</span><span id="line-43">    public String[] getFieldLabels() {</span>
+<span class="source-line-no">044</span><span id="line-44">        return new String[] {</span>
+<span class="source-line-no">045</span><span id="line-45">            "&lt;html&gt;Type &lt;code&gt;('home', 'school', or 'other')&lt;/code&gt;&lt;/html&gt;",</span>
+<span class="source-line-no">046</span><span id="line-46">            "Title:",</span>
+<span class="source-line-no">047</span><span id="line-47">            "&lt;html&gt;Starting time &lt;code&gt;(YYYY/MM/DD HH:MM)&lt;/code&gt;:&lt;/html&gt;",</span>
+<span class="source-line-no">048</span><span id="line-48">            "&lt;html&gt;Ending time &lt;code&gt;(YYYY/MM/DD HH:MM)&lt;/code&gt;:&lt;/html&gt;",</span>
+<span class="source-line-no">049</span><span id="line-49">            "&lt;html&gt;Comment &lt;i&gt;(optional)&lt;/i&gt;:&lt;/html&gt;",</span>
+<span class="source-line-no">050</span><span id="line-50">            "&lt;html&gt;Location &lt;i&gt;(if creating Other Activity only)&lt;/i&gt;:&lt;/html&gt;"</span>
+<span class="source-line-no">051</span><span id="line-51">        };</span>
+<span class="source-line-no">052</span><span id="line-52">    }</span>
+<span class="source-line-no">053</span><span id="line-53"></span>
+<span class="source-line-no">054</span><span id="line-54">    @Override</span>
+<span class="source-line-no">055</span><span id="line-55">    public boolean executeAction() {</span>
+<span class="source-line-no">056</span><span id="line-56">        return tryCreate(activities, centerFields);</span>
+<span class="source-line-no">057</span><span id="line-57">    }</span>
+<span class="source-line-no">058</span><span id="line-58"></span>
+<span class="source-line-no">059</span><span id="line-59">    /**</span>
+<span class="source-line-no">060</span><span id="line-60">     * Input-validate and try to create an activity and add it to the list.</span>
+<span class="source-line-no">061</span><span id="line-61">     * </span>
+<span class="source-line-no">062</span><span id="line-62">     * @param activities   Instantiated ActivityList.</span>
+<span class="source-line-no">063</span><span id="line-63">     * @param centerFields All of the JTextField instances in the order: type,</span>
+<span class="source-line-no">064</span><span id="line-64">     *                     title, start time, end time, comment, location.</span>
+<span class="source-line-no">065</span><span id="line-65">     * @return true if activity was created and added, false otherwise.</span>
+<span class="source-line-no">066</span><span id="line-66">     */</span>
+<span class="source-line-no">067</span><span id="line-67">    public boolean tryCreate(ActivityList activities, ArrayList&lt;JTextField&gt; centerFields) {</span>
+<span class="source-line-no">068</span><span id="line-68">        if (activities == null || centerFields == null || centerFields.size() &lt; 6) {</span>
+<span class="source-line-no">069</span><span id="line-69">            addMessage("Internal error: missing form fields.");</span>
+<span class="source-line-no">070</span><span id="line-70">            return false;</span>
+<span class="source-line-no">071</span><span id="line-71">        }</span>
+<span class="source-line-no">072</span><span id="line-72"></span>
+<span class="source-line-no">073</span><span id="line-73">        // 1. Activity type</span>
+<span class="source-line-no">074</span><span id="line-74">        String typeStr = centerFields.get(0).getText().trim();</span>
+<span class="source-line-no">075</span><span id="line-75">        if (typeStr.isEmpty()) {</span>
+<span class="source-line-no">076</span><span id="line-76">            addMessage("Activity type cannot be empty. Please enter 'home', 'school', or 'other'.");</span>
+<span class="source-line-no">077</span><span id="line-77">            return false;</span>
+<span class="source-line-no">078</span><span id="line-78">        }</span>
+<span class="source-line-no">079</span><span id="line-79">        ActivityType type = ActivityType.parse(typeStr);</span>
+<span class="source-line-no">080</span><span id="line-80">        if (type == null) {</span>
+<span class="source-line-no">081</span><span id="line-81">            addMessage("Invalid activity type: \"" + typeStr + "\". Please enter 'home', 'school', or 'other'.");</span>
+<span class="source-line-no">082</span><span id="line-82">            return false;</span>
+<span class="source-line-no">083</span><span id="line-83">        }</span>
+<span class="source-line-no">084</span><span id="line-84"></span>
+<span class="source-line-no">085</span><span id="line-85">        // 2. Title</span>
+<span class="source-line-no">086</span><span id="line-86">        String title = centerFields.get(1).getText().trim();</span>
+<span class="source-line-no">087</span><span id="line-87">        if (title.isEmpty()) {</span>
+<span class="source-line-no">088</span><span id="line-88">            addMessage("Title cannot be empty.");</span>
+<span class="source-line-no">089</span><span id="line-89">            return false;</span>
+<span class="source-line-no">090</span><span id="line-90">        }</span>
+<span class="source-line-no">091</span><span id="line-91"></span>
+<span class="source-line-no">092</span><span id="line-92">        // 3. Start time</span>
+<span class="source-line-no">093</span><span id="line-93">        Time sTime = parseAndValidateTime(centerFields.get(2).getText(), "Starting time");</span>
+<span class="source-line-no">094</span><span id="line-94">        if (sTime == null)</span>
+<span class="source-line-no">095</span><span id="line-95">            return false;</span>
+<span class="source-line-no">096</span><span id="line-96"></span>
+<span class="source-line-no">097</span><span id="line-97">        // 4. End time</span>
+<span class="source-line-no">098</span><span id="line-98">        Time eTime = parseAndValidateTime(centerFields.get(3).getText(), "Ending time");</span>
+<span class="source-line-no">099</span><span id="line-99">        if (eTime == null)</span>
+<span class="source-line-no">100</span><span id="line-100">            return false;</span>
+<span class="source-line-no">101</span><span id="line-101"></span>
+<span class="source-line-no">102</span><span id="line-102">        // 5. Start vs End order</span>
+<span class="source-line-no">103</span><span id="line-103">        if (sTime.compareTo(eTime) &gt;= 0) {</span>
+<span class="source-line-no">104</span><span id="line-104">            addMessage("Ending time (" + eTime + ") has to be after starting time (" + sTime + ").");</span>
+<span class="source-line-no">105</span><span id="line-105">            return false;</span>
+<span class="source-line-no">106</span><span id="line-106">        }</span>
+<span class="source-line-no">107</span><span id="line-107"></span>
+<span class="source-line-no">108</span><span id="line-108">        // 6. Comment (optional)</span>
+<span class="source-line-no">109</span><span id="line-109">        String comment = centerFields.get(4).getText().trim();</span>
+<span class="source-line-no">110</span><span id="line-110">        if (comment.isEmpty())</span>
+<span class="source-line-no">111</span><span id="line-111">            comment = null;</span>
+<span class="source-line-no">112</span><span id="line-112"></span>
+<span class="source-line-no">113</span><span id="line-113">        // 7. Location (required for other)</span>
+<span class="source-line-no">114</span><span id="line-114">        String location = null;</span>
+<span class="source-line-no">115</span><span id="line-115">        if (type == ActivityType.OTHER) {</span>
+<span class="source-line-no">116</span><span id="line-116">            location = centerFields.get(5).getText().trim();</span>
+<span class="source-line-no">117</span><span id="line-117">            if (location.isEmpty()) {</span>
+<span class="source-line-no">118</span><span id="line-118">                addMessage("Location cannot be empty for Other activities.");</span>
+<span class="source-line-no">119</span><span id="line-119">                return false;</span>
+<span class="source-line-no">120</span><span id="line-120">            }</span>
+<span class="source-line-no">121</span><span id="line-121">        }</span>
+<span class="source-line-no">122</span><span id="line-122"></span>
+<span class="source-line-no">123</span><span id="line-123">        // 8. Instantiate and add</span>
+<span class="source-line-no">124</span><span id="line-124">        try {</span>
+<span class="source-line-no">125</span><span id="line-125">            Activity act = switch (type) {</span>
+<span class="source-line-no">126</span><span id="line-126">                case HOME   -&gt; new HomeActivity(title, sTime, eTime, comment);</span>
+<span class="source-line-no">127</span><span id="line-127">                case SCHOOL -&gt; new SchoolActivity(title, sTime, eTime, comment);</span>
+<span class="source-line-no">128</span><span id="line-128">                case OTHER  -&gt; new OtherActivity(title, sTime, eTime, comment, location);</span>
+<span class="source-line-no">129</span><span id="line-129">            };</span>
+<span class="source-line-no">130</span><span id="line-130"></span>
+<span class="source-line-no">131</span><span id="line-131">            activities.add(act);</span>
+<span class="source-line-no">132</span><span id="line-132">            addMessage("Added successfully: " + act.toString());</span>
+<span class="source-line-no">133</span><span id="line-133">            return true;</span>
+<span class="source-line-no">134</span><span id="line-134">        } catch (IllegalArgumentException e) {</span>
+<span class="source-line-no">135</span><span id="line-135">            addMessage("Error creating activity: " + e.getMessage());</span>
+<span class="source-line-no">136</span><span id="line-136">            return false;</span>
+<span class="source-line-no">137</span><span id="line-137">        }</span>
+<span class="source-line-no">138</span><span id="line-138">    }</span>
+<span class="source-line-no">139</span><span id="line-139">}</span>
 
 
 

@@ -79,205 +79,213 @@
 <span class="source-line-no">066</span><span id="line-66">        String comment = optional(fields, 4);</span>
 <span class="source-line-no">067</span><span id="line-67"></span>
 <span class="source-line-no">068</span><span id="line-68">        // instantiate the appropriate class</span>
-<span class="source-line-no">069</span><span id="line-69">        return switch (fields[0]) {</span>
-<span class="source-line-no">070</span><span id="line-70">            case "HomeActivity"</span>
-<span class="source-line-no">071</span><span id="line-71">                -&gt; new HomeActivity(title, sTime, eTime, comment);</span>
-<span class="source-line-no">072</span><span id="line-72">            case "SchoolActivity"</span>
-<span class="source-line-no">073</span><span id="line-73">                -&gt; new SchoolActivity(title, sTime, eTime, comment);</span>
-<span class="source-line-no">074</span><span id="line-74">            default -&gt; {</span>
-<span class="source-line-no">075</span><span id="line-75">                if (fields[5].isBlank())</span>
-<span class="source-line-no">076</span><span id="line-76">                    throw new RasException("location is empty");</span>
-<span class="source-line-no">077</span><span id="line-77">                yield new OtherActivity(title, sTime, eTime, comment, desanitize(fields[5]));</span>
-<span class="source-line-no">078</span><span id="line-78">            }</span>
-<span class="source-line-no">079</span><span id="line-79">        };</span>
-<span class="source-line-no">080</span><span id="line-80">    }</span>
-<span class="source-line-no">081</span><span id="line-81"></span>
-<span class="source-line-no">082</span><span id="line-82">    /**</span>
-<span class="source-line-no">083</span><span id="line-83">     * Writes one activity as a RAS record.</span>
-<span class="source-line-no">084</span><span id="line-84">     *</span>
-<span class="source-line-no">085</span><span id="line-85">     * @param activity Activity to serialize.</span>
-<span class="source-line-no">086</span><span id="line-86">     * @return Its RAS representation.</span>
-<span class="source-line-no">087</span><span id="line-87">     */</span>
-<span class="source-line-no">088</span><span id="line-88">    public static String serialize(Activity activity) {</span>
-<span class="source-line-no">089</span><span id="line-89">        // define fields</span>
-<span class="source-line-no">090</span><span id="line-90">        String type = activity.getClass().getSimpleName();</span>
-<span class="source-line-no">091</span><span id="line-91">        String title = activity.getTitle();</span>
-<span class="source-line-no">092</span><span id="line-92">        String sTime = activity.getStartTime().toString();</span>
-<span class="source-line-no">093</span><span id="line-93">        String eTime = activity.getEndTime().toString();</span>
-<span class="source-line-no">094</span><span id="line-94">        String comment = activity.getComment();</span>
-<span class="source-line-no">095</span><span id="line-95"></span>
-<span class="source-line-no">096</span><span id="line-96">        // sanitize all fields</span>
-<span class="source-line-no">097</span><span id="line-97">        type = sanitize(type);</span>
-<span class="source-line-no">098</span><span id="line-98">        title = sanitize(title);</span>
-<span class="source-line-no">099</span><span id="line-99">        sTime = sanitize(sTime);</span>
-<span class="source-line-no">100</span><span id="line-100">        eTime = sanitize(eTime);</span>
-<span class="source-line-no">101</span><span id="line-101">        comment = sanitize(comment);</span>
-<span class="source-line-no">102</span><span id="line-102"></span>
-<span class="source-line-no">103</span><span id="line-103">        String ras = String.format(</span>
-<span class="source-line-no">104</span><span id="line-104">            "%s,%s,%s,%s,%s",</span>
-<span class="source-line-no">105</span><span id="line-105">            type, title, sTime, eTime,</span>
-<span class="source-line-no">106</span><span id="line-106">            (comment == null || comment.isBlank() ? "NIL" : comment));</span>
-<span class="source-line-no">107</span><span id="line-107">        </span>
-<span class="source-line-no">108</span><span id="line-108">        // add location field for Other Activities</span>
-<span class="source-line-no">109</span><span id="line-109">        if (activity instanceof OtherActivity other) {</span>
-<span class="source-line-no">110</span><span id="line-110">            String location = sanitize(other.getLocation());</span>
-<span class="source-line-no">111</span><span id="line-111">            ras += "," + (location == null ? "NIL" : location);</span>
-<span class="source-line-no">112</span><span id="line-112">        }</span>
-<span class="source-line-no">113</span><span id="line-113">        </span>
-<span class="source-line-no">114</span><span id="line-114">        // wrap in angled brackets</span>
-<span class="source-line-no">115</span><span id="line-115">        return "&lt;" + ras + "&gt;";</span>
-<span class="source-line-no">116</span><span id="line-116">    }</span>
-<span class="source-line-no">117</span><span id="line-117"></span>
-<span class="source-line-no">118</span><span id="line-118">    /**</span>
-<span class="source-line-no">119</span><span id="line-119">     * Returns the fields inside one RAS record. Missing fields are retained as</span>
-<span class="source-line-no">120</span><span id="line-120">     * empty strings so the activity class can apply its existing defaults.</span>
-<span class="source-line-no">121</span><span id="line-121">     *</span>
-<span class="source-line-no">122</span><span id="line-122">     * @param ras Serialized activity record.</span>
-<span class="source-line-no">123</span><span id="line-123">     * @return The record fields, including the activity type at index zero.</span>
-<span class="source-line-no">124</span><span id="line-124">     * @throws RasException when RAS input is invalid.</span>
-<span class="source-line-no">125</span><span id="line-125">     */</span>
-<span class="source-line-no">126</span><span id="line-126">    public static String[] fields(String ras)</span>
-<span class="source-line-no">127</span><span id="line-127">    throws RasException {</span>
-<span class="source-line-no">128</span><span id="line-128">        if (ras == null || !ras.startsWith("&lt;") || !ras.endsWith("&gt;") || ras.length() &lt; 2)</span>
-<span class="source-line-no">129</span><span id="line-129">            throw new RasException("record must be wrapped in &lt; &gt;");</span>
-<span class="source-line-no">130</span><span id="line-130">        String inner = ras.substring(1, ras.length() - 1);</span>
-<span class="source-line-no">131</span><span id="line-131">        return inner.split(",", -1);</span>
-<span class="source-line-no">132</span><span id="line-132">    }</span>
-<span class="source-line-no">133</span><span id="line-133"></span>
-<span class="source-line-no">134</span><span id="line-134">    /**</span>
-<span class="source-line-no">135</span><span id="line-135">     * Populate the fields of this Activity in accordance with the given RAS string.</span>
-<span class="source-line-no">136</span><span id="line-136">     * </span>
-<span class="source-line-no">137</span><span id="line-137">     * @param activity The activity whose fields to populate.</span>
-<span class="source-line-no">138</span><span id="line-138">     * @param ras      Serialized activity record.</span>
-<span class="source-line-no">139</span><span id="line-139">     * @throws RasException when RAS input is invalid.</span>
-<span class="source-line-no">140</span><span id="line-140">     */</span>
-<span class="source-line-no">141</span><span id="line-141">    public static void populate(Activity activity, String ras)</span>
-<span class="source-line-no">142</span><span id="line-142">    throws RasException {</span>
-<span class="source-line-no">143</span><span id="line-143">        String[] f = fields(ras);</span>
-<span class="source-line-no">144</span><span id="line-144">        boolean other = f[0].equals("OtherActivity");</span>
-<span class="source-line-no">145</span><span id="line-145">        if (!other &amp;&amp; !f[0].equals("HomeActivity") &amp;&amp; !f[0].equals("SchoolActivity"))</span>
-<span class="source-line-no">146</span><span id="line-146">            throw new RasException("unknown activity type: " + f[0]);</span>
-<span class="source-line-no">147</span><span id="line-147">        if (f.length != (other ? 6 : 5))</span>
-<span class="source-line-no">148</span><span id="line-148">            throw new RasException("expected " + (other ? 6 : 5) + " fields but found " + f.length);</span>
-<span class="source-line-no">149</span><span id="line-149">        if (f[1].isBlank())</span>
-<span class="source-line-no">150</span><span id="line-150">            throw new RasException("title is empty");</span>
-<span class="source-line-no">151</span><span id="line-151"></span>
-<span class="source-line-no">152</span><span id="line-152">        Time start = Input.parseTime(desanitize(f[2]));</span>
-<span class="source-line-no">153</span><span id="line-153">        Time end = Input.parseTime(desanitize(f[3]));</span>
-<span class="source-line-no">154</span><span id="line-154">        if (start == null || end == null)</span>
-<span class="source-line-no">155</span><span id="line-155">            throw new RasException("invalid start or end time");</span>
-<span class="source-line-no">156</span><span id="line-156">        if (start.compareTo(end) &gt;= 0)</span>
-<span class="source-line-no">157</span><span id="line-157">            throw new RasException("start is not before end");</span>
-<span class="source-line-no">158</span><span id="line-158"></span>
-<span class="source-line-no">159</span><span id="line-159">        String comment = optional(f, 4);</span>
-<span class="source-line-no">160</span><span id="line-160"></span>
-<span class="source-line-no">161</span><span id="line-161">        if (activity != null) {</span>
-<span class="source-line-no">162</span><span id="line-162">            activity.setTitle(desanitize(f[1]));</span>
-<span class="source-line-no">163</span><span id="line-163">            activity.setStartTime(start);</span>
-<span class="source-line-no">164</span><span id="line-164">            activity.setEndTime(end);</span>
-<span class="source-line-no">165</span><span id="line-165">            activity.setComment(comment);</span>
-<span class="source-line-no">166</span><span id="line-166">            if (other) {</span>
-<span class="source-line-no">167</span><span id="line-167">                if (f[5].isBlank())</span>
-<span class="source-line-no">168</span><span id="line-168">                    throw new RasException("location is empty");</span>
-<span class="source-line-no">169</span><span id="line-169">                if (activity instanceof OtherActivity o)</span>
-<span class="source-line-no">170</span><span id="line-170">                    o.setLocation(desanitize(f[5]));</span>
-<span class="source-line-no">171</span><span id="line-171">            }</span>
-<span class="source-line-no">172</span><span id="line-172">        }</span>
-<span class="source-line-no">173</span><span id="line-173">    }</span>
-<span class="source-line-no">174</span><span id="line-174"></span>
-<span class="source-line-no">175</span><span id="line-175">    /**</span>
-<span class="source-line-no">176</span><span id="line-176">     * Extract the location from a RAS string.</span>
-<span class="source-line-no">177</span><span id="line-177">     * </span>
-<span class="source-line-no">178</span><span id="line-178">     * @param ras Serialized activity record.</span>
-<span class="source-line-no">179</span><span id="line-179">     * @return Location content.</span>
-<span class="source-line-no">180</span><span id="line-180">     * @throws RasException when RAS input is invalid.</span>
-<span class="source-line-no">181</span><span id="line-181">     */</span>
-<span class="source-line-no">182</span><span id="line-182">    public static String location(String ras)</span>
-<span class="source-line-no">183</span><span id="line-183">    throws RasException {</span>
-<span class="source-line-no">184</span><span id="line-184">        String[] fields = fields(ras);</span>
-<span class="source-line-no">185</span><span id="line-185">        return fields.length &gt;= 6 &amp;&amp; !fields[5].isEmpty() &amp;&amp; !fields[5].equals("NIL")</span>
-<span class="source-line-no">186</span><span id="line-186">            ? desanitize(fields[5]) : null;</span>
-<span class="source-line-no">187</span><span id="line-187">    }</span>
-<span class="source-line-no">188</span><span id="line-188"></span>
-<span class="source-line-no">189</span><span id="line-189">    /**</span>
-<span class="source-line-no">190</span><span id="line-190">     * Extract the time from a RAS string.</span>
-<span class="source-line-no">191</span><span id="line-191">     * </span>
-<span class="source-line-no">192</span><span id="line-192">     * @param fields Array of fields.</span>
-<span class="source-line-no">193</span><span id="line-193">     * @param index  Index where the time is located.</span>
-<span class="source-line-no">194</span><span id="line-194">     * @return Time content.</span>
-<span class="source-line-no">195</span><span id="line-195">     */</span>
-<span class="source-line-no">196</span><span id="line-196">    public static Time time(String[] fields, int index) {</span>
-<span class="source-line-no">197</span><span id="line-197">        if (index &gt;= fields.length || fields[index].isEmpty())</span>
-<span class="source-line-no">198</span><span id="line-198">            return new Time();</span>
-<span class="source-line-no">199</span><span id="line-199">        return new Time(desanitize(fields[index]));</span>
-<span class="source-line-no">200</span><span id="line-200">    }</span>
-<span class="source-line-no">201</span><span id="line-201"></span>
-<span class="source-line-no">202</span><span id="line-202">    /**</span>
-<span class="source-line-no">203</span><span id="line-203">     * Extract any required field at any index from a RAS string.</span>
-<span class="source-line-no">204</span><span id="line-204">     * </span>
-<span class="source-line-no">205</span><span id="line-205">     * @param fields   Array of fields.</span>
-<span class="source-line-no">206</span><span id="line-206">     * @param index    Index.</span>
-<span class="source-line-no">207</span><span id="line-207">     * @param fallback Fallback value in case the value at index does not exist or</span>
-<span class="source-line-no">208</span><span id="line-208">     *                 is empty.</span>
-<span class="source-line-no">209</span><span id="line-209">     * @return Value content.</span>
-<span class="source-line-no">210</span><span id="line-210">     */</span>
-<span class="source-line-no">211</span><span id="line-211">    public static String value(String[] fields, int index, String fallback) {</span>
-<span class="source-line-no">212</span><span id="line-212">        return index &lt; fields.length &amp;&amp; !fields[index].isEmpty()</span>
-<span class="source-line-no">213</span><span id="line-213">            ? desanitize(fields[index])</span>
-<span class="source-line-no">214</span><span id="line-214">            : fallback;</span>
-<span class="source-line-no">215</span><span id="line-215">    }</span>
-<span class="source-line-no">216</span><span id="line-216"></span>
-<span class="source-line-no">217</span><span id="line-217">    </span>
-<span class="source-line-no">218</span><span id="line-218">    /**</span>
-<span class="source-line-no">219</span><span id="line-219">     * Extract any optional field at any index from a RAS string.</span>
-<span class="source-line-no">220</span><span id="line-220">     * </span>
-<span class="source-line-no">221</span><span id="line-221">     * @param fields Array of fields.</span>
-<span class="source-line-no">222</span><span id="line-222">     * @param index  Index.</span>
-<span class="source-line-no">223</span><span id="line-223">     * @return Value content if it exists, null otherwise.</span>
-<span class="source-line-no">224</span><span id="line-224">     */</span>
-<span class="source-line-no">225</span><span id="line-225">    public static String optional(String[] fields, int index) {</span>
-<span class="source-line-no">226</span><span id="line-226">        if (index &gt;= fields.length || fields[index].isEmpty()</span>
-<span class="source-line-no">227</span><span id="line-227">         || fields[index].equals("NIL"))</span>
-<span class="source-line-no">228</span><span id="line-228">            return null;</span>
-<span class="source-line-no">229</span><span id="line-229">        return desanitize(fields[index]);</span>
-<span class="source-line-no">230</span><span id="line-230">    }</span>
-<span class="source-line-no">231</span><span id="line-231"></span>
-<span class="source-line-no">232</span><span id="line-232">    /**</span>
-<span class="source-line-no">233</span><span id="line-233">     * Sanitize input for serialization using HTML codes.</span>
-<span class="source-line-no">234</span><span id="line-234">     * HTML codes referenced from &lt;a href=</span>
-<span class="source-line-no">235</span><span id="line-235">     * "https://www.rapidtables.com/web/html/html-codes.html"&gt;RapidTables&lt;/a&gt;.</span>
-<span class="source-line-no">236</span><span id="line-236">     * </span>
-<span class="source-line-no">237</span><span id="line-237">     * @param input Input to sanitize.</span>
-<span class="source-line-no">238</span><span id="line-238">     * @return Sanitized input, or &lt;code&gt;null&lt;/code&gt; if input is null.</span>
-<span class="source-line-no">239</span><span id="line-239">     * @see #desanitize(String)</span>
-<span class="source-line-no">240</span><span id="line-240">     */</span>
-<span class="source-line-no">241</span><span id="line-241">    public static String sanitize(String input) {</span>
-<span class="source-line-no">242</span><span id="line-242">        if (input == null)</span>
-<span class="source-line-no">243</span><span id="line-243">            return null;</span>
-<span class="source-line-no">244</span><span id="line-244">        return input</span>
-<span class="source-line-no">245</span><span id="line-245">            .replace(",", "&amp;#44;")</span>
-<span class="source-line-no">246</span><span id="line-246">            .replace("&lt;", "&amp;#60;")</span>
-<span class="source-line-no">247</span><span id="line-247">            .replace("&gt;", "&amp;#62;");</span>
-<span class="source-line-no">248</span><span id="line-248">    }</span>
-<span class="source-line-no">249</span><span id="line-249"></span>
-<span class="source-line-no">250</span><span id="line-250">    /**</span>
-<span class="source-line-no">251</span><span id="line-251">     * Desanitize input for serialization using HTML codes.</span>
-<span class="source-line-no">252</span><span id="line-252">     * HTML codes referenced from &lt;a href=</span>
-<span class="source-line-no">253</span><span id="line-253">     * "https://www.rapidtables.com/web/html/html-codes.html"&gt;RapidTables&lt;/a&gt;.</span>
-<span class="source-line-no">254</span><span id="line-254">     * </span>
-<span class="source-line-no">255</span><span id="line-255">     * @param input Input to desanitize.</span>
-<span class="source-line-no">256</span><span id="line-256">     * @return Desnitized input, or &lt;code&gt;null&lt;/code&gt; if input is null.</span>
-<span class="source-line-no">257</span><span id="line-257">     * @see #sanitize(String)</span>
-<span class="source-line-no">258</span><span id="line-258">     */</span>
-<span class="source-line-no">259</span><span id="line-259">    public static String desanitize(String input) {</span>
-<span class="source-line-no">260</span><span id="line-260">        if (input == null)</span>
-<span class="source-line-no">261</span><span id="line-261">            return null;</span>
-<span class="source-line-no">262</span><span id="line-262">        return input</span>
-<span class="source-line-no">263</span><span id="line-263">            .replace("&amp;#62;", "&gt;")</span>
-<span class="source-line-no">264</span><span id="line-264">            .replace("&amp;#60;", "&lt;")</span>
-<span class="source-line-no">265</span><span id="line-265">            .replace("&amp;#44;", ",");</span>
-<span class="source-line-no">266</span><span id="line-266">    }</span>
-<span class="source-line-no">267</span><span id="line-267">}</span>
+<span class="source-line-no">069</span><span id="line-69">        try {</span>
+<span class="source-line-no">070</span><span id="line-70">            return switch (fields[0]) {</span>
+<span class="source-line-no">071</span><span id="line-71">                case "HomeActivity"</span>
+<span class="source-line-no">072</span><span id="line-72">                    -&gt; new HomeActivity(title, sTime, eTime, comment);</span>
+<span class="source-line-no">073</span><span id="line-73">                case "SchoolActivity"</span>
+<span class="source-line-no">074</span><span id="line-74">                    -&gt; new SchoolActivity(title, sTime, eTime, comment);</span>
+<span class="source-line-no">075</span><span id="line-75">                default -&gt; {</span>
+<span class="source-line-no">076</span><span id="line-76">                    if (fields[5].isBlank())</span>
+<span class="source-line-no">077</span><span id="line-77">                        throw new RasException("location is empty");</span>
+<span class="source-line-no">078</span><span id="line-78">                    yield new OtherActivity(title, sTime, eTime, comment, desanitize(fields[5]));</span>
+<span class="source-line-no">079</span><span id="line-79">                }</span>
+<span class="source-line-no">080</span><span id="line-80">            };</span>
+<span class="source-line-no">081</span><span id="line-81">        } catch (IllegalArgumentException e) {</span>
+<span class="source-line-no">082</span><span id="line-82">            throw new RasException("invariant violation in activity data: " + e.getMessage());</span>
+<span class="source-line-no">083</span><span id="line-83">        }</span>
+<span class="source-line-no">084</span><span id="line-84">    }</span>
+<span class="source-line-no">085</span><span id="line-85"></span>
+<span class="source-line-no">086</span><span id="line-86">    /**</span>
+<span class="source-line-no">087</span><span id="line-87">     * Writes one activity as a RAS record.</span>
+<span class="source-line-no">088</span><span id="line-88">     *</span>
+<span class="source-line-no">089</span><span id="line-89">     * @param activity Activity to serialize.</span>
+<span class="source-line-no">090</span><span id="line-90">     * @return Its RAS representation.</span>
+<span class="source-line-no">091</span><span id="line-91">     */</span>
+<span class="source-line-no">092</span><span id="line-92">    public static String serialize(Activity activity) {</span>
+<span class="source-line-no">093</span><span id="line-93">        // define fields</span>
+<span class="source-line-no">094</span><span id="line-94">        String type = activity.getClass().getSimpleName();</span>
+<span class="source-line-no">095</span><span id="line-95">        String title = activity.getTitle();</span>
+<span class="source-line-no">096</span><span id="line-96">        String sTime = activity.getStartTime().toString();</span>
+<span class="source-line-no">097</span><span id="line-97">        String eTime = activity.getEndTime().toString();</span>
+<span class="source-line-no">098</span><span id="line-98">        String comment = activity.getComment();</span>
+<span class="source-line-no">099</span><span id="line-99"></span>
+<span class="source-line-no">100</span><span id="line-100">        // sanitize all fields</span>
+<span class="source-line-no">101</span><span id="line-101">        type = sanitize(type);</span>
+<span class="source-line-no">102</span><span id="line-102">        title = sanitize(title);</span>
+<span class="source-line-no">103</span><span id="line-103">        sTime = sanitize(sTime);</span>
+<span class="source-line-no">104</span><span id="line-104">        eTime = sanitize(eTime);</span>
+<span class="source-line-no">105</span><span id="line-105">        comment = sanitize(comment);</span>
+<span class="source-line-no">106</span><span id="line-106"></span>
+<span class="source-line-no">107</span><span id="line-107">        String ras = String.format(</span>
+<span class="source-line-no">108</span><span id="line-108">            "%s,%s,%s,%s,%s",</span>
+<span class="source-line-no">109</span><span id="line-109">            type, title, sTime, eTime,</span>
+<span class="source-line-no">110</span><span id="line-110">            (comment == null || comment.isBlank() ? "NIL" : comment));</span>
+<span class="source-line-no">111</span><span id="line-111">        </span>
+<span class="source-line-no">112</span><span id="line-112">        // add location field for Other Activities</span>
+<span class="source-line-no">113</span><span id="line-113">        if (activity instanceof OtherActivity other) {</span>
+<span class="source-line-no">114</span><span id="line-114">            String location = sanitize(other.getLocation());</span>
+<span class="source-line-no">115</span><span id="line-115">            ras += "," + (location == null ? "NIL" : location);</span>
+<span class="source-line-no">116</span><span id="line-116">        }</span>
+<span class="source-line-no">117</span><span id="line-117">        </span>
+<span class="source-line-no">118</span><span id="line-118">        // wrap in angled brackets</span>
+<span class="source-line-no">119</span><span id="line-119">        return "&lt;" + ras + "&gt;";</span>
+<span class="source-line-no">120</span><span id="line-120">    }</span>
+<span class="source-line-no">121</span><span id="line-121"></span>
+<span class="source-line-no">122</span><span id="line-122">    /**</span>
+<span class="source-line-no">123</span><span id="line-123">     * Returns the fields inside one RAS record. Missing fields are retained as</span>
+<span class="source-line-no">124</span><span id="line-124">     * empty strings so the activity class can apply its existing defaults.</span>
+<span class="source-line-no">125</span><span id="line-125">     *</span>
+<span class="source-line-no">126</span><span id="line-126">     * @param ras Serialized activity record.</span>
+<span class="source-line-no">127</span><span id="line-127">     * @return The record fields, including the activity type at index zero.</span>
+<span class="source-line-no">128</span><span id="line-128">     * @throws RasException when RAS input is invalid.</span>
+<span class="source-line-no">129</span><span id="line-129">     */</span>
+<span class="source-line-no">130</span><span id="line-130">    public static String[] fields(String ras)</span>
+<span class="source-line-no">131</span><span id="line-131">    throws RasException {</span>
+<span class="source-line-no">132</span><span id="line-132">        if (ras == null || !ras.startsWith("&lt;") || !ras.endsWith("&gt;") || ras.length() &lt; 2)</span>
+<span class="source-line-no">133</span><span id="line-133">            throw new RasException("record must be wrapped in &lt; &gt;");</span>
+<span class="source-line-no">134</span><span id="line-134">        String inner = ras.substring(1, ras.length() - 1);</span>
+<span class="source-line-no">135</span><span id="line-135">        return inner.split(",", -1);</span>
+<span class="source-line-no">136</span><span id="line-136">    }</span>
+<span class="source-line-no">137</span><span id="line-137"></span>
+<span class="source-line-no">138</span><span id="line-138">    /**</span>
+<span class="source-line-no">139</span><span id="line-139">     * Populate the fields of this Activity in accordance with the given RAS string.</span>
+<span class="source-line-no">140</span><span id="line-140">     * </span>
+<span class="source-line-no">141</span><span id="line-141">     * @param activity The activity whose fields to populate.</span>
+<span class="source-line-no">142</span><span id="line-142">     * @param ras      Serialized activity record.</span>
+<span class="source-line-no">143</span><span id="line-143">     * @throws RasException when RAS input is invalid.</span>
+<span class="source-line-no">144</span><span id="line-144">     */</span>
+<span class="source-line-no">145</span><span id="line-145">    public static void populate(Activity activity, String ras)</span>
+<span class="source-line-no">146</span><span id="line-146">    throws RasException {</span>
+<span class="source-line-no">147</span><span id="line-147">        String[] f = fields(ras);</span>
+<span class="source-line-no">148</span><span id="line-148">        boolean other = f[0].equals("OtherActivity");</span>
+<span class="source-line-no">149</span><span id="line-149">        if (!other &amp;&amp; !f[0].equals("HomeActivity") &amp;&amp; !f[0].equals("SchoolActivity"))</span>
+<span class="source-line-no">150</span><span id="line-150">            throw new RasException("unknown activity type: " + f[0]);</span>
+<span class="source-line-no">151</span><span id="line-151">        if (f.length != (other ? 6 : 5))</span>
+<span class="source-line-no">152</span><span id="line-152">            throw new RasException("expected " + (other ? 6 : 5) + " fields but found " + f.length);</span>
+<span class="source-line-no">153</span><span id="line-153">        if (f[1].isBlank())</span>
+<span class="source-line-no">154</span><span id="line-154">            throw new RasException("title is empty");</span>
+<span class="source-line-no">155</span><span id="line-155"></span>
+<span class="source-line-no">156</span><span id="line-156">        Time start = Input.parseTime(desanitize(f[2]));</span>
+<span class="source-line-no">157</span><span id="line-157">        Time end = Input.parseTime(desanitize(f[3]));</span>
+<span class="source-line-no">158</span><span id="line-158">        if (start == null || end == null)</span>
+<span class="source-line-no">159</span><span id="line-159">            throw new RasException("invalid start or end time");</span>
+<span class="source-line-no">160</span><span id="line-160">        if (start.compareTo(end) &gt;= 0)</span>
+<span class="source-line-no">161</span><span id="line-161">            throw new RasException("start is not before end");</span>
+<span class="source-line-no">162</span><span id="line-162"></span>
+<span class="source-line-no">163</span><span id="line-163">        String comment = optional(f, 4);</span>
+<span class="source-line-no">164</span><span id="line-164"></span>
+<span class="source-line-no">165</span><span id="line-165">        try {</span>
+<span class="source-line-no">166</span><span id="line-166">            if (activity != null) {</span>
+<span class="source-line-no">167</span><span id="line-167">                activity.setTitle(desanitize(f[1]));</span>
+<span class="source-line-no">168</span><span id="line-168">                activity.setStartTime(start);</span>
+<span class="source-line-no">169</span><span id="line-169">                activity.setEndTime(end);</span>
+<span class="source-line-no">170</span><span id="line-170">                activity.setComment(comment);</span>
+<span class="source-line-no">171</span><span id="line-171">                if (other) {</span>
+<span class="source-line-no">172</span><span id="line-172">                    if (f[5].isBlank())</span>
+<span class="source-line-no">173</span><span id="line-173">                        throw new RasException("location is empty");</span>
+<span class="source-line-no">174</span><span id="line-174">                    if (activity instanceof OtherActivity o)</span>
+<span class="source-line-no">175</span><span id="line-175">                        o.setLocation(desanitize(f[5]));</span>
+<span class="source-line-no">176</span><span id="line-176">                }</span>
+<span class="source-line-no">177</span><span id="line-177">            }</span>
+<span class="source-line-no">178</span><span id="line-178">        } catch (IllegalArgumentException e) {</span>
+<span class="source-line-no">179</span><span id="line-179">            throw new RasException("invariant violation in activity data: " + e.getMessage());</span>
+<span class="source-line-no">180</span><span id="line-180">        }</span>
+<span class="source-line-no">181</span><span id="line-181">    }</span>
+<span class="source-line-no">182</span><span id="line-182"></span>
+<span class="source-line-no">183</span><span id="line-183">    /**</span>
+<span class="source-line-no">184</span><span id="line-184">     * Extract the location from a RAS string.</span>
+<span class="source-line-no">185</span><span id="line-185">     * </span>
+<span class="source-line-no">186</span><span id="line-186">     * @param ras Serialized activity record.</span>
+<span class="source-line-no">187</span><span id="line-187">     * @return Location content.</span>
+<span class="source-line-no">188</span><span id="line-188">     * @throws RasException when RAS input is invalid.</span>
+<span class="source-line-no">189</span><span id="line-189">     */</span>
+<span class="source-line-no">190</span><span id="line-190">    public static String location(String ras)</span>
+<span class="source-line-no">191</span><span id="line-191">    throws RasException {</span>
+<span class="source-line-no">192</span><span id="line-192">        String[] fields = fields(ras);</span>
+<span class="source-line-no">193</span><span id="line-193">        return fields.length &gt;= 6 &amp;&amp; !fields[5].isEmpty() &amp;&amp; !fields[5].equals("NIL")</span>
+<span class="source-line-no">194</span><span id="line-194">            ? desanitize(fields[5]) : null;</span>
+<span class="source-line-no">195</span><span id="line-195">    }</span>
+<span class="source-line-no">196</span><span id="line-196"></span>
+<span class="source-line-no">197</span><span id="line-197">    /**</span>
+<span class="source-line-no">198</span><span id="line-198">     * Extract the time from a RAS string.</span>
+<span class="source-line-no">199</span><span id="line-199">     * </span>
+<span class="source-line-no">200</span><span id="line-200">     * @param fields Array of fields.</span>
+<span class="source-line-no">201</span><span id="line-201">     * @param index  Index where the time is located.</span>
+<span class="source-line-no">202</span><span id="line-202">     * @return Time content.</span>
+<span class="source-line-no">203</span><span id="line-203">     */</span>
+<span class="source-line-no">204</span><span id="line-204">    public static Time time(String[] fields, int index) {</span>
+<span class="source-line-no">205</span><span id="line-205">        if (index &gt;= fields.length || fields[index].isEmpty())</span>
+<span class="source-line-no">206</span><span id="line-206">            return new Time();</span>
+<span class="source-line-no">207</span><span id="line-207">        return new Time(desanitize(fields[index]));</span>
+<span class="source-line-no">208</span><span id="line-208">    }</span>
+<span class="source-line-no">209</span><span id="line-209"></span>
+<span class="source-line-no">210</span><span id="line-210">    /**</span>
+<span class="source-line-no">211</span><span id="line-211">     * Extract any required field at any index from a RAS string.</span>
+<span class="source-line-no">212</span><span id="line-212">     * </span>
+<span class="source-line-no">213</span><span id="line-213">     * @param fields   Array of fields.</span>
+<span class="source-line-no">214</span><span id="line-214">     * @param index    Index.</span>
+<span class="source-line-no">215</span><span id="line-215">     * @param fallback Fallback value in case the value at index does not exist or</span>
+<span class="source-line-no">216</span><span id="line-216">     *                 is empty.</span>
+<span class="source-line-no">217</span><span id="line-217">     * @return Value content.</span>
+<span class="source-line-no">218</span><span id="line-218">     */</span>
+<span class="source-line-no">219</span><span id="line-219">    public static String value(String[] fields, int index, String fallback) {</span>
+<span class="source-line-no">220</span><span id="line-220">        return index &lt; fields.length &amp;&amp; !fields[index].isEmpty()</span>
+<span class="source-line-no">221</span><span id="line-221">            ? desanitize(fields[index])</span>
+<span class="source-line-no">222</span><span id="line-222">            : fallback;</span>
+<span class="source-line-no">223</span><span id="line-223">    }</span>
+<span class="source-line-no">224</span><span id="line-224"></span>
+<span class="source-line-no">225</span><span id="line-225">    </span>
+<span class="source-line-no">226</span><span id="line-226">    /**</span>
+<span class="source-line-no">227</span><span id="line-227">     * Extract any optional field at any index from a RAS string.</span>
+<span class="source-line-no">228</span><span id="line-228">     * </span>
+<span class="source-line-no">229</span><span id="line-229">     * @param fields Array of fields.</span>
+<span class="source-line-no">230</span><span id="line-230">     * @param index  Index.</span>
+<span class="source-line-no">231</span><span id="line-231">     * @return Value content if it exists, null otherwise.</span>
+<span class="source-line-no">232</span><span id="line-232">     */</span>
+<span class="source-line-no">233</span><span id="line-233">    public static String optional(String[] fields, int index) {</span>
+<span class="source-line-no">234</span><span id="line-234">        if (index &gt;= fields.length || fields[index].isEmpty()</span>
+<span class="source-line-no">235</span><span id="line-235">         || fields[index].equals("NIL"))</span>
+<span class="source-line-no">236</span><span id="line-236">            return null;</span>
+<span class="source-line-no">237</span><span id="line-237">        return desanitize(fields[index]);</span>
+<span class="source-line-no">238</span><span id="line-238">    }</span>
+<span class="source-line-no">239</span><span id="line-239"></span>
+<span class="source-line-no">240</span><span id="line-240">    /**</span>
+<span class="source-line-no">241</span><span id="line-241">     * Sanitize input for serialization using HTML codes.</span>
+<span class="source-line-no">242</span><span id="line-242">     * HTML codes referenced from &lt;a href=</span>
+<span class="source-line-no">243</span><span id="line-243">     * "https://www.rapidtables.com/web/html/html-codes.html"&gt;RapidTables&lt;/a&gt;.</span>
+<span class="source-line-no">244</span><span id="line-244">     * </span>
+<span class="source-line-no">245</span><span id="line-245">     * @param input Input to sanitize.</span>
+<span class="source-line-no">246</span><span id="line-246">     * @return Sanitized input, or &lt;code&gt;null&lt;/code&gt; if input is null.</span>
+<span class="source-line-no">247</span><span id="line-247">     * @see #desanitize(String)</span>
+<span class="source-line-no">248</span><span id="line-248">     */</span>
+<span class="source-line-no">249</span><span id="line-249">    public static String sanitize(String input) {</span>
+<span class="source-line-no">250</span><span id="line-250">        if (input == null)</span>
+<span class="source-line-no">251</span><span id="line-251">            return null;</span>
+<span class="source-line-no">252</span><span id="line-252">        return input</span>
+<span class="source-line-no">253</span><span id="line-253">            .replace(",", "&amp;#44;")</span>
+<span class="source-line-no">254</span><span id="line-254">            .replace("&lt;", "&amp;#60;")</span>
+<span class="source-line-no">255</span><span id="line-255">            .replace("&gt;", "&amp;#62;");</span>
+<span class="source-line-no">256</span><span id="line-256">    }</span>
+<span class="source-line-no">257</span><span id="line-257"></span>
+<span class="source-line-no">258</span><span id="line-258">    /**</span>
+<span class="source-line-no">259</span><span id="line-259">     * Desanitize input for serialization using HTML codes.</span>
+<span class="source-line-no">260</span><span id="line-260">     * HTML codes referenced from &lt;a href=</span>
+<span class="source-line-no">261</span><span id="line-261">     * "https://www.rapidtables.com/web/html/html-codes.html"&gt;RapidTables&lt;/a&gt;.</span>
+<span class="source-line-no">262</span><span id="line-262">     * </span>
+<span class="source-line-no">263</span><span id="line-263">     * @param input Input to desanitize.</span>
+<span class="source-line-no">264</span><span id="line-264">     * @return Desnitized input, or &lt;code&gt;null&lt;/code&gt; if input is null.</span>
+<span class="source-line-no">265</span><span id="line-265">     * @see #sanitize(String)</span>
+<span class="source-line-no">266</span><span id="line-266">     */</span>
+<span class="source-line-no">267</span><span id="line-267">    public static String desanitize(String input) {</span>
+<span class="source-line-no">268</span><span id="line-268">        if (input == null)</span>
+<span class="source-line-no">269</span><span id="line-269">            return null;</span>
+<span class="source-line-no">270</span><span id="line-270">        return input</span>
+<span class="source-line-no">271</span><span id="line-271">            .replace("&amp;#62;", "&gt;")</span>
+<span class="source-line-no">272</span><span id="line-272">            .replace("&amp;#60;", "&lt;")</span>
+<span class="source-line-no">273</span><span id="line-273">            .replace("&amp;#44;", ",");</span>
+<span class="source-line-no">274</span><span id="line-274">    }</span>
+<span class="source-line-no">275</span><span id="line-275">}</span>
 
 
 

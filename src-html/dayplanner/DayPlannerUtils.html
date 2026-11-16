@@ -142,32 +142,34 @@
 <span class="source-line-no">129</span><span id="line-129">            }</span>
 <span class="source-line-no">130</span><span id="line-130"></span>
 <span class="source-line-no">131</span><span id="line-131">            // ensure that start comes first</span>
-<span class="source-line-no">132</span><span id="line-132">            if (start != null &amp;&amp; end != null &amp;&amp; start.compareTo(end) &gt;= 0) {</span>
-<span class="source-line-no">133</span><span id="line-133">                System.out.println("Starting time must be before ending time. Try again:");</span>
-<span class="source-line-no">134</span><span id="line-134">                return readTimePeriod(keyboard);</span>
-<span class="source-line-no">135</span><span id="line-135">            }</span>
-<span class="source-line-no">136</span><span id="line-136"></span>
-<span class="source-line-no">137</span><span id="line-137">            return new Time[] { start, end };</span>
-<span class="source-line-no">138</span><span id="line-138">        }</span>
-<span class="source-line-no">139</span><span id="line-139"></span>
-<span class="source-line-no">140</span><span id="line-140">        // if the user didn't input a dash...</span>
-<span class="source-line-no">141</span><span id="line-141">        // then a single valid time is treated as the lower bound with no upper bound</span>
-<span class="source-line-no">142</span><span id="line-142">        Time single = Input.parseTime(line);</span>
-<span class="source-line-no">143</span><span id="line-143">        if (single != null)</span>
-<span class="source-line-no">144</span><span id="line-144">            return new Time[] { single, null };</span>
-<span class="source-line-no">145</span><span id="line-145"></span>
-<span class="source-line-no">146</span><span id="line-146">        // if we got here then nothing else worked</span>
-<span class="source-line-no">147</span><span id="line-147">        System.out.println("Invalid time period. Expected 'start - end', 'start -', '- end', or press Enter to skip. Try again:");</span>
-<span class="source-line-no">148</span><span id="line-148">        return readTimePeriod(keyboard);</span>
-<span class="source-line-no">149</span><span id="line-149">    }</span>
-<span class="source-line-no">150</span><span id="line-150"></span>
-<span class="source-line-no">151</span><span id="line-151"></span>
+<span class="source-line-no">132</span><span id="line-132">            try {</span>
+<span class="source-line-no">133</span><span id="line-133">                if (start != null &amp;&amp; end != null &amp;&amp; start.compareTo(end) &gt;= 0)</span>
+<span class="source-line-no">134</span><span id="line-134">                    throw new IllegalArgumentException("Starting time must be before ending time.");</span>
+<span class="source-line-no">135</span><span id="line-135">                return new Time[] { start, end };</span>
+<span class="source-line-no">136</span><span id="line-136">            } catch (IllegalArgumentException e) {</span>
+<span class="source-line-no">137</span><span id="line-137">                System.out.println(e.getMessage() + " Try again:");</span>
+<span class="source-line-no">138</span><span id="line-138">                return readTimePeriod(keyboard);</span>
+<span class="source-line-no">139</span><span id="line-139">            }</span>
+<span class="source-line-no">140</span><span id="line-140">        }</span>
+<span class="source-line-no">141</span><span id="line-141"></span>
+<span class="source-line-no">142</span><span id="line-142">        // if the user didn't input a dash...</span>
+<span class="source-line-no">143</span><span id="line-143">        // then a single valid time is treated as the lower bound with no upper bound</span>
+<span class="source-line-no">144</span><span id="line-144">        Time single = Input.parseTime(line);</span>
+<span class="source-line-no">145</span><span id="line-145">        if (single != null)</span>
+<span class="source-line-no">146</span><span id="line-146">            return new Time[] { single, null };</span>
+<span class="source-line-no">147</span><span id="line-147"></span>
+<span class="source-line-no">148</span><span id="line-148">        // if we got here then nothing else worked</span>
+<span class="source-line-no">149</span><span id="line-149">        System.out.println("Invalid time period. Expected 'start - end', 'start -', '- end', or press Enter to skip. Try again:");</span>
+<span class="source-line-no">150</span><span id="line-150">        return readTimePeriod(keyboard);</span>
+<span class="source-line-no">151</span><span id="line-151">    }</span>
 <span class="source-line-no">152</span><span id="line-152"></span>
-<span class="source-line-no">153</span><span id="line-153">    /**</span>
-<span class="source-line-no">154</span><span id="line-154">     * Default constructor for DayPlannerUtils.</span>
-<span class="source-line-no">155</span><span id="line-155">     */</span>
-<span class="source-line-no">156</span><span id="line-156">    private DayPlannerUtils() {}</span>
-<span class="source-line-no">157</span><span id="line-157">}</span>
+<span class="source-line-no">153</span><span id="line-153"></span>
+<span class="source-line-no">154</span><span id="line-154"></span>
+<span class="source-line-no">155</span><span id="line-155">    /**</span>
+<span class="source-line-no">156</span><span id="line-156">     * Default constructor for DayPlannerUtils.</span>
+<span class="source-line-no">157</span><span id="line-157">     */</span>
+<span class="source-line-no">158</span><span id="line-158">    private DayPlannerUtils() {}</span>
+<span class="source-line-no">159</span><span id="line-159">}</span>
 
 
 
