@@ -43,113 +43,118 @@
 <span class="source-line-no">030</span><span id="line-30">    }</span>
 <span class="source-line-no">031</span><span id="line-31"></span>
 <span class="source-line-no">032</span><span id="line-32">    @Override</span>
-<span class="source-line-no">033</span><span id="line-33">    public String getActionButtonLabel() {</span>
-<span class="source-line-no">034</span><span id="line-34">        return "Add";</span>
+<span class="source-line-no">033</span><span id="line-33">    public String getSubHeaderText() {</span>
+<span class="source-line-no">034</span><span id="line-34">        return new String();</span>
 <span class="source-line-no">035</span><span id="line-35">    }</span>
 <span class="source-line-no">036</span><span id="line-36"></span>
 <span class="source-line-no">037</span><span id="line-37">    @Override</span>
-<span class="source-line-no">038</span><span id="line-38">    public String getActionButtonCommand() {</span>
-<span class="source-line-no">039</span><span id="line-39">        return "ADD";</span>
+<span class="source-line-no">038</span><span id="line-38">    public String getActionButtonLabel() {</span>
+<span class="source-line-no">039</span><span id="line-39">        return "Add";</span>
 <span class="source-line-no">040</span><span id="line-40">    }</span>
 <span class="source-line-no">041</span><span id="line-41"></span>
 <span class="source-line-no">042</span><span id="line-42">    @Override</span>
-<span class="source-line-no">043</span><span id="line-43">    public String[] getFieldLabels() {</span>
-<span class="source-line-no">044</span><span id="line-44">        return new String[] {</span>
-<span class="source-line-no">045</span><span id="line-45">            "&lt;html&gt;Type &lt;code&gt;('home', 'school', or 'other')&lt;/code&gt;&lt;/html&gt;",</span>
-<span class="source-line-no">046</span><span id="line-46">            "Title:",</span>
-<span class="source-line-no">047</span><span id="line-47">            "&lt;html&gt;Starting time &lt;code&gt;(YYYY/MM/DD HH:MM)&lt;/code&gt;:&lt;/html&gt;",</span>
-<span class="source-line-no">048</span><span id="line-48">            "&lt;html&gt;Ending time &lt;code&gt;(YYYY/MM/DD HH:MM)&lt;/code&gt;:&lt;/html&gt;",</span>
-<span class="source-line-no">049</span><span id="line-49">            "&lt;html&gt;Comment &lt;i&gt;(optional)&lt;/i&gt;:&lt;/html&gt;",</span>
-<span class="source-line-no">050</span><span id="line-50">            "&lt;html&gt;Location &lt;i&gt;(if creating Other Activity only)&lt;/i&gt;:&lt;/html&gt;"</span>
-<span class="source-line-no">051</span><span id="line-51">        };</span>
-<span class="source-line-no">052</span><span id="line-52">    }</span>
-<span class="source-line-no">053</span><span id="line-53"></span>
-<span class="source-line-no">054</span><span id="line-54">    @Override</span>
-<span class="source-line-no">055</span><span id="line-55">    public boolean executeAction() {</span>
-<span class="source-line-no">056</span><span id="line-56">        return tryCreate(activities, centerFields);</span>
+<span class="source-line-no">043</span><span id="line-43">    public String getActionButtonCommand() {</span>
+<span class="source-line-no">044</span><span id="line-44">        return "ADD";</span>
+<span class="source-line-no">045</span><span id="line-45">    }</span>
+<span class="source-line-no">046</span><span id="line-46"></span>
+<span class="source-line-no">047</span><span id="line-47">    @Override</span>
+<span class="source-line-no">048</span><span id="line-48">    public String[] getFieldLabels() {</span>
+<span class="source-line-no">049</span><span id="line-49">        return new String[] {</span>
+<span class="source-line-no">050</span><span id="line-50">            "&lt;html&gt;Type &lt;code&gt;('home', 'school', or 'other')&lt;/code&gt;&lt;/html&gt;",</span>
+<span class="source-line-no">051</span><span id="line-51">            "Title:",</span>
+<span class="source-line-no">052</span><span id="line-52">            "&lt;html&gt;Starting time &lt;code&gt;(YYYY/MM/DD HH:MM)&lt;/code&gt;:&lt;/html&gt;",</span>
+<span class="source-line-no">053</span><span id="line-53">            "&lt;html&gt;Ending time &lt;code&gt;(YYYY/MM/DD HH:MM)&lt;/code&gt;:&lt;/html&gt;",</span>
+<span class="source-line-no">054</span><span id="line-54">            "&lt;html&gt;Comment &lt;i&gt;(optional)&lt;/i&gt;:&lt;/html&gt;",</span>
+<span class="source-line-no">055</span><span id="line-55">            "&lt;html&gt;Location &lt;i&gt;(if creating Other Activity only)&lt;/i&gt;:&lt;/html&gt;"</span>
+<span class="source-line-no">056</span><span id="line-56">        };</span>
 <span class="source-line-no">057</span><span id="line-57">    }</span>
 <span class="source-line-no">058</span><span id="line-58"></span>
-<span class="source-line-no">059</span><span id="line-59">    /**</span>
-<span class="source-line-no">060</span><span id="line-60">     * Input-validate and try to create an activity and add it to the list.</span>
-<span class="source-line-no">061</span><span id="line-61">     * </span>
-<span class="source-line-no">062</span><span id="line-62">     * @param activities   Instantiated ActivityList.</span>
-<span class="source-line-no">063</span><span id="line-63">     * @param centerFields All of the JTextField instances in the order: type,</span>
-<span class="source-line-no">064</span><span id="line-64">     *                     title, start time, end time, comment, location.</span>
-<span class="source-line-no">065</span><span id="line-65">     * @return true if activity was created and added, false otherwise.</span>
-<span class="source-line-no">066</span><span id="line-66">     */</span>
-<span class="source-line-no">067</span><span id="line-67">    public boolean tryCreate(ActivityList activities, ArrayList&lt;JTextField&gt; centerFields) {</span>
-<span class="source-line-no">068</span><span id="line-68">        if (activities == null || centerFields == null || centerFields.size() &lt; 6) {</span>
-<span class="source-line-no">069</span><span id="line-69">            addMessage("Internal error: missing form fields.");</span>
-<span class="source-line-no">070</span><span id="line-70">            return false;</span>
-<span class="source-line-no">071</span><span id="line-71">        }</span>
-<span class="source-line-no">072</span><span id="line-72"></span>
-<span class="source-line-no">073</span><span id="line-73">        // 1. Activity type</span>
-<span class="source-line-no">074</span><span id="line-74">        String typeStr = centerFields.get(0).getText().trim();</span>
-<span class="source-line-no">075</span><span id="line-75">        if (typeStr.isEmpty()) {</span>
-<span class="source-line-no">076</span><span id="line-76">            addMessage("Activity type cannot be empty. Please enter 'home', 'school', or 'other'.");</span>
-<span class="source-line-no">077</span><span id="line-77">            return false;</span>
-<span class="source-line-no">078</span><span id="line-78">        }</span>
-<span class="source-line-no">079</span><span id="line-79">        ActivityType type = ActivityType.parse(typeStr);</span>
-<span class="source-line-no">080</span><span id="line-80">        if (type == null) {</span>
-<span class="source-line-no">081</span><span id="line-81">            addMessage("Invalid activity type: \"" + typeStr + "\". Please enter 'home', 'school', or 'other'.");</span>
+<span class="source-line-no">059</span><span id="line-59">    @Override</span>
+<span class="source-line-no">060</span><span id="line-60">    public boolean executeAction() {</span>
+<span class="source-line-no">061</span><span id="line-61">        return tryCreate(activities, centerFields);</span>
+<span class="source-line-no">062</span><span id="line-62">    }</span>
+<span class="source-line-no">063</span><span id="line-63"></span>
+<span class="source-line-no">064</span><span id="line-64">    /**</span>
+<span class="source-line-no">065</span><span id="line-65">     * Input-validate and try to create an activity and add it to the list.</span>
+<span class="source-line-no">066</span><span id="line-66">     * </span>
+<span class="source-line-no">067</span><span id="line-67">     * @param activities   Instantiated ActivityList.</span>
+<span class="source-line-no">068</span><span id="line-68">     * @param centerFields All of the JTextField instances in the order: type,</span>
+<span class="source-line-no">069</span><span id="line-69">     *                     title, start time, end time, comment, location.</span>
+<span class="source-line-no">070</span><span id="line-70">     * @return true if activity was created and added, false otherwise.</span>
+<span class="source-line-no">071</span><span id="line-71">     */</span>
+<span class="source-line-no">072</span><span id="line-72">    public boolean tryCreate(ActivityList activities, ArrayList&lt;JTextField&gt; centerFields) {</span>
+<span class="source-line-no">073</span><span id="line-73">        if (activities == null || centerFields == null || centerFields.size() &lt; 6) {</span>
+<span class="source-line-no">074</span><span id="line-74">            addMessage("Internal error: missing form fields.");</span>
+<span class="source-line-no">075</span><span id="line-75">            return false;</span>
+<span class="source-line-no">076</span><span id="line-76">        }</span>
+<span class="source-line-no">077</span><span id="line-77"></span>
+<span class="source-line-no">078</span><span id="line-78">        // 1. Activity type</span>
+<span class="source-line-no">079</span><span id="line-79">        String typeStr = centerFields.get(0).getText().trim();</span>
+<span class="source-line-no">080</span><span id="line-80">        if (typeStr.isEmpty()) {</span>
+<span class="source-line-no">081</span><span id="line-81">            addMessage("Activity type cannot be empty. Please enter 'home', 'school', or 'other'.");</span>
 <span class="source-line-no">082</span><span id="line-82">            return false;</span>
 <span class="source-line-no">083</span><span id="line-83">        }</span>
-<span class="source-line-no">084</span><span id="line-84"></span>
-<span class="source-line-no">085</span><span id="line-85">        // 2. Title</span>
-<span class="source-line-no">086</span><span id="line-86">        String title = centerFields.get(1).getText().trim();</span>
-<span class="source-line-no">087</span><span id="line-87">        if (title.isEmpty()) {</span>
-<span class="source-line-no">088</span><span id="line-88">            addMessage("Title cannot be empty.");</span>
-<span class="source-line-no">089</span><span id="line-89">            return false;</span>
-<span class="source-line-no">090</span><span id="line-90">        }</span>
-<span class="source-line-no">091</span><span id="line-91"></span>
-<span class="source-line-no">092</span><span id="line-92">        // 3. Start time</span>
-<span class="source-line-no">093</span><span id="line-93">        Time sTime = parseAndValidateTime(centerFields.get(2).getText(), "Starting time");</span>
-<span class="source-line-no">094</span><span id="line-94">        if (sTime == null)</span>
-<span class="source-line-no">095</span><span id="line-95">            return false;</span>
+<span class="source-line-no">084</span><span id="line-84">        ActivityType type = ActivityType.parse(typeStr);</span>
+<span class="source-line-no">085</span><span id="line-85">        if (type == null) {</span>
+<span class="source-line-no">086</span><span id="line-86">            addMessage("Invalid activity type: \"" + typeStr + "\". Please enter 'home', 'school', or 'other'.");</span>
+<span class="source-line-no">087</span><span id="line-87">            return false;</span>
+<span class="source-line-no">088</span><span id="line-88">        }</span>
+<span class="source-line-no">089</span><span id="line-89"></span>
+<span class="source-line-no">090</span><span id="line-90">        // 2. Title</span>
+<span class="source-line-no">091</span><span id="line-91">        String title = centerFields.get(1).getText().trim();</span>
+<span class="source-line-no">092</span><span id="line-92">        if (title.isEmpty()) {</span>
+<span class="source-line-no">093</span><span id="line-93">            addMessage("Title cannot be empty.");</span>
+<span class="source-line-no">094</span><span id="line-94">            return false;</span>
+<span class="source-line-no">095</span><span id="line-95">        }</span>
 <span class="source-line-no">096</span><span id="line-96"></span>
-<span class="source-line-no">097</span><span id="line-97">        // 4. End time</span>
-<span class="source-line-no">098</span><span id="line-98">        Time eTime = parseAndValidateTime(centerFields.get(3).getText(), "Ending time");</span>
-<span class="source-line-no">099</span><span id="line-99">        if (eTime == null)</span>
+<span class="source-line-no">097</span><span id="line-97">        // 3. Start time</span>
+<span class="source-line-no">098</span><span id="line-98">        Time sTime = parseAndValidateTime(centerFields.get(2).getText(), "Starting time");</span>
+<span class="source-line-no">099</span><span id="line-99">        if (sTime == null)</span>
 <span class="source-line-no">100</span><span id="line-100">            return false;</span>
 <span class="source-line-no">101</span><span id="line-101"></span>
-<span class="source-line-no">102</span><span id="line-102">        // 5. Start vs End order</span>
-<span class="source-line-no">103</span><span id="line-103">        if (sTime.compareTo(eTime) &gt;= 0) {</span>
-<span class="source-line-no">104</span><span id="line-104">            addMessage("Ending time (" + eTime + ") has to be after starting time (" + sTime + ").");</span>
+<span class="source-line-no">102</span><span id="line-102">        // 4. End time</span>
+<span class="source-line-no">103</span><span id="line-103">        Time eTime = parseAndValidateTime(centerFields.get(3).getText(), "Ending time");</span>
+<span class="source-line-no">104</span><span id="line-104">        if (eTime == null)</span>
 <span class="source-line-no">105</span><span id="line-105">            return false;</span>
-<span class="source-line-no">106</span><span id="line-106">        }</span>
-<span class="source-line-no">107</span><span id="line-107"></span>
-<span class="source-line-no">108</span><span id="line-108">        // 6. Comment (optional)</span>
-<span class="source-line-no">109</span><span id="line-109">        String comment = centerFields.get(4).getText().trim();</span>
-<span class="source-line-no">110</span><span id="line-110">        if (comment.isEmpty())</span>
-<span class="source-line-no">111</span><span id="line-111">            comment = null;</span>
+<span class="source-line-no">106</span><span id="line-106"></span>
+<span class="source-line-no">107</span><span id="line-107">        // 5. Start vs End order</span>
+<span class="source-line-no">108</span><span id="line-108">        if (sTime.compareTo(eTime) &gt;= 0) {</span>
+<span class="source-line-no">109</span><span id="line-109">            addMessage("Ending time (" + eTime + ") has to be after starting time (" + sTime + ").");</span>
+<span class="source-line-no">110</span><span id="line-110">            return false;</span>
+<span class="source-line-no">111</span><span id="line-111">        }</span>
 <span class="source-line-no">112</span><span id="line-112"></span>
-<span class="source-line-no">113</span><span id="line-113">        // 7. Location (required for other)</span>
-<span class="source-line-no">114</span><span id="line-114">        String location = null;</span>
-<span class="source-line-no">115</span><span id="line-115">        if (type == ActivityType.OTHER) {</span>
-<span class="source-line-no">116</span><span id="line-116">            location = centerFields.get(5).getText().trim();</span>
-<span class="source-line-no">117</span><span id="line-117">            if (location.isEmpty()) {</span>
-<span class="source-line-no">118</span><span id="line-118">                addMessage("Location cannot be empty for Other activities.");</span>
-<span class="source-line-no">119</span><span id="line-119">                return false;</span>
-<span class="source-line-no">120</span><span id="line-120">            }</span>
-<span class="source-line-no">121</span><span id="line-121">        }</span>
-<span class="source-line-no">122</span><span id="line-122"></span>
-<span class="source-line-no">123</span><span id="line-123">        // 8. Instantiate and add</span>
-<span class="source-line-no">124</span><span id="line-124">        try {</span>
-<span class="source-line-no">125</span><span id="line-125">            Activity act = switch (type) {</span>
-<span class="source-line-no">126</span><span id="line-126">                case HOME   -&gt; new HomeActivity(title, sTime, eTime, comment);</span>
-<span class="source-line-no">127</span><span id="line-127">                case SCHOOL -&gt; new SchoolActivity(title, sTime, eTime, comment);</span>
-<span class="source-line-no">128</span><span id="line-128">                case OTHER  -&gt; new OtherActivity(title, sTime, eTime, comment, location);</span>
-<span class="source-line-no">129</span><span id="line-129">            };</span>
-<span class="source-line-no">130</span><span id="line-130"></span>
-<span class="source-line-no">131</span><span id="line-131">            activities.add(act);</span>
-<span class="source-line-no">132</span><span id="line-132">            addMessage("Added successfully: " + act.toString());</span>
-<span class="source-line-no">133</span><span id="line-133">            return true;</span>
-<span class="source-line-no">134</span><span id="line-134">        } catch (IllegalArgumentException e) {</span>
-<span class="source-line-no">135</span><span id="line-135">            addMessage("Error creating activity: " + e.getMessage());</span>
-<span class="source-line-no">136</span><span id="line-136">            return false;</span>
-<span class="source-line-no">137</span><span id="line-137">        }</span>
-<span class="source-line-no">138</span><span id="line-138">    }</span>
-<span class="source-line-no">139</span><span id="line-139">}</span>
+<span class="source-line-no">113</span><span id="line-113">        // 6. Comment (optional)</span>
+<span class="source-line-no">114</span><span id="line-114">        String comment = centerFields.get(4).getText().trim();</span>
+<span class="source-line-no">115</span><span id="line-115">        if (comment.isEmpty())</span>
+<span class="source-line-no">116</span><span id="line-116">            comment = null;</span>
+<span class="source-line-no">117</span><span id="line-117"></span>
+<span class="source-line-no">118</span><span id="line-118">        // 7. Location (required for other)</span>
+<span class="source-line-no">119</span><span id="line-119">        String location = null;</span>
+<span class="source-line-no">120</span><span id="line-120">        if (type == ActivityType.OTHER) {</span>
+<span class="source-line-no">121</span><span id="line-121">            location = centerFields.get(5).getText().trim();</span>
+<span class="source-line-no">122</span><span id="line-122">            if (location.isEmpty()) {</span>
+<span class="source-line-no">123</span><span id="line-123">                addMessage("Location cannot be empty for Other activities.");</span>
+<span class="source-line-no">124</span><span id="line-124">                return false;</span>
+<span class="source-line-no">125</span><span id="line-125">            }</span>
+<span class="source-line-no">126</span><span id="line-126">        }</span>
+<span class="source-line-no">127</span><span id="line-127"></span>
+<span class="source-line-no">128</span><span id="line-128">        // 8. Instantiate and add</span>
+<span class="source-line-no">129</span><span id="line-129">        try {</span>
+<span class="source-line-no">130</span><span id="line-130">            Activity act = switch (type) {</span>
+<span class="source-line-no">131</span><span id="line-131">                case HOME   -&gt; new HomeActivity(title, sTime, eTime, comment);</span>
+<span class="source-line-no">132</span><span id="line-132">                case SCHOOL -&gt; new SchoolActivity(title, sTime, eTime, comment);</span>
+<span class="source-line-no">133</span><span id="line-133">                case OTHER  -&gt; new OtherActivity(title, sTime, eTime, comment, location);</span>
+<span class="source-line-no">134</span><span id="line-134">            };</span>
+<span class="source-line-no">135</span><span id="line-135"></span>
+<span class="source-line-no">136</span><span id="line-136">            activities.add(act);</span>
+<span class="source-line-no">137</span><span id="line-137">            addMessage("Added successfully: " + act.toString());</span>
+<span class="source-line-no">138</span><span id="line-138">            return true;</span>
+<span class="source-line-no">139</span><span id="line-139">        } catch (IllegalArgumentException e) {</span>
+<span class="source-line-no">140</span><span id="line-140">            addMessage("Error creating activity: " + e.getMessage());</span>
+<span class="source-line-no">141</span><span id="line-141">            return false;</span>
+<span class="source-line-no">142</span><span id="line-142">        }</span>
+<span class="source-line-no">143</span><span id="line-143">    }</span>
+<span class="source-line-no">144</span><span id="line-144">}</span>
 
 
 
