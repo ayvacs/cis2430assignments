@@ -30,6 +30,11 @@ public class GUIAddWindow extends GUIWindow {
     }
 
     @Override
+    public String getSubHeaderText() {
+        return new String();
+    }
+
+    @Override
     public String getActionButtonLabel() {
         return "Add";
     }

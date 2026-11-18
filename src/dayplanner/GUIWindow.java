@@ -27,7 +27,7 @@ import javax.swing.border.Border;
  * Add or Search).
  */
 public abstract class GUIWindow extends JFrame {
-    private static final Dimension DIMS = new Dimension(800, 400);
+    private static final Dimension DIMS = new Dimension(800, 600);
     private static final int CLOSE = JFrame.DISPOSE_ON_CLOSE;
     private static final Color BACKGROUND = new Color(250, 250, 250);
     private static final Border PADDING = BorderFactory.createEmptyBorder(12, 12, 12, 12);
@@ -91,12 +91,14 @@ public abstract class GUIWindow extends JFrame {
      */
     public JPanel createCenterPanel() {
         String[] labels = getFieldLabels();
-        int rows = labels.length + 1; // +1 for the header row
+        int rows = labels.length + 2; // +2 for the header rows
 
         JPanel centerPanel = new JPanel();
         centerPanel.setLayout(new GridLayout(rows, 2, 8, 8));
         centerPanel.setBorder(PADDING);
         centerPanel.add(new JLabel(getHeaderText()));
+        centerPanel.add(Box.createGlue()); // skip this grid cell
+        centerPanel.add(new JLabel(getSubHeaderText()));
         centerPanel.add(Box.createGlue()); // skip this grid cell
 
         centerFields.clear();
@@ -339,6 +341,13 @@ public abstract class GUIWindow extends JFrame {
      * @return Header label text.
      */
     public abstract String getHeaderText();
+
+    /**
+     * Returns the subheader HTML text shown under the header.
+     * 
+     * @return Subheader label text.
+     */
+    public abstract String getSubHeaderText();
 
     /**
      * Returns the display text for the primary action button.

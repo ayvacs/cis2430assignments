@@ -46,7 +46,7 @@ public class DayPlanner {
         }
 
         // Now the the ActivityList is initialized we can Show the GUI
-        System.out.println("\n!!Showing GUI...\n");
+        System.out.println("Showing GUI. Ctrl+C on this terminal window to quit immediately without saving.");
         new GUIDayPlanner(activities);
 
         /*

@@ -30,6 +30,11 @@ public class GUISearchWindow extends GUIWindow {
     }
 
     @Override
+    public String getSubHeaderText() {
+        return "<html>Fields are optional; leaving a text field blank means the search will ignore that parameter.</html>";
+    }
+
+    @Override
     public String getActionButtonLabel() {
         return "Search";
     }
@@ -46,8 +51,8 @@ public class GUISearchWindow extends GUIWindow {
             "<html>Title <i>(keywords)</i>:</html>",
             "<html>Starting time <code>(YYYY/MM/DD HH:MM)</code>:</html>",
             "<html>Ending time <code>(YYYY/MM/DD HH:MM)</code>:</html>",
-            "<html>Comment <i>(optional)</i>:</html>",
-            "<html>Location <i>(if creating Other Activity only)</i>:</html>"
+            "<html>Comment:</html>",
+            "<html>Location <i>(if searching for Other Activity only)</i>:</html>"
         };
     }
 
