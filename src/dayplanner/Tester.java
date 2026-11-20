@@ -47,6 +47,21 @@ public class Tester {
         runTestCase("case21", "Title Index: Activity Addition", testCase21());
         runTestCase("case22", "Persistence Verification (RAS Read/Write)", testCase22());
 
+        // Exception-handling test cases (Assignment 4)
+        runTestCase("case23", "Exception: Time Constructor Throws IllegalArgumentException on Bad Year",   testCase23());
+        runTestCase("case24", "Exception: Time Constructor Throws IllegalArgumentException on Bad Month",  testCase24());
+        runTestCase("case25", "Exception: Time Constructor Throws IllegalArgumentException on Bad Day",    testCase25());
+        runTestCase("case26", "Exception: Time Constructor Throws IllegalArgumentException on Bad Hour",   testCase26());
+        runTestCase("case27", "Exception: Time Constructor Throws IllegalArgumentException on Bad Minute", testCase27());
+        runTestCase("case28", "Exception: Time.compareTo Throws NullPointerException for Null Argument",  testCase28());
+        runTestCase("case29", "Exception: Time.compareTo Throws ClassCastException for Wrong Class",      testCase29());
+        runTestCase("case30", "Exception: Activity Constructor Throws on Null/Blank Title",               testCase30());
+        runTestCase("case31", "Exception: Activity Constructor Throws on Null Start/End Time",            testCase31());
+        runTestCase("case32", "Exception: Activity Constructor Throws When Start >= End",                 testCase32());
+        runTestCase("case33", "Exception: OtherActivity Throws on Null/Blank Location",                  testCase33());
+        runTestCase("case34", "Exception: Input.readInt Recovers from Non-Integer Input",                 testCase34());
+        runTestCase("case35", "Exception: Time Mutators Throw IllegalArgumentException on Bad Values",    testCase35());
+
         System.out.printf(String.format("Out of %d tests, %d passed and %d failed\n",
             passedCount + failedCount, passedCount, failedCount));
     }
@@ -422,6 +437,254 @@ public class Tester {
     }
 
     
+
+    // =========================================================================
+    // Exception-handling test cases (Assignment 4)
+    // =========================================================================
+
+    /**
+     * Case 23: Verifies that Time's parameterized constructor throws
+     * IllegalArgumentException for an out-of-range year (year = 0).
+     */
+    public static boolean testCase23() {
+        try {
+            new Time(0, 1, 1, 0, 0);
+            return false; // should have thrown
+        } catch (IllegalArgumentException e) {
+            return true;  // correct: exception was thrown
+        }
+    }
+
+    /**
+     * Case 24: Verifies that Time's parameterized constructor throws
+     * IllegalArgumentException for an out-of-range month (month = 13).
+     */
+    public static boolean testCase24() {
+        try {
+            new Time(2026, 13, 1, 0, 0);
+            return false;
+        } catch (IllegalArgumentException e) {
+            return true;
+        }
+    }
+
+    /**
+     * Case 25: Verifies that Time's parameterized constructor throws
+     * IllegalArgumentException for an out-of-range day (day = 32 in January).
+     */
+    public static boolean testCase25() {
+        try {
+            new Time(2026, 1, 32, 0, 0);
+            return false;
+        } catch (IllegalArgumentException e) {
+            return true;
+        }
+    }
+
+    /**
+     * Case 26: Verifies that Time's parameterized constructor throws
+     * IllegalArgumentException for an out-of-range hour (hour = 24).
+     */
+    public static boolean testCase26() {
+        try {
+            new Time(2026, 1, 1, 24, 0);
+            return false;
+        } catch (IllegalArgumentException e) {
+            return true;
+        }
+    }
+
+    /**
+     * Case 27: Verifies that Time's parameterized constructor throws
+     * IllegalArgumentException for an out-of-range minute (minute = 60).
+     */
+    public static boolean testCase27() {
+        try {
+            new Time(2026, 1, 1, 0, 60);
+            return false;
+        } catch (IllegalArgumentException e) {
+            return true;
+        }
+    }
+
+    /**
+     * Case 28: Verifies that Time.compareTo throws NullPointerException
+     * when the argument is null, as required by the Comparable contract.
+     */
+    public static boolean testCase28() {
+        Time t = new Time(2026, 10, 1, 9, 0);
+        try {
+            t.compareTo((Object) null);
+            return false; // should have thrown
+        } catch (NullPointerException e) {
+            return true;  // correct
+        }
+    }
+
+    /**
+     * Case 29: Verifies that Time.compareTo throws ClassCastException
+     * when the argument is not an instance of Time.
+     */
+    public static boolean testCase29() {
+        Time t = new Time(2026, 10, 1, 9, 0);
+        try {
+            t.compareTo("not a Time");
+            return false; // should have thrown
+        } catch (ClassCastException e) {
+            return true;  // correct
+        }
+    }
+
+    /**
+     * Case 30: Verifies that Activity's constructor throws
+     * IllegalArgumentException for a null or blank title.
+     */
+    public static boolean testCase30() {
+        Time start = new Time(2026, 10, 1, 9, 0);
+        Time end   = new Time(2026, 10, 1, 10, 0);
+
+        boolean nullTitleThrew  = false;
+        boolean blankTitleThrew = false;
+
+        try {
+            new HomeActivity(null, start, end);
+        } catch (IllegalArgumentException e) {
+            nullTitleThrew = true;
+        }
+
+        try {
+            new HomeActivity("   ", start, end);
+        } catch (IllegalArgumentException e) {
+            blankTitleThrew = true;
+        }
+
+        return nullTitleThrew && blankTitleThrew;
+    }
+
+    /**
+     * Case 31: Verifies that Activity's constructor throws
+     * IllegalArgumentException when startTime or endTime is null.
+     */
+    public static boolean testCase31() {
+        Time valid = new Time(2026, 10, 1, 9, 0);
+
+        boolean nullStartThrew = false;
+        boolean nullEndThrew   = false;
+
+        try {
+            new HomeActivity("Test", null, valid);
+        } catch (IllegalArgumentException e) {
+            nullStartThrew = true;
+        }
+
+        try {
+            new HomeActivity("Test", valid, null);
+        } catch (IllegalArgumentException e) {
+            nullEndThrew = true;
+        }
+
+        return nullStartThrew && nullEndThrew;
+    }
+
+    /**
+     * Case 32: Verifies that Activity's constructor throws
+     * IllegalArgumentException when startTime is not strictly before endTime
+     * (covers equal times and reversed order).
+     */
+    public static boolean testCase32() {
+        Time t1 = new Time(2026, 10, 1, 10, 0);
+        Time t2 = new Time(2026, 10, 1,  9, 0); // before t1
+
+        boolean equalThrew   = false;
+        boolean invertedThrew = false;
+
+        // equal start and end
+        try {
+            new HomeActivity("Test", t1, t1);
+        } catch (IllegalArgumentException e) {
+            equalThrew = true;
+        }
+
+        // start after end
+        try {
+            new HomeActivity("Test", t1, t2);
+        } catch (IllegalArgumentException e) {
+            invertedThrew = true;
+        }
+
+        return equalThrew && invertedThrew;
+    }
+
+    /**
+     * Case 33: Verifies that OtherActivity's constructor throws
+     * IllegalArgumentException when the location is null or blank.
+     */
+    public static boolean testCase33() {
+        Time start = new Time(2026, 10, 1, 9, 0);
+        Time end   = new Time(2026, 10, 1, 10, 0);
+
+        boolean nullLocationThrew  = false;
+        boolean blankLocationThrew = false;
+
+        try {
+            new OtherActivity("Test", start, end, null);
+        } catch (IllegalArgumentException e) {
+            nullLocationThrew = true;
+        }
+
+        try {
+            new OtherActivity("Test", start, end, "   ");
+        } catch (IllegalArgumentException e) {
+            blankLocationThrew = true;
+        }
+
+        return nullLocationThrew && blankLocationThrew;
+    }
+
+    /**
+     * Case 34: Verifies that Input.readInt() silently recovers from a
+     * non-integer line and returns the first valid integer that follows.
+     * Uses a ByteArrayInputStream so no real keyboard is needed.
+     */
+    public static boolean testCase34() {
+        // Feed: "hello\n42\n" – the first token is not an integer, the second is
+        java.io.InputStream stream =
+            new ByteArrayInputStream("hello\n42\n".getBytes());
+        Input input = new Input(stream);
+
+        // Suppress console output during this test
+        java.io.PrintStream originalOut = System.out;
+        System.setOut(new java.io.PrintStream(new java.io.ByteArrayOutputStream()));
+        try {
+            int result = input.readInt();
+            return result == 42;
+        } finally {
+            System.setOut(originalOut);
+        }
+    }
+
+    /**
+     * Case 35: Verifies that the Time mutator methods (setYear, setMonth,
+     * setDay, setHour, setMinute) each throw IllegalArgumentException for
+     * values outside their valid ranges.
+     */
+    public static boolean testCase35() {
+        Time t = new Time(2026, 6, 15, 12, 30);
+
+        boolean setYearThrew   = false;
+        boolean setMonthThrew  = false;
+        boolean setDayThrew    = false;
+        boolean setHourThrew   = false;
+        boolean setMinuteThrew = false;
+
+        try { t.setYear(0);    } catch (IllegalArgumentException e) { setYearThrew   = true; }
+        try { t.setMonth(13);  } catch (IllegalArgumentException e) { setMonthThrew  = true; }
+        try { t.setDay(32);    } catch (IllegalArgumentException e) { setDayThrew    = true; }
+        try { t.setHour(24);   } catch (IllegalArgumentException e) { setHourThrew   = true; }
+        try { t.setMinute(60); } catch (IllegalArgumentException e) { setMinuteThrew = true; }
+
+        return setYearThrew && setMonthThrew && setDayThrew && setHourThrew && setMinuteThrew;
+    }
 
     /**
      * Default constructor (not used)
