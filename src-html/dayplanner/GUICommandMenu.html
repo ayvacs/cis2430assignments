@@ -19,51 +19,54 @@
 <span class="source-line-no">006</span><span id="line-6"> * Represents the Swing GUI combo box to select a command.</span>
 <span class="source-line-no">007</span><span id="line-7"> */</span>
 <span class="source-line-no">008</span><span id="line-8">public class GUICommandMenu extends JComboBox&lt;String&gt; {</span>
-<span class="source-line-no">009</span><span id="line-9">    private static final String[] OPTIONS = {</span>
-<span class="source-line-no">010</span><span id="line-10">        "&lt; Select a Command &gt;",</span>
-<span class="source-line-no">011</span><span id="line-11">        "Add - Insert a new activity",</span>
-<span class="source-line-no">012</span><span id="line-12">        "Search - Search for an activity",</span>
-<span class="source-line-no">013</span><span id="line-13">        "Quit - Exit DayPlanner" };</span>
-<span class="source-line-no">014</span><span id="line-14"></span>
-<span class="source-line-no">015</span><span id="line-15"></span>
-<span class="source-line-no">016</span><span id="line-16">    /**</span>
-<span class="source-line-no">017</span><span id="line-17">     * Create a new Swing GUI picker.</span>
-<span class="source-line-no">018</span><span id="line-18">     * </span>
-<span class="source-line-no">019</span><span id="line-19">     * @param gdp        Refers to the Swing GUI window.</span>
-<span class="source-line-no">020</span><span id="line-20">     * @param activities Instantiated ActivityList.</span>
-<span class="source-line-no">021</span><span id="line-21">     */</span>
-<span class="source-line-no">022</span><span id="line-22">    public GUICommandMenu(GUIDayPlanner gdp, ActivityList activities) {</span>
-<span class="source-line-no">023</span><span id="line-23">        super(OPTIONS);</span>
-<span class="source-line-no">024</span><span id="line-24"></span>
-<span class="source-line-no">025</span><span id="line-25">        addActionListener(e -&gt; {</span>
-<span class="source-line-no">026</span><span id="line-26">            int index = getSelectedIndex();</span>
-<span class="source-line-no">027</span><span id="line-27">            if (index &lt;= 0)</span>
-<span class="source-line-no">028</span><span id="line-28">                return;</span>
-<span class="source-line-no">029</span><span id="line-29"></span>
-<span class="source-line-no">030</span><span id="line-30">            MenuOption option = MenuOption.parse(index);</span>
-<span class="source-line-no">031</span><span id="line-31">            if (option == null)</span>
-<span class="source-line-no">032</span><span id="line-32">                return;</span>
-<span class="source-line-no">033</span><span id="line-33">            </span>
-<span class="source-line-no">034</span><span id="line-34">            // Execute the desired task.</span>
-<span class="source-line-no">035</span><span id="line-35">            switch (option) {</span>
-<span class="source-line-no">036</span><span id="line-36">                case ADD:</span>
-<span class="source-line-no">037</span><span id="line-37">                    new GUIAddWindow(activities);</span>
-<span class="source-line-no">038</span><span id="line-38">                    break;</span>
-<span class="source-line-no">039</span><span id="line-39">                case SEARCH:</span>
-<span class="source-line-no">040</span><span id="line-40">                    new GUISearchWindow(activities);</span>
+<span class="source-line-no">009</span><span id="line-9">    /**</span>
+<span class="source-line-no">010</span><span id="line-10">     * Menu options displayed in the command selection combo box.</span>
+<span class="source-line-no">011</span><span id="line-11">     */</span>
+<span class="source-line-no">012</span><span id="line-12">    private static final String[] OPTIONS = {</span>
+<span class="source-line-no">013</span><span id="line-13">        "&lt; Select a Command &gt;",</span>
+<span class="source-line-no">014</span><span id="line-14">        "Add - Insert a new activity",</span>
+<span class="source-line-no">015</span><span id="line-15">        "Search - Search for an activity",</span>
+<span class="source-line-no">016</span><span id="line-16">        "Quit - Exit DayPlanner" };</span>
+<span class="source-line-no">017</span><span id="line-17"></span>
+<span class="source-line-no">018</span><span id="line-18"></span>
+<span class="source-line-no">019</span><span id="line-19">    /**</span>
+<span class="source-line-no">020</span><span id="line-20">     * Create a new Swing GUI picker.</span>
+<span class="source-line-no">021</span><span id="line-21">     * </span>
+<span class="source-line-no">022</span><span id="line-22">     * @param gdp        Refers to the Swing GUI window.</span>
+<span class="source-line-no">023</span><span id="line-23">     * @param activities Instantiated ActivityList.</span>
+<span class="source-line-no">024</span><span id="line-24">     */</span>
+<span class="source-line-no">025</span><span id="line-25">    public GUICommandMenu(GUIDayPlanner gdp, ActivityList activities) {</span>
+<span class="source-line-no">026</span><span id="line-26">        super(OPTIONS);</span>
+<span class="source-line-no">027</span><span id="line-27"></span>
+<span class="source-line-no">028</span><span id="line-28">        addActionListener(e -&gt; {</span>
+<span class="source-line-no">029</span><span id="line-29">            int index = getSelectedIndex();</span>
+<span class="source-line-no">030</span><span id="line-30">            if (index &lt;= 0)</span>
+<span class="source-line-no">031</span><span id="line-31">                return;</span>
+<span class="source-line-no">032</span><span id="line-32"></span>
+<span class="source-line-no">033</span><span id="line-33">            MenuOption option = MenuOption.parse(index);</span>
+<span class="source-line-no">034</span><span id="line-34">            if (option == null)</span>
+<span class="source-line-no">035</span><span id="line-35">                return;</span>
+<span class="source-line-no">036</span><span id="line-36">            </span>
+<span class="source-line-no">037</span><span id="line-37">            // Execute the desired task.</span>
+<span class="source-line-no">038</span><span id="line-38">            switch (option) {</span>
+<span class="source-line-no">039</span><span id="line-39">                case ADD:</span>
+<span class="source-line-no">040</span><span id="line-40">                    new GUIAddWindow(activities);</span>
 <span class="source-line-no">041</span><span id="line-41">                    break;</span>
-<span class="source-line-no">042</span><span id="line-42">                case QUIT:</span>
-<span class="source-line-no">043</span><span id="line-43">                    new GUIQuitMenu(gdp);</span>
+<span class="source-line-no">042</span><span id="line-42">                case SEARCH:</span>
+<span class="source-line-no">043</span><span id="line-43">                    new GUISearchWindow(activities);</span>
 <span class="source-line-no">044</span><span id="line-44">                    break;</span>
-<span class="source-line-no">045</span><span id="line-45">                default:</span>
-<span class="source-line-no">046</span><span id="line-46">                    break;</span>
-<span class="source-line-no">047</span><span id="line-47">            }</span>
-<span class="source-line-no">048</span><span id="line-48"></span>
-<span class="source-line-no">049</span><span id="line-49">            // Immediately show the "Select Command" item.</span>
-<span class="source-line-no">050</span><span id="line-50">            setSelectedIndex(0);</span>
-<span class="source-line-no">051</span><span id="line-51">        });</span>
-<span class="source-line-no">052</span><span id="line-52">    }</span>
-<span class="source-line-no">053</span><span id="line-53">}</span>
+<span class="source-line-no">045</span><span id="line-45">                case QUIT:</span>
+<span class="source-line-no">046</span><span id="line-46">                    new GUIQuitMenu(gdp);</span>
+<span class="source-line-no">047</span><span id="line-47">                    break;</span>
+<span class="source-line-no">048</span><span id="line-48">                default:</span>
+<span class="source-line-no">049</span><span id="line-49">                    break;</span>
+<span class="source-line-no">050</span><span id="line-50">            }</span>
+<span class="source-line-no">051</span><span id="line-51"></span>
+<span class="source-line-no">052</span><span id="line-52">            // Immediately show the "Select Command" item.</span>
+<span class="source-line-no">053</span><span id="line-53">            setSelectedIndex(0);</span>
+<span class="source-line-no">054</span><span id="line-54">        });</span>
+<span class="source-line-no">055</span><span id="line-55">    }</span>
+<span class="source-line-no">056</span><span id="line-56">}</span>
 
 
 

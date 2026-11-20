@@ -45,11 +45,11 @@
 <span class="source-line-no">032</span><span id="line-32"></span>
 <span class="source-line-no">033</span><span id="line-33">    /**</span>
 <span class="source-line-no">034</span><span id="line-34">     * &lt;p&gt;</span>
-<span class="source-line-no">035</span><span id="line-35">     * Parses one RAS record and creates its corresponding activity.</span>
-<span class="source-line-no">036</span><span id="line-36">     * &lt;/p&gt;</span>
-<span class="source-line-no">037</span><span id="line-37">     * &lt;p&gt;</span>
-<span class="source-line-no">038</span><span id="line-38">     * Unknown type names produce a plain {@link Activity}, preserving the</span>
-<span class="source-line-no">039</span><span id="line-39">     * format's existing fallback behavior.</span>
+<span class="source-line-no">035</span><span id="line-35">     * Parses one RAS record and creates its corresponding concrete activity</span>
+<span class="source-line-no">036</span><span id="line-36">     * ({@link HomeActivity}, {@link SchoolActivity}, or {@link OtherActivity}).</span>
+<span class="source-line-no">037</span><span id="line-37">     * &lt;/p&gt;</span>
+<span class="source-line-no">038</span><span id="line-38">     * &lt;p&gt;</span>
+<span class="source-line-no">039</span><span id="line-39">     * Unknown type names throw a {@link RasException}.</span>
 <span class="source-line-no">040</span><span id="line-40">     * &lt;/p&gt;</span>
 <span class="source-line-no">041</span><span id="line-41">     *</span>
 <span class="source-line-no">042</span><span id="line-42">     * @param ras Serialized activity record.</span>
@@ -274,7 +274,7 @@
 <span class="source-line-no">261</span><span id="line-261">     * "https://www.rapidtables.com/web/html/html-codes.html"&gt;RapidTables&lt;/a&gt;.</span>
 <span class="source-line-no">262</span><span id="line-262">     * </span>
 <span class="source-line-no">263</span><span id="line-263">     * @param input Input to desanitize.</span>
-<span class="source-line-no">264</span><span id="line-264">     * @return Desnitized input, or &lt;code&gt;null&lt;/code&gt; if input is null.</span>
+<span class="source-line-no">264</span><span id="line-264">     * @return Desanitized input, or &lt;code&gt;null&lt;/code&gt; if input is null.</span>
 <span class="source-line-no">265</span><span id="line-265">     * @see #sanitize(String)</span>
 <span class="source-line-no">266</span><span id="line-266">     */</span>
 <span class="source-line-no">267</span><span id="line-267">    public static String desanitize(String input) {</span>
