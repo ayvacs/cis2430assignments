@@ -128,8 +128,11 @@ public abstract class GUIWindow extends JPanel {
             centerPanel.add(label);
 
             if (i == 0) {
-                typeComboBox = new JComboBox<>(new String[]{"home", "school", "other"});
-                typeComboBox.setSelectedItem("home");
+                String[] options = getTypeOptions();
+                typeComboBox = new JComboBox<>(options);
+                if (options.length > 0) {
+                    typeComboBox.setSelectedItem(options[0]);
+                }
                 centerPanel.add(typeComboBox);
             } else {
                 JTextField tf = new JTextField();
@@ -220,6 +223,24 @@ public abstract class GUIWindow extends JPanel {
     }
 
     /**
+     * Returns the options for the activity type combo box.
+     * 
+     * @return Array of type option strings, defaulting to "home", "school", and "other".
+     */
+    protected String[] getTypeOptions() {
+        return new String[]{"home", "school", "other"};
+    }
+
+    /**
+     * Clears all messages from the message box.
+     */
+    public void clearMessages() {
+        if (messages != null) {
+            messages.setText("");
+        }
+    }
+
+    /**
      * Add a message to the top of the message box and scroll to the top.
      * Does nothing if the text box hasn't been initialized yet or if the text is blank.
      * 
@@ -236,6 +257,33 @@ public abstract class GUIWindow extends JPanel {
             sb.append("\n");
             sb.append(messages.getText());
         }
+
+        messages.setText(sb.toString());
+        messages.setCaretPosition(0);
+        if (scrollPane != null) {
+            SwingUtilities.invokeLater(() -> {
+                scrollPane.getVerticalScrollBar().setValue(0);
+            });
+        }
+    }
+
+    /**
+     * Appends a message to the end of the message box and scrolls to the top.
+     * Does nothing if the text box hasn't been initialized yet or if the text is blank.
+     * 
+     * @param text Text to append.
+     */
+    public void appendMessage(String text) {
+        if (messages == null || text == null || text.isBlank())
+            return;
+
+        StringBuilder sb = new StringBuilder();
+        if (!messages.getText().isEmpty()) {
+            sb.append(messages.getText());
+            sb.append("\n");
+        }
+        sb.append("> ");
+        sb.append(text);
 
         messages.setText(sb.toString());
         messages.setCaretPosition(0);

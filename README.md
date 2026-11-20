@@ -83,7 +83,7 @@ Selecting **Commands > Add** switches to the activity creation form:
    * **Comment (Optional)**: Optional note associated with the activity.
    * **Location (Other activities only)**: Physical location where the activity occurs (mandatory only for `OtherActivity`).
 4. **Action Buttons**:
-   * **Reset**: Clears all text input fields in the form while preserving the current combo box selection, strictly complying with the grading rubric.
+   * **Reset**: Clears all text input fields in the form while preserving the current combo box selection.
    * **Add**: Validates all inputs defensively. Upon success, instantiates the concrete subclass (`HomeActivity`, `SchoolActivity`, or `OtherActivity`), stores a defensive copy in `ActivityList` to prevent privacy leaks, updates the title index, and logs a success confirmation. On error, a descriptive error message is output.
 5. **Messages Area**: A read-only text area wrapped in a `JScrollPane` displaying system messages and activity confirmation logs. Both vertical and horizontal scrollbars are configured as `AS_NEEDED`. Text line wrapping is disabled (`messages.setLineWrap(false)`), allowing long activity details to trigger horizontal scrolling as needed.
 
@@ -91,7 +91,7 @@ Selecting **Commands > Add** switches to the activity creation form:
 
 Selecting **Commands > Search** switches to the activity search form:
 
-1. **Activity Type**: A drop-down combo box (`JComboBox`) with options `"home"`, `"school"`, and `"other"` (default `"home"`).
+1. **Activity Type**: A drop-down combo box (`JComboBox`) with options `"any"`, `"home"`, `"school"`, and `"other"` (default `"any"`).
 2. **Form Fields**:
    * **Title (keywords)**: Optional space-separated search keywords. Matches all keywords as exact whole words in activity titles (case-insensitive, order-invariant).
    * **Starting Time**: Optional timestamp (`YYYY/MM/DD HH:MM`). Filters activities starting at or after this time.
@@ -131,7 +131,6 @@ The DayPlanner consists of the following classes in the `dayplanner` package:
 * `GUIAddWindow`: Subclass of `GUIWindow` for adding activities, featuring a type `JComboBox` (`"home"`, `"school"`, `"other"`), dynamic Location label/field visibility toggling, input validation, and text-only reset.
 * `GUISearchWindow`: Subclass of `GUIWindow` for searching activities, featuring a type `JComboBox`, keyword and time filtering, a `Search Results:` header, and clean removal of unused Comment and Location fields.
 * `GUIQuitMenu`: Confirmation dialog ensuring safe RAS persistence to disk prior to application exit.
-* `GUICommandMenu`: Command selection dropdown retained for backward compatibility.
 
 ## Exception Handling & Class Invariants
 
@@ -273,7 +272,7 @@ where each `<entry...>` is enclosed in angle brackets with comma-separated field
 8. **Graphical User Interface (GUI) Controls & Behavior**:
    * **Commands Menu Bar**: `JMenuBar` on the main frame with `Commands` menu (`Add`, `Search`, `Quit`).
    * **In-Place CardLayout Navigation**: Switches between `welcome`, `add`, and `search` cards inside the single main `JFrame`.
-   * **Activity Type ComboBox**: Dropdown containing `"home"`, `"school"`, and `"other"`, defaulting to `"home"`.
+   * **Activity Type ComboBox**: Dropdown containing `"home"`, `"school"`, and `"other"` in the Add view (defaulting to `"home"`), and `"any"`, `"home"`, `"school"`, and `"other"` in the Search view (defaulting to `"any"`).
    * **Dynamic Location Visibility**: Selecting `"other"` reveals the Location label and field; selecting `"home"` or `"school"` hides them via `setVisible(type.equals("other"))`.
    * **Text-Only Reset**: `Reset` button clears only the text fields, preserving the combo box selection.
    * **Dual Scrollbars**: South message areas configure `JScrollPane` with both horizontal and vertical scrollbars (`AS_NEEDED`) and disabled text line wrap (`messages.setLineWrap(false)`).
@@ -366,7 +365,7 @@ The following test table covers every graphical control, view transition, dynami
 | **gui14** | Add View: Error - Malformed Start Time | Enter Start: `invalid-date`, click **Add**. | Error message: `> Invalid starting time format. Expected: YYYY/MM/DD HH:MM...` logged. | **PASS** |
 | **gui15** | Add View: Error - Chronological Inversion | Enter Start: `2026/10/10 12:00`, End: `2026/10/10 10:00`, click **Add**. | Error message: `> Ending time (...) has to be after starting time (...).` logged. | **PASS** |
 | **gui16** | Add View: Error - Blank Location on Other | Select `other`, fill Title and times, leave Location blank, click **Add**. | Error message: `> Location cannot be empty for Other activities.` logged. | **PASS** |
-| **gui17** | Search View: ComboBox Initial State | Open Search view. Inspect Activity Type combo box. | Combo box contains `{"home", "school", "other"}` with `"home"` selected as default. | **PASS** |
+| **gui17** | Search View: ComboBox Initial State | Open Search view. Inspect Activity Type combo box. | Combo box contains `{"any", "home", "school", "other"}` with `"any"` selected as default. | **PASS** |
 | **gui18** | Search View: Fields Layout | Inspect form fields in Search view. | Displays Type, Title (keywords), Starting time, Ending time. Comment and Location fields are omitted. | **PASS** |
 | **gui19** | Search View: Reset Button | Enter search parameters in text fields and click **Reset**. | Text fields are cleared; Type combo box selection is preserved without reset. | **PASS** |
 | **gui20** | Search View: Search With Matches | Enter keywords or time bounds that match entered activities, click **Search**. | Matching activities and count (e.g. `Found 1 matching activity.`) logged in south panel. | **PASS** |

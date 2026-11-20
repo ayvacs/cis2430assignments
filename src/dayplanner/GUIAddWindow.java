@@ -148,37 +148,16 @@ public class GUIAddWindow extends GUIWindow {
      * 
      * @param activities   Instantiated ActivityList.
      * @param centerFields All of the JTextField instances in the order:
-     *                     title, start time, end time, comment, location
-     *                     (or type, title, start, end, comment, location for legacy callers).
+     *                     title, start time, end time, comment, location.
      * @return true if activity was created and added, false otherwise.
      */
     public boolean tryCreate(ActivityList activities, ArrayList<JTextField> centerFields) {
-        if (activities == null || centerFields == null) {
+        if (activities == null || centerFields == null || centerFields.size() < 5) {
             addMessage("Internal error: missing form fields.");
             return false;
         }
 
-        String typeStr;
-        int titleIdx, sTimeIdx, eTimeIdx, commentIdx, locationIdx;
-
-        if (centerFields.size() == 5) {
-            typeStr = (typeComboBox != null) ? (String) typeComboBox.getSelectedItem() : "home";
-            titleIdx = 0;
-            sTimeIdx = 1;
-            eTimeIdx = 2;
-            commentIdx = 3;
-            locationIdx = 4;
-        } else if (centerFields.size() >= 6) {
-            typeStr = centerFields.get(0).getText().trim();
-            titleIdx = 1;
-            sTimeIdx = 2;
-            eTimeIdx = 3;
-            commentIdx = 4;
-            locationIdx = 5;
-        } else {
-            addMessage("Internal error: missing form fields.");
-            return false;
-        }
+        String typeStr = (typeComboBox != null) ? (String) typeComboBox.getSelectedItem() : "home";
 
         // 1. Activity type
         if (typeStr == null || typeStr.isEmpty()) {
@@ -192,19 +171,19 @@ public class GUIAddWindow extends GUIWindow {
         }
 
         // 2. Title
-        String title = centerFields.get(titleIdx).getText().trim();
+        String title = centerFields.get(0).getText().trim();
         if (title.isEmpty()) {
             addMessage("Title cannot be empty.");
             return false;
         }
 
         // 3. Start time
-        Time sTime = parseAndValidateTime(centerFields.get(sTimeIdx).getText(), "Starting time");
+        Time sTime = parseAndValidateTime(centerFields.get(1).getText(), "Starting time");
         if (sTime == null)
             return false;
 
         // 4. End time
-        Time eTime = parseAndValidateTime(centerFields.get(eTimeIdx).getText(), "Ending time");
+        Time eTime = parseAndValidateTime(centerFields.get(2).getText(), "Ending time");
         if (eTime == null)
             return false;
 
@@ -215,14 +194,14 @@ public class GUIAddWindow extends GUIWindow {
         }
 
         // 6. Comment (optional)
-        String comment = centerFields.get(commentIdx).getText().trim();
+        String comment = centerFields.get(3).getText().trim();
         if (comment.isEmpty())
             comment = null;
 
         // 7. Location (required for other)
         String location = null;
         if (type == ActivityType.OTHER) {
-            location = centerFields.get(locationIdx).getText().trim();
+            location = centerFields.get(4).getText().trim();
             if (location.isEmpty()) {
                 addMessage("Location cannot be empty for Other activities.");
                 return false;

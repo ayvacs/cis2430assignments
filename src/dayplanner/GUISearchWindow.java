@@ -72,6 +72,16 @@ public class GUISearchWindow extends GUIWindow {
     /**
      * {@inheritDoc}
      * 
+     * @return Array of type options with "any" first, followed by "home", "school", and "other".
+     */
+    @Override
+    protected String[] getTypeOptions() {
+        return new String[]{"any", "home", "school", "other"};
+    }
+
+    /**
+     * {@inheritDoc}
+     * 
      * @return Label for the south message area "Search Results:".
      */
     @Override
@@ -113,30 +123,25 @@ public class GUISearchWindow extends GUIWindow {
      * @return true if search was performed, false if validation failed.
      */
     public boolean trySearch(ActivityList activities, ArrayList<JTextField> centerFields) {
-        if (activities == null || centerFields == null) {
+        clearMessages();
+
+        if (activities == null || centerFields == null || centerFields.size() < 3) {
             addMessage("Internal error: missing form fields.");
             return false;
         }
 
         // 1. Activity type
         String typeStr = (typeComboBox != null) ? (String) typeComboBox.getSelectedItem() : "";
-        ActivityType type = ActivityType.parse(typeStr);
-
-        // Determine field indices based on centerFields size:
-        // Default with JComboBox: 3 fields: [0]=title keywords, [1]=start time, [2]=end time
-        // Legacy compatibility: if centerFields has >= 4 items: [0]=type, [1]=title, [2]=start, [3]=end
-        int titleIdx = (centerFields.size() == 3) ? 0 : 1;
-        int sTimeIdx = (centerFields.size() == 3) ? 1 : 2;
-        int eTimeIdx = (centerFields.size() == 3) ? 2 : 3;
+        ActivityType type = "any".equals(typeStr) ? null : ActivityType.parse(typeStr);
 
         // 2. Title keywords (optional)
-        String titleStr = (centerFields.size() > titleIdx) ? centerFields.get(titleIdx).getText().trim() : "";
+        String titleStr = centerFields.get(0).getText().trim();
         String[] keywords = null;
         if (!titleStr.isEmpty())
             keywords = titleStr.split("\\s+");
 
         // 3. Start time (optional)
-        String sTimeStr = (centerFields.size() > sTimeIdx) ? centerFields.get(sTimeIdx).getText().trim() : "";
+        String sTimeStr = centerFields.get(1).getText().trim();
         Time sTime = null;
         if (!sTimeStr.isEmpty()) {
             sTime = parseAndValidateTime(sTimeStr, "Starting time", false);
@@ -145,7 +150,7 @@ public class GUISearchWindow extends GUIWindow {
         }
 
         // 4. End time (optional)
-        String eTimeStr = (centerFields.size() > eTimeIdx) ? centerFields.get(eTimeIdx).getText().trim() : "";
+        String eTimeStr = centerFields.get(2).getText().trim();
         Time eTime = null;
         if (!eTimeStr.isEmpty()) {
             eTime = parseAndValidateTime(eTimeStr, "Ending time", false);
@@ -166,14 +171,14 @@ public class GUISearchWindow extends GUIWindow {
             Activity act = activities.get(index);
             if (DayPlannerUtils.matchesCriteria(act, type, sTime, eTime)) {
                 count++;
-                addMessage(count + ". " + act.toString());
+                appendMessage(count + ". " + act.toString());
             }
         }
 
         if (count == 0)
-            addMessage("No activities matched your search request.");
+            appendMessage("No activities matched your search request.");
         else
-            addMessage("Found " + count + " matching " + (count == 1 ? "activity." : "activities."));
+            appendMessage("Found " + count + " matching " + (count == 1 ? "activity." : "activities."));
 
         return true;
     }

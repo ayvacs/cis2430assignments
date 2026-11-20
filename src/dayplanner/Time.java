@@ -464,19 +464,6 @@ public class Time implements Comparable<Object> {
     }
 
     /**
-     * Compares this time with another time chronologically.
-     * 
-     * @param other The other time to compare with.
-     * @return A negative integer, zero, or a positive integer as this time
-     *         precedes, equals, or follows {@code other}.
-     * @throws NullPointerException If {@code other} is {@code null}.
-     */
-    public int compareTo(Time other)
-    throws NullPointerException {
-        return compareTo((Object) other);
-    }
-
-    /**
      * Determines whether a time period from {@code start} to {@code end} is valid.
      * Uses {@link #compareTo(Object)} to verify that {@code start} is strictly
      * before {@code end}.
@@ -509,6 +496,6 @@ public class Time implements Comparable<Object> {
             return true;
         if (other == null || getClass() != other.getClass())
             return false;
-        return compareTo((Time) other) == 0;
+        return compareTo(other) == 0;
     }
 }
