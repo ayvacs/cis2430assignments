@@ -105,7 +105,7 @@ public class GUIDayPlanner extends JFrame {
      * @param welcomeText The welcome text label.
      * @param activities  The list of activities.
      */
-    public void refreshWelcomeText(JLabel welcomeText, ActivityList activities) {
+    private void refreshWelcomeText(JLabel welcomeText, ActivityList activities) {
         String text = ("<html>"
                      + DayPlannerUtils.getGreeting(activities.size())
                      + "\n"

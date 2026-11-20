@@ -62,6 +62,10 @@ public class Tester {
         runTestCase("case34", "Exception: Input.readInt Recovers from Non-Integer Input",                 testCase34());
         runTestCase("case35", "Exception: Time Mutators Throw IllegalArgumentException on Bad Values",    testCase35());
 
+        // Inheritance, Abstract Classes & Polymorphism test cases (Assignment 3, requirement 3a)
+        runTestCase("case36", "Abstract Class: Activity is Abstract and Cannot be Instantiated Directly", testCase36());
+        runTestCase("case37", "Polymorphism: Dynamic Binding via toString and getType on Activity List",  testCase37());
+
         System.out.printf(String.format("Out of %d tests, %d passed and %d failed\n",
             passedCount + failedCount, passedCount, failedCount));
     }
@@ -445,6 +449,8 @@ public class Tester {
     /**
      * Case 23: Verifies that Time's parameterized constructor throws
      * IllegalArgumentException for an out-of-range year (year = 0).
+     * 
+     * @return <code>true</code> if the test passes, <code>false</code> otherwise.
      */
     public static boolean testCase23() {
         try {
@@ -458,6 +464,8 @@ public class Tester {
     /**
      * Case 24: Verifies that Time's parameterized constructor throws
      * IllegalArgumentException for an out-of-range month (month = 13).
+     * 
+     * @return <code>true</code> if the test passes, <code>false</code> otherwise.
      */
     public static boolean testCase24() {
         try {
@@ -471,6 +479,8 @@ public class Tester {
     /**
      * Case 25: Verifies that Time's parameterized constructor throws
      * IllegalArgumentException for an out-of-range day (day = 32 in January).
+     * 
+     * @return <code>true</code> if the test passes, <code>false</code> otherwise.
      */
     public static boolean testCase25() {
         try {
@@ -484,6 +494,8 @@ public class Tester {
     /**
      * Case 26: Verifies that Time's parameterized constructor throws
      * IllegalArgumentException for an out-of-range hour (hour = 24).
+     * 
+     * @return <code>true</code> if the test passes, <code>false</code> otherwise.
      */
     public static boolean testCase26() {
         try {
@@ -497,6 +509,8 @@ public class Tester {
     /**
      * Case 27: Verifies that Time's parameterized constructor throws
      * IllegalArgumentException for an out-of-range minute (minute = 60).
+     * 
+     * @return <code>true</code> if the test passes, <code>false</code> otherwise.
      */
     public static boolean testCase27() {
         try {
@@ -510,6 +524,8 @@ public class Tester {
     /**
      * Case 28: Verifies that Time.compareTo throws NullPointerException
      * when the argument is null, as required by the Comparable contract.
+     * 
+     * @return <code>true</code> if the test passes, <code>false</code> otherwise.
      */
     public static boolean testCase28() {
         Time t = new Time(2026, 10, 1, 9, 0);
@@ -524,6 +540,8 @@ public class Tester {
     /**
      * Case 29: Verifies that Time.compareTo throws ClassCastException
      * when the argument is not an instance of Time.
+     * 
+     * @return <code>true</code> if the test passes, <code>false</code> otherwise.
      */
     public static boolean testCase29() {
         Time t = new Time(2026, 10, 1, 9, 0);
@@ -538,6 +556,8 @@ public class Tester {
     /**
      * Case 30: Verifies that Activity's constructor throws
      * IllegalArgumentException for a null or blank title.
+     * 
+     * @return <code>true</code> if the test passes, <code>false</code> otherwise.
      */
     public static boolean testCase30() {
         Time start = new Time(2026, 10, 1, 9, 0);
@@ -564,6 +584,8 @@ public class Tester {
     /**
      * Case 31: Verifies that Activity's constructor throws
      * IllegalArgumentException when startTime or endTime is null.
+     * 
+     * @return <code>true</code> if the test passes, <code>false</code> otherwise.
      */
     public static boolean testCase31() {
         Time valid = new Time(2026, 10, 1, 9, 0);
@@ -590,6 +612,8 @@ public class Tester {
      * Case 32: Verifies that Activity's constructor throws
      * IllegalArgumentException when startTime is not strictly before endTime
      * (covers equal times and reversed order).
+     * 
+     * @return <code>true</code> if the test passes, <code>false</code> otherwise.
      */
     public static boolean testCase32() {
         Time t1 = new Time(2026, 10, 1, 10, 0);
@@ -618,6 +642,8 @@ public class Tester {
     /**
      * Case 33: Verifies that OtherActivity's constructor throws
      * IllegalArgumentException when the location is null or blank.
+     * 
+     * @return <code>true</code> if the test passes, <code>false</code> otherwise.
      */
     public static boolean testCase33() {
         Time start = new Time(2026, 10, 1, 9, 0);
@@ -645,6 +671,8 @@ public class Tester {
      * Case 34: Verifies that Input.readInt() silently recovers from a
      * non-integer line and returns the first valid integer that follows.
      * Uses a ByteArrayInputStream so no real keyboard is needed.
+     * 
+     * @return <code>true</code> if the test passes, <code>false</code> otherwise.
      */
     public static boolean testCase34() {
         // Feed: "hello\n42\n" – the first token is not an integer, the second is
@@ -667,6 +695,8 @@ public class Tester {
      * Case 35: Verifies that the Time mutator methods (setYear, setMonth,
      * setDay, setHour, setMinute) each throw IllegalArgumentException for
      * values outside their valid ranges.
+     * 
+     * @return <code>true</code> if the test passes, <code>false</code> otherwise.
      */
     public static boolean testCase35() {
         Time t = new Time(2026, 6, 15, 12, 30);
@@ -684,6 +714,80 @@ public class Tester {
         try { t.setMinute(60); } catch (IllegalArgumentException e) { setMinuteThrew = true; }
 
         return setYearThrew && setMonthThrew && setDayThrew && setHourThrew && setMinuteThrew;
+    }
+
+    /**
+     * Case 36: Verifies that Activity is declared as an abstract class, so
+     * objects can only be created from the concrete subclasses: HomeActivity,
+     * SchoolActivity, and OtherActivity.
+     * 
+     * @return <code>true</code> if the test passes, <code>false</code> otherwise.
+     */
+    public static boolean testCase36() {
+        // Activity class itself must be abstract
+        boolean activityIsAbstract = java.lang.reflect.Modifier.isAbstract(Activity.class.getModifiers());
+
+        // Concrete subclasses must not be abstract
+        boolean homeConcrete = !java.lang.reflect.Modifier.isAbstract(HomeActivity.class.getModifiers());
+        boolean schoolConcrete = !java.lang.reflect.Modifier.isAbstract(SchoolActivity.class.getModifiers());
+        boolean otherConcrete = !java.lang.reflect.Modifier.isAbstract(OtherActivity.class.getModifiers());
+
+        // Subclasses must inherit from Activity
+        boolean homeExtends = Activity.class.isAssignableFrom(HomeActivity.class);
+        boolean schoolExtends = Activity.class.isAssignableFrom(SchoolActivity.class);
+        boolean otherExtends = Activity.class.isAssignableFrom(OtherActivity.class);
+
+        return activityIsAbstract && homeConcrete && schoolConcrete && otherConcrete
+            && homeExtends && schoolExtends && otherExtends;
+    }
+
+    /**
+     * Case 37: Verifies effective use of polymorphism through dynamic binding.
+     * Given an ArrayList&lt;Activity&gt; containing HomeActivity, SchoolActivity, and
+     * OtherActivity objects, all details are displayed polymorphically via
+     * toString() without checking class types or using instanceof.
+     * 
+     * @return <code>true</code> if the test passes, <code>false</code> otherwise.
+     */
+    public static boolean testCase37() {
+        Time s1 = new Time(2026, 10, 1, 9, 0);
+        Time e1 = new Time(2026, 10, 1, 10, 0);
+        Time s2 = new Time(2026, 10, 1, 11, 0);
+        Time e2 = new Time(2026, 10, 1, 12, 0);
+        Time s3 = new Time(2026, 10, 1, 13, 0);
+        Time e3 = new Time(2026, 10, 1, 14, 0);
+
+        java.util.ArrayList<Activity> activities = new java.util.ArrayList<>();
+        activities.add(new HomeActivity("Clean Kitchen", s1, e1, "Do dishes"));
+        activities.add(new SchoolActivity("CIS 2430 Lecture", s2, e2, "Room 101"));
+        activities.add(new OtherActivity("Dentist Appointment", s3, e3, "Checkup", "Medical Clinic"));
+
+        // Polymorphic display via toString() and polymorphic getType()
+        // No class type checks or instanceof needed
+        String[] expectedDetails = {
+            "Clean Kitchen (2026/10/01 09:00 - 2026/10/01 10:00) (Do dishes)",
+            "CIS 2430 Lecture (2026/10/01 11:00 - 2026/10/01 12:00) (Room 101)",
+            "Dentist Appointment (2026/10/01 13:00 - 2026/10/01 14:00 at Medical Clinic) (Checkup)"
+        };
+        ActivityType[] expectedTypes = {
+            ActivityType.HOME,
+            ActivityType.SCHOOL,
+            ActivityType.OTHER
+        };
+
+        for (int i = 0; i < activities.size(); i++) {
+            Activity act = activities.get(i);
+            // Dynamic binding invokes the appropriate toString() and getType() implementation
+            String details = act.toString();
+            ActivityType type = act.getType();
+
+            if (!details.equals(expectedDetails[i]))
+                return false;
+            if (type != expectedTypes[i])
+                return false;
+        }
+
+        return true;
     }
 
     /**

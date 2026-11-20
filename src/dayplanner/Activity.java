@@ -23,7 +23,7 @@ package dayplanner;
  * Activity lab = new SchoolActivity("CIS 2430 Lab", start, end, "Bring laptop");
  * </pre>
  */
-public class Activity implements Comparable<Activity> {
+public abstract class Activity implements Comparable<Activity> {
     private String title;   // Required
     private Time startTime; // Required
     private Time endTime;   // Required
@@ -52,7 +52,7 @@ public class Activity implements Comparable<Activity> {
      *                                  endTime is null, or if startTime is not
      *                                  strictly before endTime.
      */
-    public Activity(String title, Time startTime, Time endTime)
+    protected Activity(String title, Time startTime, Time endTime)
     throws IllegalArgumentException {
         // Input validation is managed by the setters.
         setTitle(title);
@@ -74,7 +74,7 @@ public class Activity implements Comparable<Activity> {
      *                                  endTime is null, or if startTime is not
      *                                  strictly before endTime.
      */
-    public Activity(String title, Time startTime, Time endTime, String comment)
+    protected Activity(String title, Time startTime, Time endTime, String comment)
     throws IllegalArgumentException {
         // Input validation is managed by the setters.
         this(title, startTime, endTime);
@@ -98,7 +98,7 @@ public class Activity implements Comparable<Activity> {
      *            {@code <HomeActivity,Laundry,2026/10/20 09:00,2026/10/20 10:00,NIL>}.
      * @throws RasException when RAS input is invalid.
      */
-    public Activity(String ras)
+    protected Activity(String ras)
     throws RasException {
         RasParser.populate(this, ras);
     }
@@ -113,7 +113,7 @@ public class Activity implements Comparable<Activity> {
      * @param other The <code>Activity</code> to copy.
      * @throws IllegalArgumentException If {@code other} is {@code null}.
      */
-    public Activity(Activity other)
+    protected Activity(Activity other)
     throws IllegalArgumentException {
         if (other == null)
             throw new IllegalArgumentException("Cannot copy a null Activity.");
@@ -177,12 +177,9 @@ public class Activity implements Comparable<Activity> {
      * Returns the {@link dayplanner.ActivityType} that corresponds to this
      * Activity.
      * 
-     * @return Corresponding ActivityType. For regular Activities, this is
-     *         <code>null</code>.
+     * @return Corresponding ActivityType.
      */
-    public ActivityType getType() {
-        return null;
-    }
+    public abstract ActivityType getType();
 
 
 

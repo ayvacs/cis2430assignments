@@ -33,6 +33,7 @@
  * public or private</li>
  * </ul>
  * 
+ * @see dayplanner.GUIDayPlanner
  * @see dayplanner.DayPlanner
  * @see dayplanner.Tester
  */

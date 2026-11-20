@@ -223,7 +223,6 @@ public class DayPlanner {
                 case HOME   -> new HomeActivity(title, startTime, endTime, comment);
                 case SCHOOL -> new SchoolActivity(title, startTime, endTime, comment);
                 case OTHER  -> new OtherActivity(title, startTime, endTime, comment, location);
-                default     -> new Activity(title, startTime, endTime, comment);
             };
 
             if (act != null) {

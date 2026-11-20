@@ -32,11 +32,11 @@ public final class RasParser {
 
     /**
      * <p>
-     * Parses one RAS record and creates its corresponding activity.
+     * Parses one RAS record and creates its corresponding concrete activity
+     * ({@link HomeActivity}, {@link SchoolActivity}, or {@link OtherActivity}).
      * </p>
      * <p>
-     * Unknown type names produce a plain {@link Activity}, preserving the
-     * format's existing fallback behavior.
+     * Unknown type names throw a {@link RasException}.
      * </p>
      *
      * @param ras Serialized activity record.
