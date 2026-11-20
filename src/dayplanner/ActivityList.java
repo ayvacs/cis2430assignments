@@ -468,17 +468,6 @@ public class ActivityList extends AbstractList<Activity> {
      * @return <code>true</code> if both lists contain equal activities in the same
      *         order, <code>false</code> otherwise.
      */
-    public boolean equals(ActivityList other) {
-        if (other == null || size() != other.size())
-            return false;
-
-        for (int i = 0; i < size(); i++)
-            if (!get(i).equals(other.get(i)))
-                return false;
-
-        return true;
-    }
-
     /**
      * Determines whether this activity list is equal to another object.
      * 
@@ -492,6 +481,12 @@ public class ActivityList extends AbstractList<Activity> {
             return true;
         if (other == null || getClass() != other.getClass())
             return false;
-        return equals((ActivityList) other);
+        ActivityList that = (ActivityList) other;
+        if (size() != that.size())
+            return false;
+        for (int i = 0; i < size(); i++)
+            if (!get(i).equals(that.get(i)))
+                return false;
+        return true;
     }
 }

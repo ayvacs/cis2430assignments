@@ -141,24 +141,6 @@ public class OtherActivity extends Activity {
      */
 
     /**
-     * Determines whether this activity is equal to another
-     * <code>OtherActivity</code>.
-     * 
-     * @param other The other <code>OtherActivity</code> to compare with.
-     * @return <code>true</code> if both activities are equal, <code>false</code>
-     *         otherwise.
-     */
-    public boolean equals(OtherActivity other) {
-        if (other == null)
-            return false;
-        if (!super.equals(other))
-            return false;
-        if (getLocation() == null)
-            return other.getLocation() == null;
-        return getLocation().equals(other.getLocation());
-    }
-
-    /**
      * Determines whether this activity is equal to another object.
      * 
      * @param other The object to compare with.
@@ -171,7 +153,12 @@ public class OtherActivity extends Activity {
             return true;
         if (other == null || getClass() != other.getClass())
             return false;
-        return equals((OtherActivity) other);
+        if (!super.equals(other))
+            return false;
+        OtherActivity that = (OtherActivity) other;
+        if (getLocation() == null)
+            return that.getLocation() == null;
+        return getLocation().equals(that.getLocation());
     }
 
     /**

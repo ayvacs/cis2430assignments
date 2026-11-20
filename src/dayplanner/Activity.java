@@ -320,49 +320,6 @@ public class Activity implements Comparable<Activity> {
     }
 
     /**
-     * Determines whether this activity is equal to another activity.
-     * 
-     * @param other The other activity to compare with.
-     * @return <code>true</code> if both activities are equal, <code>false</code>
-     *         otherwise.
-     */
-    public boolean equals(Activity other) {
-        /*
-         * compare the class first. this is necessary because HomeActivity etc. are
-         * subclasses of this one and when comparing activities of different classes
-         * (i.e. HomeActivity and SchoolActivity), the two should always be treated as
-         * unequal.
-         */
-        if (other == null || (getClass() != other.getClass()))
-            return false;
-
-        // compare title
-        if (getTitle() == null
-            ? other.getTitle() != null
-            : !getTitle().equals(other.getTitle()))
-            return false;
-
-        // compare start time
-        if (getStartTime() == null
-            ? other.getStartTime() != null
-            : !getStartTime().equals(other.getStartTime()))
-            return false;
-
-        // compare end time
-        if (getEndTime() == null
-            ? other.getEndTime() != null
-            : !getEndTime().equals(other.getEndTime()))
-            return false;
-        
-        // compare comment
-        String c1 = getComment();
-        String c2 = other.getComment();
-        if (c1 == null || c1.isBlank())
-            return c2 == null || c2.isBlank();
-        return c1.equals(c2);
-    }
-
-    /**
      * Determines whether this activity is equal to another object.
      * 
      * @param other The object to compare with.
@@ -373,10 +330,41 @@ public class Activity implements Comparable<Activity> {
     public boolean equals(Object other) {
         if (this == other)
             return true;
+        /*
+         * compare the class first. this is necessary because HomeActivity etc. are
+         * subclasses of this one and when comparing activities of different classes
+         * (i.e. HomeActivity and SchoolActivity), the two should always be treated as
+         * unequal.
+         */
         if (other == null || getClass() != other.getClass())
             return false;
 
-        return equals((Activity) other);
+        Activity that = (Activity) other;
+
+        // compare title
+        if (getTitle() == null
+            ? that.getTitle() != null
+            : !getTitle().equals(that.getTitle()))
+            return false;
+
+        // compare start time
+        if (getStartTime() == null
+            ? that.getStartTime() != null
+            : !getStartTime().equals(that.getStartTime()))
+            return false;
+
+        // compare end time
+        if (getEndTime() == null
+            ? that.getEndTime() != null
+            : !getEndTime().equals(that.getEndTime()))
+            return false;
+
+        // compare comment
+        String c1 = getComment();
+        String c2 = that.getComment();
+        if (c1 == null || c1.isBlank())
+            return c2 == null || c2.isBlank();
+        return c1.equals(c2);
     }
 
     /**

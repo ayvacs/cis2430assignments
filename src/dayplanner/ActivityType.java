@@ -77,18 +77,7 @@ public enum ActivityType {
 
 
 
-    /**
-     * Determines whether this type is equal to another <code>ActivityType</code>.
-     * 
-     * @param other The other type to compare with.
-     * @return <code>true</code> if both types are equal,
-     *         <code>false</code> otherwise.
-     */
-    public boolean equals(ActivityType other) {
-        if (other == null)
-            return false;
-        return getCode() == other.getCode();
-    }
+
 
 
 

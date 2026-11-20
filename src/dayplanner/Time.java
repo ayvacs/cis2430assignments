@@ -483,19 +483,6 @@ public class Time implements Comparable<Object> {
     }
 
     /**
-     * Determines whether this time is equal to another <code>Time</code>.
-     * 
-     * @param other The other time to compare with.
-     * @return <code>true</code> if both times represent the same moment,
-     *         <code>false</code> otherwise.
-     */
-    public boolean equals(Time other) {
-        if (other == null)
-            return false;
-        return compareTo(other) == 0;
-    }
-
-    /**
      * Determines whether this time is equal to another object.
      * 
      * @param other The object to compare with.
@@ -508,6 +495,6 @@ public class Time implements Comparable<Object> {
             return true;
         if (other == null || getClass() != other.getClass())
             return false;
-        return equals((Time) other);
+        return compareTo((Time) other) == 0;
     }
 }
