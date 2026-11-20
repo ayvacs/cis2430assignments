@@ -477,54 +477,41 @@
 <span class="source-line-no">464</span><span id="line-464">    }</span>
 <span class="source-line-no">465</span><span id="line-465"></span>
 <span class="source-line-no">466</span><span id="line-466">    /**</span>
-<span class="source-line-no">467</span><span id="line-467">     * Compares this time with another time chronologically.</span>
-<span class="source-line-no">468</span><span id="line-468">     * </span>
-<span class="source-line-no">469</span><span id="line-469">     * @param other The other time to compare with.</span>
-<span class="source-line-no">470</span><span id="line-470">     * @return A negative integer, zero, or a positive integer as this time</span>
-<span class="source-line-no">471</span><span id="line-471">     *         precedes, equals, or follows {@code other}.</span>
-<span class="source-line-no">472</span><span id="line-472">     * @throws NullPointerException If {@code other} is {@code null}.</span>
-<span class="source-line-no">473</span><span id="line-473">     */</span>
-<span class="source-line-no">474</span><span id="line-474">    public int compareTo(Time other)</span>
-<span class="source-line-no">475</span><span id="line-475">    throws NullPointerException {</span>
-<span class="source-line-no">476</span><span id="line-476">        return compareTo((Object) other);</span>
-<span class="source-line-no">477</span><span id="line-477">    }</span>
-<span class="source-line-no">478</span><span id="line-478"></span>
-<span class="source-line-no">479</span><span id="line-479">    /**</span>
-<span class="source-line-no">480</span><span id="line-480">     * Determines whether a time period from {@code start} to {@code end} is valid.</span>
-<span class="source-line-no">481</span><span id="line-481">     * Uses {@link #compareTo(Object)} to verify that {@code start} is strictly</span>
-<span class="source-line-no">482</span><span id="line-482">     * before {@code end}.</span>
-<span class="source-line-no">483</span><span id="line-483">     * </span>
-<span class="source-line-no">484</span><span id="line-484">     * @param start The start time.</span>
-<span class="source-line-no">485</span><span id="line-485">     * @param end   The end time.</span>
-<span class="source-line-no">486</span><span id="line-486">     * @return {@code true} if both times are non-null and {@code start} is strictly</span>
-<span class="source-line-no">487</span><span id="line-487">     *         before {@code end}; {@code false} otherwise.</span>
-<span class="source-line-no">488</span><span id="line-488">     */</span>
-<span class="source-line-no">489</span><span id="line-489">    public static boolean isValidPeriod(Time start, Time end) {</span>
-<span class="source-line-no">490</span><span id="line-490">        if (start == null || end == null)</span>
-<span class="source-line-no">491</span><span id="line-491">            return false;</span>
-<span class="source-line-no">492</span><span id="line-492">        try {</span>
-<span class="source-line-no">493</span><span id="line-493">            return start.compareTo(end) &lt; 0;</span>
-<span class="source-line-no">494</span><span id="line-494">        } catch (ClassCastException | NullPointerException e) {</span>
-<span class="source-line-no">495</span><span id="line-495">            return false;</span>
-<span class="source-line-no">496</span><span id="line-496">        }</span>
-<span class="source-line-no">497</span><span id="line-497">    }</span>
-<span class="source-line-no">498</span><span id="line-498"></span>
-<span class="source-line-no">499</span><span id="line-499">    /**</span>
-<span class="source-line-no">500</span><span id="line-500">     * Determines whether this time is equal to another object.</span>
-<span class="source-line-no">501</span><span id="line-501">     * </span>
-<span class="source-line-no">502</span><span id="line-502">     * @param other The object to compare with.</span>
-<span class="source-line-no">503</span><span id="line-503">     * @return &lt;code&gt;true&lt;/code&gt; if the objects are equal, &lt;code&gt;false&lt;/code&gt;</span>
-<span class="source-line-no">504</span><span id="line-504">     *         otherwise.</span>
-<span class="source-line-no">505</span><span id="line-505">     */</span>
-<span class="source-line-no">506</span><span id="line-506">    @Override</span>
-<span class="source-line-no">507</span><span id="line-507">    public boolean equals(Object other) {</span>
-<span class="source-line-no">508</span><span id="line-508">        if (this == other)</span>
-<span class="source-line-no">509</span><span id="line-509">            return true;</span>
-<span class="source-line-no">510</span><span id="line-510">        if (other == null || getClass() != other.getClass())</span>
-<span class="source-line-no">511</span><span id="line-511">            return false;</span>
-<span class="source-line-no">512</span><span id="line-512">        return compareTo((Time) other) == 0;</span>
-<span class="source-line-no">513</span><span id="line-513">    }</span>
-<span class="source-line-no">514</span><span id="line-514">}</span>
+<span class="source-line-no">467</span><span id="line-467">     * Determines whether a time period from {@code start} to {@code end} is valid.</span>
+<span class="source-line-no">468</span><span id="line-468">     * Uses {@link #compareTo(Object)} to verify that {@code start} is strictly</span>
+<span class="source-line-no">469</span><span id="line-469">     * before {@code end}.</span>
+<span class="source-line-no">470</span><span id="line-470">     * </span>
+<span class="source-line-no">471</span><span id="line-471">     * @param start The start time.</span>
+<span class="source-line-no">472</span><span id="line-472">     * @param end   The end time.</span>
+<span class="source-line-no">473</span><span id="line-473">     * @return {@code true} if both times are non-null and {@code start} is strictly</span>
+<span class="source-line-no">474</span><span id="line-474">     *         before {@code end}; {@code false} otherwise.</span>
+<span class="source-line-no">475</span><span id="line-475">     */</span>
+<span class="source-line-no">476</span><span id="line-476">    public static boolean isValidPeriod(Time start, Time end) {</span>
+<span class="source-line-no">477</span><span id="line-477">        if (start == null || end == null)</span>
+<span class="source-line-no">478</span><span id="line-478">            return false;</span>
+<span class="source-line-no">479</span><span id="line-479">        try {</span>
+<span class="source-line-no">480</span><span id="line-480">            return start.compareTo(end) &lt; 0;</span>
+<span class="source-line-no">481</span><span id="line-481">        } catch (ClassCastException | NullPointerException e) {</span>
+<span class="source-line-no">482</span><span id="line-482">            return false;</span>
+<span class="source-line-no">483</span><span id="line-483">        }</span>
+<span class="source-line-no">484</span><span id="line-484">    }</span>
+<span class="source-line-no">485</span><span id="line-485"></span>
+<span class="source-line-no">486</span><span id="line-486">    /**</span>
+<span class="source-line-no">487</span><span id="line-487">     * Determines whether this time is equal to another object.</span>
+<span class="source-line-no">488</span><span id="line-488">     * </span>
+<span class="source-line-no">489</span><span id="line-489">     * @param other The object to compare with.</span>
+<span class="source-line-no">490</span><span id="line-490">     * @return &lt;code&gt;true&lt;/code&gt; if the objects are equal, &lt;code&gt;false&lt;/code&gt;</span>
+<span class="source-line-no">491</span><span id="line-491">     *         otherwise.</span>
+<span class="source-line-no">492</span><span id="line-492">     */</span>
+<span class="source-line-no">493</span><span id="line-493">    @Override</span>
+<span class="source-line-no">494</span><span id="line-494">    public boolean equals(Object other) {</span>
+<span class="source-line-no">495</span><span id="line-495">        if (this == other)</span>
+<span class="source-line-no">496</span><span id="line-496">            return true;</span>
+<span class="source-line-no">497</span><span id="line-497">        if (other == null || getClass() != other.getClass())</span>
+<span class="source-line-no">498</span><span id="line-498">            return false;</span>
+<span class="source-line-no">499</span><span id="line-499">        return compareTo(other) == 0;</span>
+<span class="source-line-no">500</span><span id="line-500">    }</span>
+<span class="source-line-no">501</span><span id="line-501">}</span>
 
 
 
