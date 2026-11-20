@@ -103,6 +103,26 @@ public class Activity implements Comparable<Activity> {
         RasParser.populate(this, ras);
     }
 
+    /**
+     * <p>
+     * Copy constructor. Constructs a new <code>Activity</code> that is a
+     * duplicate of the given <code>Activity</code>, preventing co-references
+     * that could cause privacy leaks.
+     * </p>
+     *
+     * @param other The <code>Activity</code> to copy.
+     * @throws IllegalArgumentException If {@code other} is {@code null}.
+     */
+    public Activity(Activity other)
+    throws IllegalArgumentException {
+        if (other == null)
+            throw new IllegalArgumentException("Cannot copy a null Activity.");
+        setTitle(other.getTitle());
+        setStartTime(other.getStartTime()); // getStartTime() already returns a copy
+        setEndTime(other.getEndTime());     // getEndTime() already returns a copy
+        setComment(other.getComment());     // String is immutable; no copy needed
+    }
+
 
 
     /*
@@ -120,20 +140,26 @@ public class Activity implements Comparable<Activity> {
     
     /**
      * Gets the start time of this activity.
+     *
+     * <p>Returns a defensive copy so that external mutations of the returned
+     * {@link Time} cannot affect this activity's internal state.</p>
      * 
-     * @return The activity start time.
+     * @return A copy of the activity start time.
      */
     public Time getStartTime() {
-        return this.startTime;
+        return new Time(this.startTime);
     }
   
     /**
      * Gets the end time of this activity.
+     *
+     * <p>Returns a defensive copy so that external mutations of the returned
+     * {@link Time} cannot affect this activity's internal state.</p>
      * 
-     * @return The activity end time.
+     * @return A copy of the activity end time.
      */
     public Time getEndTime() {
-        return this.endTime;
+        return new Time(this.endTime);
     }
     
     /**
@@ -180,6 +206,9 @@ public class Activity implements Comparable<Activity> {
 
     /**
      * Sets the start time of this activity.
+     *
+     * <p>Stores a defensive copy of {@code startTime} to prevent external
+     * mutations from affecting this activity's internal state.</p>
      * 
      * @param startTime The new start time.
      * @throws IllegalArgumentException If startTime is null, or if an endTime is
@@ -194,11 +223,14 @@ public class Activity implements Comparable<Activity> {
             && startTime.compareTo(this.endTime) >= 0)
             throw new IllegalArgumentException("Start time (" + startTime + ") must be before end time (" + this.endTime + ").");
         
-        this.startTime = startTime;
+        this.startTime = new Time(startTime);
     }
 
     /**
      * Sets the end time of this activity.
+     *
+     * <p>Stores a defensive copy of {@code endTime} to prevent external
+     * mutations from affecting this activity's internal state.</p>
      * 
      * @param endTime The new end time.
      * @throws IllegalArgumentException If endTime is null, or if a startTime is
@@ -212,7 +244,7 @@ public class Activity implements Comparable<Activity> {
             && this.startTime.compareTo(endTime) >= 0)
             throw new IllegalArgumentException("End time (" + endTime + ") must be after start time (" + this.startTime + ").");
         
-        this.endTime = endTime;
+        this.endTime = new Time(endTime);
     }
 
     /**

@@ -70,6 +70,22 @@ public class OtherActivity extends Activity {
         super(ras);
     }
 
+    /**
+     * <p>
+     * Copy constructor. Constructs a new <code>OtherActivity</code> that is a
+     * duplicate of the given <code>OtherActivity</code>, preventing co-references
+     * that could cause privacy leaks.
+     * </p>
+     *
+     * @param other The <code>OtherActivity</code> to copy.
+     * @throws IllegalArgumentException If {@code other} is {@code null}.
+     */
+    public OtherActivity(OtherActivity other)
+    throws IllegalArgumentException {
+        super(other);
+        setLocation(other.getLocation()); // String is immutable; no copy needed
+    }
+
 
 
     /*

@@ -187,6 +187,27 @@ public class Time implements Comparable<Object> {
     }
 
     /**
+     * <p>
+     * Copy constructor. Constructs a new <code>Time</code> that is a duplicate
+     * of the given <code>Time</code>, preventing co-references that could cause
+     * privacy leaks.
+     * </p>
+     *
+     * @param other The <code>Time</code> to copy.
+     * @throws IllegalArgumentException If {@code other} is {@code null}.
+     */
+    public Time(Time other)
+    throws IllegalArgumentException {
+        if (other == null)
+            throw new IllegalArgumentException("Cannot copy a null Time.");
+        this.year   = other.year;
+        this.month  = other.month;
+        this.day    = other.day;
+        this.hour   = other.hour;
+        this.minute = other.minute;
+    }
+
+    /**
      * Constructs a <code>Time</code> by parsing a string in YYYY/MM/DD HH:MM
      * format.
      * 

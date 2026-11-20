@@ -63,6 +63,21 @@ public class SchoolActivity extends Activity {
         super(ras);
     }
 
+    /**
+     * <p>
+     * Copy constructor. Constructs a new <code>SchoolActivity</code> that is a
+     * duplicate of the given <code>SchoolActivity</code>, preventing co-references
+     * that could cause privacy leaks.
+     * </p>
+     *
+     * @param other The <code>SchoolActivity</code> to copy.
+     * @throws IllegalArgumentException If {@code other} is {@code null}.
+     */
+    public SchoolActivity(SchoolActivity other)
+    throws IllegalArgumentException {
+        super(other);
+    }
+
 
 
     /*
