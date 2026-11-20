@@ -138,6 +138,14 @@ public abstract class Activity implements Comparable<Activity> {
         setComment(other.getComment());     // String is immutable; no copy needed
     }
 
+    /**
+     * Creates and returns a defensive copy of this activity.
+     * Subclasses implement this method using their copy constructors to prevent privacy leaks.
+     * 
+     * @return A duplicate copy of this Activity.
+     */
+    public abstract Activity copy();
+
 
 
     /*

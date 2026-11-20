@@ -13,7 +13,7 @@ import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
-import javax.swing.JFrame;
+import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -23,22 +23,17 @@ import javax.swing.SwingUtilities;
 import javax.swing.border.Border;
 
 /**
- * Abstract superclass representing a standard DayPlanner GUI window (such as
- * Add or Search).
+ * Abstract superclass representing a standard DayPlanner GUI panel (such as
+ * Add or Search) used inside a CardLayout.
  */
-public abstract class GUIWindow extends JFrame {
+public abstract class GUIWindow extends JPanel {
     /**
      * Default dimensions of the GUI window.
      */
-    private static final Dimension DIMS = new Dimension(800, 600);
+    public static final Dimension DIMS = new Dimension(800, 600);
 
     /**
-     * Default close operation: dispose this window when closed.
-     */
-    private static final int CLOSE = JFrame.DISPOSE_ON_CLOSE;
-
-    /**
-     * Background color for the GUI window content pane.
+     * Background color for the GUI window panel.
      */
     private static final Color BACKGROUND = new Color(250, 250, 250);
 
@@ -51,6 +46,16 @@ public abstract class GUIWindow extends JFrame {
      * Reference to the activity list.
      */
     public ActivityList activities;
+
+    /**
+     * Combo box for selecting activity type ("home", "school", "other").
+     */
+    public JComboBox<String> typeComboBox;
+
+    /**
+     * List of JLabels in the center form panel.
+     */
+    public ArrayList<JLabel> centerLabels = new ArrayList<JLabel>();
 
     /**
      * ArrayList that contains all of the JTextField instances in the center panel.
@@ -78,7 +83,7 @@ public abstract class GUIWindow extends JFrame {
     public JButton actionButton = null;
 
     /**
-     * Creates and initializes a new Swing GUI window.
+     * Creates and initializes a new Swing GUI panel.
      * 
      * @param activities Instantiated ActivityList.
      */
@@ -86,17 +91,14 @@ public abstract class GUIWindow extends JFrame {
         super();
         this.activities = activities;
 
-        setSize(DIMS);
-        setTitle(getWindowTitle());
-        setDefaultCloseOperation(CLOSE);
-        getContentPane().setBackground(BACKGROUND);
-        setLocationRelativeTo(null);
+        setPreferredSize(DIMS);
+        setBackground(BACKGROUND);
         setLayout(new BorderLayout(12, 12));
+        setBorder(PADDING);
 
         add(createCenterPanel(), BorderLayout.CENTER);
         add(createEastPanel(), BorderLayout.EAST);
         add(createSouthPanel(), BorderLayout.SOUTH);
-        setVisible(true);
     }
 
     /**
@@ -116,12 +118,24 @@ public abstract class GUIWindow extends JFrame {
         centerPanel.add(new JLabel(getSubHeaderText()));
         centerPanel.add(Box.createGlue()); // skip this grid cell
 
+        centerLabels.clear();
         centerFields.clear();
-        for (String labelText : labels) {
-            centerPanel.add(new JLabel(labelText));
-            JTextField tf = new JTextField();
-            centerPanel.add(tf);
-            centerFields.add(tf);
+
+        for (int i = 0; i < labels.length; i++) {
+            String labelText = labels[i];
+            JLabel label = new JLabel(labelText);
+            centerLabels.add(label);
+            centerPanel.add(label);
+
+            if (i == 0) {
+                typeComboBox = new JComboBox<>(new String[]{"home", "school", "other"});
+                typeComboBox.setSelectedItem("home");
+                centerPanel.add(typeComboBox);
+            } else {
+                JTextField tf = new JTextField();
+                centerPanel.add(tf);
+                centerFields.add(tf);
+            }
         }
 
         return centerPanel;
@@ -172,20 +186,20 @@ public abstract class GUIWindow extends JFrame {
         southPanel.setLayout(new BoxLayout(southPanel, BoxLayout.Y_AXIS));
         southPanel.setBorder(PADDING);
 
-        JLabel messageLabel = new JLabel("<html><b>Messages:</b></html>");
+        JLabel messageLabel = new JLabel("<html><b>" + getMessageBoxLabel() + "</b></html>");
         messageLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
         southPanel.add(messageLabel);
         southPanel.add(Box.createVerticalStrut(6));
 
         messages = new JTextArea(5, 40);
         messages.setEditable(false);
-        messages.setLineWrap(true);
-        messages.setWrapStyleWord(true);
+        messages.setLineWrap(false);
+        messages.setWrapStyleWord(false);
         messages.setBackground(Color.WHITE);
 
         scrollPane = new JScrollPane(messages);
         scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
-        scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+        scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
         scrollPane.setPreferredSize(new Dimension(760, 100));
         scrollPane.setMaximumSize(new Dimension(Integer.MAX_VALUE, 110));
         scrollPane.setAlignmentX(Component.LEFT_ALIGNMENT);
@@ -195,7 +209,7 @@ public abstract class GUIWindow extends JFrame {
     }
 
     /**
-     * Resets all text input fields in the center panel.
+     * Resets all text input fields in the center panel without resetting the combo box.
      */
     public void resetFields() {
         if (centerFields != null) {
@@ -299,6 +313,24 @@ public abstract class GUIWindow extends JFrame {
     }
 
     /**
+     * Gets the combo box used to select activity type.
+     * 
+     * @return JComboBox instance for activity type.
+     */
+    public JComboBox<String> getTypeComboBox() {
+        return typeComboBox;
+    }
+
+    /**
+     * Gets the list of labels in the center panel.
+     * 
+     * @return ArrayList of JLabels.
+     */
+    public ArrayList<JLabel> getCenterLabels() {
+        return centerLabels;
+    }
+
+    /**
      * Gets the list of text fields in the center panel.
      * 
      * @return ArrayList of JTextFields.
@@ -341,6 +373,15 @@ public abstract class GUIWindow extends JFrame {
      */
     public JButton getActionButton() {
         return actionButton;
+    }
+
+    /**
+     * Returns the label text to display above the south message area.
+     * 
+     * @return Message box header string, defaulting to "Messages:".
+     */
+    public String getMessageBoxLabel() {
+        return "Messages:";
     }
 
     /**

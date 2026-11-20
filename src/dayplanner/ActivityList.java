@@ -229,10 +229,11 @@ public class ActivityList extends AbstractList<Activity> {
      */
 
     /**
-     * Gets the activity at the specified index.
+     * Gets a defensive copy of the activity at the specified index to prevent
+     * privacy leaks.
      * 
      * @param index The index of the activity to retrieve.
-     * @return The activity at the specified index.
+     * @return A duplicate copy of the activity at the specified index.
      * @throws IndexOutOfBoundsException If {@code index < 0} or
      *                                   {@code index >= size()}.
      */
@@ -242,7 +243,7 @@ public class ActivityList extends AbstractList<Activity> {
         if (index < 0 || index >= size())
             throw new IndexOutOfBoundsException("Index " + index + ", Size" + size());
 
-        return array.get(index);
+        return array.get(index).copy();
     }
     
     /**
@@ -256,11 +257,13 @@ public class ActivityList extends AbstractList<Activity> {
     }
 
     /**
-     * Replaces the activity at the specified index.
+     * Replaces the activity at the specified index with a defensive copy of the
+     * given activity, and returns a defensive copy of the previous activity to
+     * prevent privacy leaks.
      * 
      * @param index    Index of the activity to replace.
      * @param activity The new activity to place at the index.
-     * @return The activity previously at the specified index.
+     * @return A duplicate copy of the activity previously at the specified index.
      * @throws IndexOutOfBoundsException If index is out of bounds.
      * @throws IllegalArgumentException  If activity is null.
      */
@@ -272,15 +275,15 @@ public class ActivityList extends AbstractList<Activity> {
         if (activity == null)
             throw new IllegalArgumentException("Activity cannot be null.");
 
-        Activity previous = array.set(index, activity);
+        Activity previous = array.set(index, activity.copy());
         rebuildTitleIndex();
-        return previous;
+        return previous.copy();
     }
 
     /**
      * <p>
-     * Inserts the activity at the specified index, shifting subsequent elements
-     * right.
+     * Inserts a defensive copy of the activity at the specified index, shifting
+     * subsequent elements right. Storing a copy prevents privacy leaks.
      * </p>
      * <p>
      * Existing elements are shifted right. The title index is rebuilt so its
@@ -299,16 +302,17 @@ public class ActivityList extends AbstractList<Activity> {
         if (activity == null)
             throw new IllegalArgumentException("Activity cannot be null.");
 
-        array.add(index, activity);
+        array.add(index, activity.copy());
         rebuildTitleIndex();
     }
 
     /**
      * Removes the activity at the specified index, shifting subsequent elements
-     * left.
+     * left. Returns a defensive copy of the removed activity to prevent privacy
+     * leaks.
      * 
      * @param index Index of the activity to remove.
-     * @return The activity that was removed.
+     * @return A duplicate copy of the activity that was removed.
      * @throws IndexOutOfBoundsException If index is out of bounds.
      */
     @Override
@@ -319,7 +323,7 @@ public class ActivityList extends AbstractList<Activity> {
 
         Activity removed = array.remove(index);
         rebuildTitleIndex();
-        return removed;
+        return removed.copy();
     }
 
     /**
@@ -332,8 +336,8 @@ public class ActivityList extends AbstractList<Activity> {
     }
 
     /**
-     * Appends an activity to the end of this list and adds its title keywords to
-     * the index.
+     * Appends a defensive copy of an activity to the end of this list and adds its
+     * title keywords to the index. Storing a copy prevents privacy leaks.
      * 
      * @param activity The activity to append.
      * @return Whether the element was added.
@@ -344,9 +348,10 @@ public class ActivityList extends AbstractList<Activity> {
         if (activity == null)
             throw new IllegalArgumentException("Activity cannot be null.");
         int position = array.size();
-        boolean added = array.add(activity);
+        Activity activityCopy = activity.copy();
+        boolean added = array.add(activityCopy);
         if (added)
-            indexActivity(position, activity);
+            indexActivity(position, activityCopy);
         return added;
     }
 
@@ -434,7 +439,7 @@ public class ActivityList extends AbstractList<Activity> {
             public Activity next() {
                 Activity ret = array.get(index);
                 index++;
-                return ret;
+                return ret.copy();
             }
         };
     }

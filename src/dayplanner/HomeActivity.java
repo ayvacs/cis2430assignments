@@ -81,6 +81,16 @@ public class HomeActivity extends Activity {
         super(other);
     }
 
+    /**
+     * Creates and returns a copy of this {@code HomeActivity}.
+     * 
+     * @return A duplicate copy of this HomeActivity.
+     */
+    @Override
+    public Activity copy() {
+        return new HomeActivity(this);
+    }
+
 
 
     /*

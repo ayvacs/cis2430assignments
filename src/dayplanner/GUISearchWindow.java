@@ -5,13 +5,13 @@ import java.util.List;
 import javax.swing.JTextField;
 
 /**
- * Represents the Swing GUI search window. Extends {@link GUIWindow} to share
- * common window configuration, layout, and component handling with other GUI
- * windows such as {@link GUIAddWindow}.
+ * Represents the Swing GUI search activities panel. Extends {@link GUIWindow} to share
+ * common configuration, layout, and component handling with other GUI
+ * panels such as {@link GUIAddWindow}.
  */
 public class GUISearchWindow extends GUIWindow {
     /**
-     * Create a new Swing GUI search window.
+     * Create a new Swing GUI search panel.
      * 
      * @param activities Instantiated ActivityList.
      */
@@ -72,17 +72,26 @@ public class GUISearchWindow extends GUIWindow {
     /**
      * {@inheritDoc}
      * 
-     * @return Array of field labels for the search form.
+     * @return Label for the south message area "Search Results:".
+     */
+    @Override
+    public String getMessageBoxLabel() {
+        return "Search Results:";
+    }
+
+    /**
+     * {@inheritDoc}
+     * 
+     * @return Array of field labels for the search form. Comment and Location
+     *         fields are omitted as the search function ignores them.
      */
     @Override
     public String[] getFieldLabels() {
         return new String[] {
-            "<html>Type <code>('home', 'school', or 'other')</code></html>",
+            "Type:",
             "<html>Title <i>(keywords)</i>:</html>",
             "<html>Starting time <code>(YYYY/MM/DD HH:MM)</code>:</html>",
-            "<html>Ending time <code>(YYYY/MM/DD HH:MM)</code>:</html>",
-            "<html>Comment:</html>",
-            "<html>Location <i>(if searching for Other Activity only)</i>:</html>"
+            "<html>Ending time <code>(YYYY/MM/DD HH:MM)</code>:</html>"
         };
     }
 
@@ -100,35 +109,34 @@ public class GUISearchWindow extends GUIWindow {
      * Input-validate and try to search for activities matching the criteria.
      * 
      * @param activities   Instantiated ActivityList.
-     * @param centerFields All of the JTextField instances in the order: type,
-     *                     title/keywords, start time, end time, comment, location.
+     * @param centerFields List of JTextField instances in the center panel.
      * @return true if search was performed, false if validation failed.
      */
     public boolean trySearch(ActivityList activities, ArrayList<JTextField> centerFields) {
-        if (activities == null || centerFields == null || centerFields.size() < 4) {
+        if (activities == null || centerFields == null) {
             addMessage("Internal error: missing form fields.");
             return false;
         }
 
-        // 1. Activity type (optional)
-        String typeStr = centerFields.get(0).getText().trim();
-        ActivityType type = null;
-        if (!typeStr.isEmpty()) {
-            type = ActivityType.parse(typeStr);
-            if (type == null) {
-                addMessage("Invalid activity type: \"" + typeStr + "\". Please enter 'home', 'school', or 'other', or leave blank.");
-                return false;
-            }
-        }
+        // 1. Activity type
+        String typeStr = (typeComboBox != null) ? (String) typeComboBox.getSelectedItem() : "";
+        ActivityType type = ActivityType.parse(typeStr);
+
+        // Determine field indices based on centerFields size:
+        // Default with JComboBox: 3 fields: [0]=title keywords, [1]=start time, [2]=end time
+        // Legacy compatibility: if centerFields has >= 4 items: [0]=type, [1]=title, [2]=start, [3]=end
+        int titleIdx = (centerFields.size() == 3) ? 0 : 1;
+        int sTimeIdx = (centerFields.size() == 3) ? 1 : 2;
+        int eTimeIdx = (centerFields.size() == 3) ? 2 : 3;
 
         // 2. Title keywords (optional)
-        String titleStr = centerFields.get(1).getText().trim();
+        String titleStr = (centerFields.size() > titleIdx) ? centerFields.get(titleIdx).getText().trim() : "";
         String[] keywords = null;
         if (!titleStr.isEmpty())
             keywords = titleStr.split("\\s+");
 
         // 3. Start time (optional)
-        String sTimeStr = centerFields.get(2).getText().trim();
+        String sTimeStr = (centerFields.size() > sTimeIdx) ? centerFields.get(sTimeIdx).getText().trim() : "";
         Time sTime = null;
         if (!sTimeStr.isEmpty()) {
             sTime = parseAndValidateTime(sTimeStr, "Starting time", false);
@@ -137,7 +145,7 @@ public class GUISearchWindow extends GUIWindow {
         }
 
         // 4. End time (optional)
-        String eTimeStr = centerFields.get(3).getText().trim();
+        String eTimeStr = (centerFields.size() > eTimeIdx) ? centerFields.get(eTimeIdx).getText().trim() : "";
         Time eTime = null;
         if (!eTimeStr.isEmpty()) {
             eTime = parseAndValidateTime(eTimeStr, "Ending time", false);

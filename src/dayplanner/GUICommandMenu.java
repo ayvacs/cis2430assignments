@@ -4,6 +4,8 @@ import javax.swing.JComboBox;
 
 /**
  * Represents the Swing GUI combo box to select a command.
+ * Main navigation is now handled by the menu bar in {@link GUIDayPlanner};
+ * this class switches cards on the main window for backward compatibility.
  */
 public class GUICommandMenu extends JComboBox<String> {
     /**
@@ -14,7 +16,6 @@ public class GUICommandMenu extends JComboBox<String> {
         "Add - Insert a new activity",
         "Search - Search for an activity",
         "Quit - Exit DayPlanner" };
-
 
     /**
      * Create a new Swing GUI picker.
@@ -34,16 +35,16 @@ public class GUICommandMenu extends JComboBox<String> {
             if (option == null)
                 return;
             
-            // Execute the desired task.
+            // Execute the desired task by switching in-place cards on the main frame
             switch (option) {
                 case ADD:
-                    new GUIAddWindow(activities);
+                    gdp.showAdd();
                     break;
                 case SEARCH:
-                    new GUISearchWindow(activities);
+                    gdp.showSearch();
                     break;
                 case QUIT:
-                    new GUIQuitMenu(gdp);
+                    gdp.showGuiQuitMenu();
                     break;
                 default:
                     break;

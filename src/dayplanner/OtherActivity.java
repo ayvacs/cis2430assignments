@@ -89,6 +89,16 @@ public class OtherActivity extends Activity {
         setLocation(other.getLocation()); // String is immutable; no copy needed
     }
 
+    /**
+     * Creates and returns a copy of this {@code OtherActivity}.
+     * 
+     * @return A duplicate copy of this OtherActivity.
+     */
+    @Override
+    public Activity copy() {
+        return new OtherActivity(this);
+    }
+
 
 
     /*

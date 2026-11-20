@@ -73,6 +73,9 @@ public class Tester {
         runTestCase("case36", "Abstract Class: Activity is Abstract and Cannot be Instantiated Directly", testCase36());
         runTestCase("case37", "Polymorphism: Dynamic Binding via toString and getType on Activity List",  testCase37());
 
+        // Defensive Copying & Privacy Leak Prevention
+        runTestCase("case38", "Privacy Leak: ActivityList Stores and Returns Defensive Copies",           testCase38());
+
         System.out.printf(String.format("Out of %d tests, %d passed and %d failed\n",
             passedCount + failedCount, passedCount, failedCount));
     }
@@ -797,6 +800,48 @@ public class Tester {
             if (type != expectedTypes[i])
                 return false;
         }
+
+        return true;
+    }
+
+    /**
+     * Case 38: Verifies that ActivityList prevents privacy leaks by storing and
+     * returning defensive copies in add(), get(), and set().
+     * 
+     * @return <code>true</code> if the test passes, <code>false</code> otherwise.
+     */
+    public static boolean testCase38() {
+        Time s1 = new Time(2026, 10, 1, 9, 0);
+        Time e1 = new Time(2026, 10, 1, 10, 0);
+        HomeActivity original = new HomeActivity("Laundry", s1, e1, "Fold clothes");
+
+        ActivityList list = new ActivityList();
+        list.add(original);
+
+        // 1. Retrieved object must equal original in content, but be a distinct reference
+        Activity retrieved1 = list.get(0);
+        if (!retrieved1.equals(original))
+            return false;
+        if (retrieved1 == original)
+            return false; // privacy leak: returned direct reference
+
+        // 2. Successive gets must return distinct defensive copies
+        Activity retrieved2 = list.get(0);
+        if (retrieved1 == retrieved2)
+            return false; // privacy leak: multiple gets shared reference
+
+        // 3. Modifying fields through setters on retrieved object must not affect list
+        retrieved1.setTitle("Changed Title");
+        if (list.get(0).getTitle().equals("Changed Title"))
+            return false; // privacy leak: external mutation affected internal state
+
+        // 4. set() must store a defensive copy and return a copy of previous
+        SchoolActivity newAct = new SchoolActivity("Math", s1, e1);
+        Activity previous = list.set(0, newAct);
+        if (previous == original)
+            return false; // privacy leak on returned previous
+        if (list.get(0) == newAct)
+            return false; // privacy leak on set argument
 
         return true;
     }

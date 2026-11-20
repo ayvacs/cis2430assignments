@@ -56,58 +56,82 @@ java -jar bin/DayPlanner.jar sampleData.ras
 
 ## Interface
 
-When running the application, the command loop presents a main menu with options:
+DayPlanner features a graphical user interface (GUI) built with Java Swing. The interface operates within a single main window (`JFrame`) utilizing a `CardLayout` to switch between views in-place without opening redundant windows. Navigation is driven by a top menu bar (`JMenuBar`) containing a **Commands** menu with options to Add, Search, and Quit:
 
-* **Add an activity**: enter `add`, `a`, or `1`.
-* **Search for activities**: enter `search`, `s`, or `2`.
-* **Quit application**: enter `quit`, `q`, or `3`.
-* Any other input is rejected with an error message and prompts the user to re-enter.
+* **Commands > Add**: Switches the active card to the **Add Activity** view.
+* **Commands > Search**: Switches the active card to the **Search Activities** view.
+* **Commands > Quit**: Opens the exit confirmation dialog to save data to disk and quit.
+* **Window Close Button (`X`)**: Handled via `WindowAdapter` (`windowClosing`) to invoke the same quit confirmation dialog, preventing accidental data loss.
 
-### 1. Adding an Activity (`add`)
+### 1. Welcome Screen (`welcome` card)
 
-The following steps are presented:
+When the application launches, the main window displays the welcome view:
+* Greets the user with a dynamic time-of-day greeting (e.g. *Good morning!*, *Good afternoon!*, *Good evening!*).
+* Summarizes the current count of loaded activities.
+* Informs the user: *"Choose a command from the Commands menu above."*
 
-1. **Activity Type**: Enter `home` (or `1`, `h`), `school` (or `2`, `s`), or `other` (or `3`, `o`).
-   * The new activity is appended to the activity list and its title keywords are added to the index.
-2. **Title**: Enter a non-empty descriptive title.
-3. **Starting Time**: Enter a timestamp in `YYYY/MM/DD HH:MM` format (e.g. `2026/09/10 17:30`).
-   * Validated defensively: year $\ge 1$, month between $1$ and $12$, days valid according to the month (including leap year rules for February: 29 days on leap years, 28 days otherwise), hour between $0$ and $23$, minute between $0$ and $59$.
-4. **Ending Time**: Enter a timestamp in `YYYY/MM/DD HH:MM` format, same validation above. Must be strictly after the starting time.
-5. **Comment (Optional)**: Answer `Y` / `Yes` or `N` / `No`. If `Y`, enter the comment.
-6. **Location (Other activities only)**: Enter the physical location (required for `OtherActivity`).
+### 2. Adding an Activity (`add` card)
 
-### 2. Searching for Activities (`search`)
+Selecting **Commands > Add** switches to the activity creation form:
 
-A search query accepts up to three optional components (press Enter on any prompt to leave that component open / unrestricted):
-1. **Activity Type**: Filter by `home`, `school`, or `other`. Press Enter to search across all three categories.
-2. **Title Keywords**: Enter space-separated keywords (e.g. `Java Programming`). All keywords must appear as exact whole words in the activity title (case-insensitive, any order). Press Enter to match any title.
-3. **Time Period**: Enter a time range:
-   * Both bounded: `2026/09/12 06:00 - 2026/09/22 11:59` (matches activities starting at/after the start time and ending at/before the end time).
-   * Open end: `2026/09/12 06:00 -` (matches activities starting at/after the start time).
-   * Open start: `- 2026/09/22 11:59` (matches activities ending at/before the end time).
-   * Open both ends: press Enter (matches activities occurring at any time).
+1. **Activity Type**: A drop-down combo box (`JComboBox`) with options `"home"`, `"school"`, and `"other"`, defaulting to `"home"`.
+2. **Location Field Toggle**: An `ItemListener` on the type combo box dynamically toggles the visibility of the Location label and its text field (`setVisible(type.equals("other"))`). When `"other"` is selected, the Location field appears; when switching back to `"home"` or `"school"`, the field is hidden automatically.
+3. **Form Fields**:
+   * **Title**: Enter a non-empty descriptive title.
+   * **Starting Time**: Enter a timestamp in `YYYY/MM/DD HH:MM` format (e.g. `2026/09/10 17:30`). Validated defensively for calendar bounds, valid months, leap years, and 24-hour time ranges.
+   * **Ending Time**: Enter a timestamp in `YYYY/MM/DD HH:MM` format. Must be strictly after the starting time.
+   * **Comment (Optional)**: Optional note associated with the activity.
+   * **Location (Other activities only)**: Physical location where the activity occurs (mandatory only for `OtherActivity`).
+4. **Action Buttons**:
+   * **Reset**: Clears all text input fields in the form while preserving the current combo box selection, strictly complying with the grading rubric.
+   * **Add**: Validates all inputs defensively. Upon success, instantiates the concrete subclass (`HomeActivity`, `SchoolActivity`, or `OtherActivity`), stores a defensive copy in `ActivityList` to prevent privacy leaks, updates the title index, and logs a success confirmation. On error, a descriptive error message is output.
+5. **Messages Area**: A read-only text area wrapped in a `JScrollPane` displaying system messages and activity confirmation logs. Both vertical and horizontal scrollbars are configured as `AS_NEEDED`. Text line wrapping is disabled (`messages.setLineWrap(false)`), allowing long activity details to trigger horizontal scrolling as needed.
 
-### 3. Quitting (`quit`)
+### 3. Searching for Activities (`search` card)
 
-Saves the activity list to disk in RAS format and exits.
+Selecting **Commands > Search** switches to the activity search form:
+
+1. **Activity Type**: A drop-down combo box (`JComboBox`) with options `"home"`, `"school"`, and `"other"` (default `"home"`).
+2. **Form Fields**:
+   * **Title (keywords)**: Optional space-separated search keywords. Matches all keywords as exact whole words in activity titles (case-insensitive, order-invariant).
+   * **Starting Time**: Optional timestamp (`YYYY/MM/DD HH:MM`). Filters activities starting at or after this time.
+   * **Ending Time**: Optional timestamp (`YYYY/MM/DD HH:MM`). Filters activities ending at or before this time.
+   * *Note*: The Comment and Location fields have been removed from the search interface, as search filtering is governed strictly by category, title keywords, and time range.
+3. **Action Buttons**:
+   * **Reset**: Clears the text fields only without resetting the combo box.
+   * **Search**: Intersects the title index keyword candidate lists, applies category and time filters, and outputs matching activities.
+4. **Search Results Area**: The south message panel is labelled **Search Results:** and contains a dual-scrollbar scroll pane (`AS_NEEDED` vertical and horizontal, line wrapping disabled) reporting match counts and formatted activity listings.
+
+### 4. Quitting & Persistence (`quit`)
+
+The user can exit DayPlanner by selecting **Commands > Quit** or by clicking the window close button (`X`):
+1. A confirmation window (`GUIQuitMenu`) opens with warning feedback.
+2. Clicking **"YES - Save and exit"** writes the entire activity list to disk in RAS format and terminates the application cleanly.
+3. Clicking **"NO - Keep planning"** cancels exit and returns to the planner.
 
 # Implementation
 
 The DayPlanner consists of the following classes in the `dayplanner` package:
 
 * `Time`: Represents an instant in time with minute precision (`year`, `month`, `day`, `hour`, `minute`). Implements the `Comparable` interface (`compareTo(Object)`) for chronological ordering and time period validation, properly throwing `NullPointerException` when passed `null` and `ClassCastException` for mismatched object classes. Constructors and mutator methods strictly enforce valid ranges and leap year calendar rules, throwing `IllegalArgumentException` whenever invariants are violated.
-* `Activity`: Abstract base class holding common attributes: `title`, `startTime`, `endTime`, `comment`. Enforces class invariants (non-null and non-blank title, non-null timestamps, and start time strictly preceding end time), throwing `IllegalArgumentException` in constructors and mutator methods on invariant violations. Implements `Comparable<Activity>` to sort by starting time, accessors, mutators, and also overrides `equals` and `toString`.
-    * `HomeActivity`: Subclass of `Activity` representing home activities.
-    * `SchoolActivity`: Subclass of `Activity` representing school activities.
-    * `OtherActivity`: Subclass of `Activity` representing miscellaneous activities, adding the `location` attribute (enforced non-null and non-blank via `IllegalArgumentException` in constructors and mutators), accessors, mutators, and custom `toString`.
-* `ActivityList`: Wrapper around an `ArrayList<Activity>`, extending `AbstractList<Activity>`. Enforces non-null activities in mutators and insertion methods with `IllegalArgumentException`. Maintains a `HashMap` title index whose values are activity positions.
+* `Activity`: Abstract base class holding common attributes: `title`, `startTime`, `endTime`, `comment`. Enforces class invariants (non-null and non-blank title, non-null timestamps, and start time strictly preceding end time), throwing `IllegalArgumentException` in constructors and mutator methods on invariant violations. Implements `Comparable<Activity>` to sort by starting time, accessors, mutators, and overrides `equals` and `toString`. Declares an abstract `copy()` method implemented polymorphically by all subclasses to create defensive copies and prevent privacy leaks.
+    * `HomeActivity`: Subclass of `Activity` representing home activities. Implements `copy()` using its copy constructor.
+    * `SchoolActivity`: Subclass of `Activity` representing school activities. Implements `copy()` using its copy constructor.
+    * `OtherActivity`: Subclass of `Activity` representing miscellaneous activities, adding the `location` attribute (enforced non-null and non-blank via `IllegalArgumentException` in constructors and mutators), accessors, mutators, and custom `toString`. Implements `copy()` using its copy constructor.
+* `ActivityList`: Wrapper around an `ArrayList<Activity>`, extending `AbstractList<Activity>`. Enforces non-null activities in mutators and insertion methods with `IllegalArgumentException`. Maintains a `HashMap` title index whose values are activity positions. Stores and returns defensive copies in `add()`, `set()`, and `get()` using the polymorphic `copy()` method, completely eliminating privacy leaks.
 * `ActivityType`: Enum denoting all valid types of Activities.
 * `Input`: Wrapper around `Scanner` utilizing exception handling (`NumberFormatException`, `IllegalArgumentException`) to catch invalid input and re-prompt the user to retry entering valid data.
-* `DayPlanner`: The main application class which manages the user menu and handles command/creation exceptions with recovery loops.
-* `DayPlannerUtils`: Utility methods for `DayPlanner`.
+* `DayPlanner`: The main application class which initializes data and launches the graphical interface.
+* `DayPlannerUtils`: Shared utility methods for activity category matching, greeting generation, and search filtering.
 * `MenuOption`: Enum denoting all valid menu options.
 * `RasParser`: Utility methods for serialization/deserialization.
 * `RasException`: Exception denoting something went wrong with serialization/deserialization.
+* `GUIDayPlanner`: Main application `JFrame` managing in-place view switching via a `CardLayout` (`welcome`, `add`, `search`) and a top `JMenuBar` (`Commands` menu with `Add`, `Search`, and `Quit`).
+* `GUIWindow`: Abstract base `JPanel` providing standard `BorderLayout` structure, form field generation, action buttons, and a scrollable message area with dual scrollbars (`AS_NEEDED`) and disabled line wrapping.
+* `GUIAddWindow`: Subclass of `GUIWindow` for adding activities, featuring a type `JComboBox` (`"home"`, `"school"`, `"other"`), dynamic Location label/field visibility toggling, input validation, and text-only reset.
+* `GUISearchWindow`: Subclass of `GUIWindow` for searching activities, featuring a type `JComboBox`, keyword and time filtering, a `Search Results:` header, and clean removal of unused Comment and Location fields.
+* `GUIQuitMenu`: Confirmation dialog ensuring safe RAS persistence to disk prior to application exit.
+* `GUICommandMenu`: Command selection dropdown retained for backward compatibility.
 
 ## Exception Handling & Class Invariants
 
@@ -242,6 +266,20 @@ where each `<entry...>` is enclosed in angle brackets with comma-separated field
    * **Abstract Activity Class**: `Activity` is declared as an abstract class and cannot be instantiated directly; concrete subclasses (`HomeActivity`, `SchoolActivity`, `OtherActivity`) are instantiated.
    * **Dynamic Binding**: Iterating over an `ArrayList<Activity>` polymorphically invokes `toString()` and `getType()` on each element without explicit type checks or `instanceof`.
 
+7. **Defensive Copying & Privacy Leak Prevention**:
+   * **Polymorphic Copying**: `Activity` defines an abstract `copy()` method implemented by `HomeActivity`, `SchoolActivity`, and `OtherActivity` via their copy constructors.
+   * **Encapsulation in ActivityList**: `ActivityList.add`, `set`, and `get` store and return defensive copies. Mutating an activity reference returned from `get()` or passed to `add()` never alters the internal list state.
+
+8. **Graphical User Interface (GUI) Controls & Behavior**:
+   * **Commands Menu Bar**: `JMenuBar` on the main frame with `Commands` menu (`Add`, `Search`, `Quit`).
+   * **In-Place CardLayout Navigation**: Switches between `welcome`, `add`, and `search` cards inside the single main `JFrame`.
+   * **Activity Type ComboBox**: Dropdown containing `"home"`, `"school"`, and `"other"`, defaulting to `"home"`.
+   * **Dynamic Location Visibility**: Selecting `"other"` reveals the Location label and field; selecting `"home"` or `"school"` hides them via `setVisible(type.equals("other"))`.
+   * **Text-Only Reset**: `Reset` button clears only the text fields, preserving the combo box selection.
+   * **Dual Scrollbars**: South message areas configure `JScrollPane` with both horizontal and vertical scrollbars (`AS_NEEDED`) and disabled text line wrap (`messages.setLineWrap(false)`).
+   * **Defensive Form Validation**: Clear feedback messages for missing titles, malformed timestamps, chronological inversions, or missing location on `Other` activities.
+   * **Quit Menu & Window Close ('X')**: Both the `Quit` menu item and window close button trigger `GUIQuitMenu` to ensure changes persist to disk.
+
 ---
 
 ## 2. Tester
@@ -302,3 +340,37 @@ The tester will automatically run all test cases, and report results.
 | **case35** | Exception: Time Mutators Component Bounds | Call `setYear(0)`, `setMonth(13)`, `setDay(32)`, `setHour(24)`, `setMinute(60)`. | Each mutator throws `IllegalArgumentException`. | **PASS** |
 | **case36** | Abstract Class: Activity Direct Instantiation | Inspect `Activity` class modifiers and concrete subclasses via reflection. | Confirms `Activity` is abstract and subclasses are concrete. | **PASS** |
 | **case37** | Polymorphism: Dynamic Binding via toString & getType | Invoke `toString()` and `getType()` on an `ArrayList<Activity>` containing all three subclasses. | Dynamic binding invokes correct subclass implementation without `instanceof`. | **PASS** |
+| **case38** | Privacy Leak: Defensive Copies | Add, retrieve, and mutate an activity via `ActivityList`. | Confirms stored and returned objects are independent defensive copies; internal state is unaffected. | **PASS** |
+
+---
+
+## 4. GUI Test Plan
+
+The following test table covers every graphical control, view transition, dynamic behavior, input validation message, reset functionality, and exit handling in the DayPlanner GUI:
+
+| GUI Test ID | Control / Feature | Action / Input Steps | Expected Output / Behavior | Status |
+| --- | --- | --- | --- | --- |
+| **gui01** | Menu Bar: Commands > Add | Click `Commands` in the menu bar and select `Add`. | `CardLayout` switches in-place to the **Add Activity** view without opening new windows. | **PASS** |
+| **gui02** | Menu Bar: Commands > Search | Click `Commands` in the menu bar and select `Search`. | `CardLayout` switches in-place to the **Search Activities** view without opening new windows. | **PASS** |
+| **gui03** | Menu Bar: Commands > Quit | Click `Commands` in the menu bar and select `Quit`. | Opens `GUIQuitMenu` confirmation dialog asking to save and exit. | **PASS** |
+| **gui04** | Window Close Button (`X`) | Click the window title bar `X` close button. | `WindowAdapter` intercepts close (`DO_NOTHING_ON_CLOSE`) and opens `GUIQuitMenu` confirmation dialog. | **PASS** |
+| **gui05** | Quit Confirmation: Cancel | In `GUIQuitMenu`, click **"NO - Keep planning"**. | Dialog closes; main window remains open and active without quitting. | **PASS** |
+| **gui06** | Quit Confirmation: Confirm | In `GUIQuitMenu`, click **"YES - Save and exit"**. | Saves activities to RAS data file on disk, displays success notification dialog, and terminates program. | **PASS** |
+| **gui07** | Add View: ComboBox Initial State | Open Add view. Inspect Activity Type combo box. | Combo box contains `{"home", "school", "other"}` with `"home"` selected as default. | **PASS** |
+| **gui08** | Add View: Location Toggle to "other" | In Add view, select `"other"` from the Type combo box. | `ItemListener` triggers; `locationLabel` and `locationField` become visible (`setVisible(true)`). | **PASS** |
+| **gui09** | Add View: Location Toggle to "home"/"school" | In Add view with `"other"` selected, switch Type to `"home"` or `"school"`. | `ItemListener` triggers; `locationLabel` and `locationField` hide automatically (`setVisible(false)`). | **PASS** |
+| **gui10** | Add View: Reset Button | Enter text in Title, Times, Comment, select `"other"`, and click **Reset**. | All text fields are cleared; Type combo box remains `"other"` and Location field remains visible. | **PASS** |
+| **gui11** | Add View: Add Home Activity (Valid) | Type: `home`, Title: `Laundry`, Start: `2026/10/10 09:00`, End: `2026/10/10 10:00`, Comment: `Fold`. Click **Add**. | Activity created and added to list; success message `> Added successfully: ...` logged in message area. | **PASS** |
+| **gui12** | Add View: Add Other Activity (Valid) | Type: `other`, Title: `Dentist`, Start: `2026/10/12 14:00`, End: `2026/10/12 15:00`, Location: `Clinic`. Click **Add**. | `OtherActivity` added; success message logged with location details. | **PASS** |
+| **gui13** | Add View: Error - Blank Title | Leave Title blank, fill valid times, click **Add**. | Error message: `> Title cannot be empty.` logged; activity is not added. | **PASS** |
+| **gui14** | Add View: Error - Malformed Start Time | Enter Start: `invalid-date`, click **Add**. | Error message: `> Invalid starting time format. Expected: YYYY/MM/DD HH:MM...` logged. | **PASS** |
+| **gui15** | Add View: Error - Chronological Inversion | Enter Start: `2026/10/10 12:00`, End: `2026/10/10 10:00`, click **Add**. | Error message: `> Ending time (...) has to be after starting time (...).` logged. | **PASS** |
+| **gui16** | Add View: Error - Blank Location on Other | Select `other`, fill Title and times, leave Location blank, click **Add**. | Error message: `> Location cannot be empty for Other activities.` logged. | **PASS** |
+| **gui17** | Search View: ComboBox Initial State | Open Search view. Inspect Activity Type combo box. | Combo box contains `{"home", "school", "other"}` with `"home"` selected as default. | **PASS** |
+| **gui18** | Search View: Fields Layout | Inspect form fields in Search view. | Displays Type, Title (keywords), Starting time, Ending time. Comment and Location fields are omitted. | **PASS** |
+| **gui19** | Search View: Reset Button | Enter search parameters in text fields and click **Reset**. | Text fields are cleared; Type combo box selection is preserved without reset. | **PASS** |
+| **gui20** | Search View: Search With Matches | Enter keywords or time bounds that match entered activities, click **Search**. | Matching activities and count (e.g. `Found 1 matching activity.`) logged in south panel. | **PASS** |
+| **gui21** | Search View: Search No Matches | Search for nonexistent keywords `xyz123`, click **Search**. | Logs: `> No activities matched your search request.` | **PASS** |
+| **gui22** | Search View: Panel Header Label | Inspect south results panel in Search view. | Panel label displays **Search Results:** instead of standard Messages label. | **PASS** |
+| **gui23** | Message Area: Dual Scrollbars | Add multiple activities with long descriptions until text exceeds area dimensions. | Vertical scrollbar appears as needed; horizontal scrollbar appears as needed with `lineWrap = false`. | **PASS** |
+

@@ -78,6 +78,16 @@ public class SchoolActivity extends Activity {
         super(other);
     }
 
+    /**
+     * Creates and returns a copy of this {@code SchoolActivity}.
+     * 
+     * @return A duplicate copy of this SchoolActivity.
+     */
+    @Override
+    public Activity copy() {
+        return new SchoolActivity(this);
+    }
+
 
 
     /*
