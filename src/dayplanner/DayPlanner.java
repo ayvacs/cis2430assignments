@@ -98,6 +98,25 @@ public class DayPlanner {
 
 
     /**
+     * Get a large greeting message.
+     * 
+     * @return Greeting message.
+     */
+    public static String getGreetingMessage() {
+        StringBuilder msg = new StringBuilder();
+        msg.append("\n\n\t\t===-=-==-=====-==-=-===\n\n");
+        msg.append("\t『 DAY PLANNER 』  Main Menu\n");
+        msg.append(DayPlannerUtils.getGreeting(activities.size()));
+        msg.append("\nPlease enter a command:");
+        msg.append("\t1. add    - Insert a new activity");
+        msg.append("\t2. search - Search for an activity");
+        msg.append("\t3. quit   - Exit DayPlanner\n");
+        return msg.toString();
+    }
+
+
+
+    /**
      * Displays the main menu and processes a single user command.
      * 
      * @return {@code true} to show the menu again, or {@code false} after
@@ -105,13 +124,7 @@ public class DayPlanner {
      */
     public static boolean commandLoop() {
         // Print a big greeting message
-        System.out.println("\n\n\t\t===-=-==-=====-==-=-===\n\n");
-        System.out.println("\t『 DAY PLANNER 』  Main Menu\n");
-        System.out.println(DayPlannerUtils.getGreeting(activities.size()));
-        System.out.println("\nPlease enter a command:");
-        System.out.println("\t1. add    - Insert a new activity");
-        System.out.println("\t2. search - Search for an activity");
-        System.out.println("\t3. quit   - Exit DayPlanner\n");
+        System.out.println(getGreetingMessage());
 
         String cmd;
         MenuOption option;
