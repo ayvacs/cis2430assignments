@@ -128,7 +128,7 @@ The application handles errors and invariant violations via structured Java exce
 
 The Tester consists of one class:
 
-* `Tester.java`: The application class that runs test cases.
+* `Tester.java`: Automatic tester that executes test cases for DayPlanner features, invariants, and exceptions.
 
 ## Assumptions
 
@@ -231,6 +231,17 @@ where each `<entry...>` is enclosed in angle brackets with comma-separated field
    * Verify newly added activities are written to disk upon `quit`.
    * Verify saved activities are restored properly when restarting the application.
 
+5. **Exception Handling and Class Invariants**:
+   * **Time Component Bounds**: Parameterized constructor and mutator methods throw `IllegalArgumentException` on invalid year, month, day, hour, or minute values.
+   * **Comparable Contract**: `Time.compareTo` throws `NullPointerException` when passed `null` and `ClassCastException` when passed an object of mismatched type.
+   * **Activity Invariants**: Constructors throw `IllegalArgumentException` for null or blank titles, null start or end timestamps, and when start time is not strictly before end time.
+   * **OtherActivity Location**: Constructor throws `IllegalArgumentException` for null or blank locations.
+   * **Input Recovery**: `Input.readInt()` catches `NumberFormatException` on non-integer input and re-prompts until a valid integer is entered.
+
+6. **Inheritance, Abstract Classes & Polymorphism**:
+   * **Abstract Activity Class**: `Activity` is declared as an abstract class and cannot be instantiated directly; concrete subclasses (`HomeActivity`, `SchoolActivity`, `OtherActivity`) are instantiated.
+   * **Dynamic Binding**: Iterating over an `ArrayList<Activity>` polymorphically invokes `toString()` and `getType()` on each element without explicit type checks or `instanceof`.
+
 ---
 
 ## 2. Tester
@@ -276,3 +287,18 @@ The tester will automatically run all test cases, and report results.
 | **case20** | Search: No Title Keywords | Request all title candidates with no keywords. | Returns every position in the activity list. | **PASS** |
 | **case21** | Title Index: Activity Addition | Add three activities, then search for the title of the last activity. | Returns its updated position, 2. | **PASS** |
 | **case22** | Persistence Verification | Write three activities to a temporary RAS file and load them again. | Activities are restored in order and the title index returns the expected positions. | **PASS** |
+| **case23** | Exception: Bad Year in Time Constructor | Construct `Time(0, 1, 1, 0, 0)` with invalid year (0). | Throws `IllegalArgumentException`. | **PASS** |
+| **case24** | Exception: Bad Month in Time Constructor | Construct `Time(2026, 13, 1, 0, 0)` with invalid month (13). | Throws `IllegalArgumentException`. | **PASS** |
+| **case25** | Exception: Bad Day in Time Constructor | Construct `Time(2026, 1, 32, 0, 0)` with invalid day (32 in January). | Throws `IllegalArgumentException`. | **PASS** |
+| **case26** | Exception: Bad Hour in Time Constructor | Construct `Time(2026, 1, 1, 24, 0)` with invalid hour (24). | Throws `IllegalArgumentException`. | **PASS** |
+| **case27** | Exception: Bad Minute in Time Constructor | Construct `Time(2026, 1, 1, 0, 60)` with invalid minute (60). | Throws `IllegalArgumentException`. | **PASS** |
+| **case28** | Exception: Time.compareTo Null Argument | Call `compareTo((Object) null)` with `null` argument. | Throws `NullPointerException` per `Comparable` contract. | **PASS** |
+| **case29** | Exception: Time.compareTo Wrong Class | Call `compareTo("not a Time")` with a non-`Time` object. | Throws `ClassCastException`. | **PASS** |
+| **case30** | Exception: Null or Blank Activity Title | Construct `HomeActivity` with `null` and blank (`"   "`) titles. | Throws `IllegalArgumentException` in both cases. | **PASS** |
+| **case31** | Exception: Null Activity Timestamps | Construct `HomeActivity` with `null` start time and `null` end time. | Throws `IllegalArgumentException` in both cases. | **PASS** |
+| **case32** | Exception: Start Time Not Before End Time | Construct `HomeActivity` with equal start/end times and start time after end time. | Throws `IllegalArgumentException` in both cases. | **PASS** |
+| **case33** | Exception: Null or Blank Location | Construct `OtherActivity` with `null` and blank (`"   "`) locations. | Throws `IllegalArgumentException` in both cases. | **PASS** |
+| **case34** | Exception: Input.readInt Non-Integer Input | Feed non-integer input (`"hello\n42\n"`) to `Input.readInt()`. | Silently recovers from `NumberFormatException` and returns `42`. | **PASS** |
+| **case35** | Exception: Time Mutators Component Bounds | Call `setYear(0)`, `setMonth(13)`, `setDay(32)`, `setHour(24)`, `setMinute(60)`. | Each mutator throws `IllegalArgumentException`. | **PASS** |
+| **case36** | Abstract Class: Activity Direct Instantiation | Inspect `Activity` class modifiers and concrete subclasses via reflection. | Confirms `Activity` is abstract and subclasses are concrete. | **PASS** |
+| **case37** | Polymorphism: Dynamic Binding via toString & getType | Invoke `toString()` and `getType()` on an `ArrayList<Activity>` containing all three subclasses. | Dynamic binding invokes correct subclass implementation without `instanceof`. | **PASS** |

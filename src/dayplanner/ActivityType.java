@@ -42,13 +42,23 @@ public enum ActivityType {
 
 
 
+    /**
+     * Numeric code representing this activity type.
+     */
     private final int code;
+
+    /**
+     * Human-readable display name of this activity type.
+     */
     private final String displayName;
 
 
 
     /**
-     * Define a new enum
+     * Constructs an ActivityType constant with its numeric code and display name.
+     * 
+     * @param code        The numeric menu choice.
+     * @param displayName The human-readable name of the activity category.
      */
     private ActivityType(int code, String displayName) {
         this.code = code;

@@ -24,10 +24,25 @@ package dayplanner;
  * </pre>
  */
 public abstract class Activity implements Comparable<Activity> {
-    private String title;   // Required
-    private Time startTime; // Required
-    private Time endTime;   // Required
-    private String comment; // Optional
+    /**
+     * The title of this activity. Must be non-null and non-blank.
+     */
+    private String title;
+
+    /**
+     * The starting time of this activity. Must be non-null and strictly before endTime.
+     */
+    private Time startTime;
+
+    /**
+     * The ending time of this activity. Must be non-null and strictly after startTime.
+     */
+    private Time endTime;
+
+    /**
+     * Optional user comment or note associated with this activity.
+     */
+    private String comment;
 
 
 

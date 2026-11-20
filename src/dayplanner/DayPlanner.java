@@ -12,17 +12,31 @@ package dayplanner;
  * </p>
  */
 public class DayPlanner {
+    /**
+     * Input instance used for reading console user input.
+     */
     private static final Input KEYBOARD = new Input();
 
+    /**
+     * Directory path where data files are stored.
+     */
     private static final String DATA_DIRECTORY = "dat";
+
+    /**
+     * File name of the RAS data file loaded and persisted.
+     */
     private static String dataFileName;
+
+    /**
+     * The master list of activities currently loaded into the planner.
+     */
     private static ActivityList activities;
 
 
     /**
      * Main entry point for the DayPlanner application.
      * 
-     * @param args command-line arguments (currently unused).
+     * @param args Command-line arguments; expects exactly one argument specifying the data file name.
      */
     public static void main(String[] args) {
         // Get the data file name from args

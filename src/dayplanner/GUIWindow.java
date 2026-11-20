@@ -27,9 +27,24 @@ import javax.swing.border.Border;
  * Add or Search).
  */
 public abstract class GUIWindow extends JFrame {
+    /**
+     * Default dimensions of the GUI window.
+     */
     private static final Dimension DIMS = new Dimension(800, 600);
+
+    /**
+     * Default close operation: dispose this window when closed.
+     */
     private static final int CLOSE = JFrame.DISPOSE_ON_CLOSE;
+
+    /**
+     * Background color for the GUI window content pane.
+     */
     private static final Color BACKGROUND = new Color(250, 250, 250);
+
+    /**
+     * Padding border applied around panels in the window.
+     */
     private static final Border PADDING = BorderFactory.createEmptyBorder(12, 12, 12, 12);
 
     /**

@@ -13,7 +13,10 @@ package dayplanner;
  * <code>new OtherActivity("Appointment", start, end, "Clinic")</code>
  */
 public class OtherActivity extends Activity {
-    private String location;    // Required
+    /**
+     * The physical location where this activity takes place. Must be non-null and non-blank.
+     */
+    private String location;
 
 
 

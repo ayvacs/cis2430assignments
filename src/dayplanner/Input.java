@@ -22,6 +22,9 @@ import java.io.InputStream;
  * </p>
  */
 public class Input {
+    /**
+     * Scanner used for reading lines and tokens from the underlying input stream.
+     */
     private final Scanner SCANNER;
 
 

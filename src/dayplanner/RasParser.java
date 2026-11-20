@@ -261,7 +261,7 @@ public final class RasParser {
      * "https://www.rapidtables.com/web/html/html-codes.html">RapidTables</a>.
      * 
      * @param input Input to desanitize.
-     * @return Desnitized input, or <code>null</code> if input is null.
+     * @return Desanitized input, or <code>null</code> if input is null.
      * @see #sanitize(String)
      */
     public static String desanitize(String input) {

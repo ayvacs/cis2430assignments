@@ -19,31 +19,61 @@ public class GUISearchWindow extends GUIWindow {
         super(activities);
     }
 
+    /**
+     * {@inheritDoc}
+     * 
+     * @return Title string for the search window.
+     */
     @Override
     public String getWindowTitle() {
         return "DayPlanner - Search";
     }
 
+    /**
+     * {@inheritDoc}
+     * 
+     * @return Header HTML text for the search window form.
+     */
     @Override
     public String getHeaderText() {
         return "<html><b>Searching activities:</b></html>";
     }
 
+    /**
+     * {@inheritDoc}
+     * 
+     * @return Subheader HTML text explaining search parameters are optional.
+     */
     @Override
     public String getSubHeaderText() {
         return "<html>Fields are optional; leaving a text field blank means the search will ignore that parameter.</html>";
     }
 
+    /**
+     * {@inheritDoc}
+     * 
+     * @return Action button label "Search".
+     */
     @Override
     public String getActionButtonLabel() {
         return "Search";
     }
 
+    /**
+     * {@inheritDoc}
+     * 
+     * @return Action command string "SEARCH".
+     */
     @Override
     public String getActionButtonCommand() {
         return "SEARCH";
     }
 
+    /**
+     * {@inheritDoc}
+     * 
+     * @return Array of field labels for the search form.
+     */
     @Override
     public String[] getFieldLabels() {
         return new String[] {
@@ -56,6 +86,11 @@ public class GUISearchWindow extends GUIWindow {
         };
     }
 
+    /**
+     * {@inheritDoc}
+     * 
+     * @return true if search was performed, false if validation failed.
+     */
     @Override
     public boolean executeAction() {
         return trySearch(activities, centerFields);

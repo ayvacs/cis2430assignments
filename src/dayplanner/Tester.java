@@ -9,10 +9,17 @@ import java.nio.file.Path;
 
 
 /**
- * Automatic tester, that executes all 22 test cases in README.md.
+ * Automatic tester that executes test cases for DayPlanner features, invariants, and exceptions.
  */
 public class Tester {
+    /**
+     * Counter of test cases that passed.
+     */
     private static int passedCount = 0;
+
+    /**
+     * Counter of test cases that failed.
+     */
     private static int failedCount = 0;
 
 
@@ -413,7 +420,9 @@ public class Tester {
 
     /**
      * Return an ActivityList with a bunch of activities with the same start and end
-     * times (Sample data)
+     * times (Sample data).
+     * 
+     * @return Sample ActivityList with activities sharing the same start and end times.
      */
     private static ActivityList testActivities() {
         ActivityList list = new ActivityList();
@@ -426,8 +435,10 @@ public class Tester {
     }
 
     /**
-     * Return a ActivityList with a bunch of activities with differing start and end
-     * times (Sample data)
+     * Return an ActivityList with a bunch of activities with differing start and end
+     * times (Sample data).
+     * 
+     * @return Sample ActivityList with activities having differing start and end times.
      */
     private static ActivityList testTimeActivities() {
         ActivityList list = new ActivityList();
@@ -791,7 +802,7 @@ public class Tester {
     }
 
     /**
-     * Default constructor (not used)
+     * Default constructor (not used).
      */
     private Tester() {}
 }

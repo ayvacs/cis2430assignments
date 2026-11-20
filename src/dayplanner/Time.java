@@ -31,17 +31,26 @@ public class Time implements Comparable<Object> {
      * Static Constants
      */
 
+    /** Minimum allowable year (1). */
     private static final int MIN_YEAR = 1;
+    /** Minimum allowable month (1, January). */
     private static final int MIN_MONTH = 1;
+    /** Minimum allowable day (1). */
     private static final int MIN_DAY = 1;
+    /** Minimum allowable hour (0). */
     private static final int MIN_HOUR = 0;
+    /** Minimum allowable minute (0). */
     private static final int MIN_MINUTE = 0;
 
+    /** Maximum allowable year (9999). */
     private static final int MAX_YEAR = 9999;
+    /** Maximum allowable month (12, December). */
     private static final int MAX_MONTH = 12;
     // There is no MAX_DAY because the highest possible
     // day is variable, depending on the month.
+    /** Maximum allowable hour (23). */
     private static final int MAX_HOUR = 23;
+    /** Maximum allowable minute (59). */
     private static final int MAX_MINUTE = 59;
 
 
@@ -50,11 +59,16 @@ public class Time implements Comparable<Object> {
      * Instance Variables
      */
 
-    private int year;   // Required
-    private int month;  // Required
-    private int day;    // Required
-    private int hour;   // Required
-    private int minute; // Required
+    /** The year component (1–9999). */
+    private int year;
+    /** The month component (1–12). */
+    private int month;
+    /** The day component (1 to max days in month). */
+    private int day;
+    /** The hour component (0–23). */
+    private int hour;
+    /** The minute component (0–59). */
+    private int minute;
 
 
 

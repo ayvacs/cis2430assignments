@@ -31,7 +31,14 @@ import java.util.Set;
  * </pre>
  */
 public class ActivityList extends AbstractList<Activity> {
+    /**
+     * Internal storage list holding the Activity objects.
+     */
     private ArrayList<Activity> array;
+
+    /**
+     * Index mapping each lowercase title keyword to the list of activity positions in {@code array}.
+     */
     private final Map<String, ArrayList<Integer>> titleIndex = new HashMap<>();
 
 
@@ -103,7 +110,8 @@ public class ActivityList extends AbstractList<Activity> {
      * @param dirName  The directory containing the RAS file.
      * @param fileName The name of the RAS file.
      * @throws FileNotFoundException          if the file does not exist.
-     * @throws IOException                    if there was an error reading to the
+     * @throws ArrayIndexOutOfBoundsException if a line has invalid token formatting.
+     * @throws IOException                    if there was an error reading from the
      *                                        file.
      */
     public void appendActivitiesFromFile(String dirName, String fileName)
@@ -460,14 +468,6 @@ public class ActivityList extends AbstractList<Activity> {
         return "---\n"+sb.toString()+"---";
     }
 
-    /**
-     * Determines whether this activity list is equal to another
-     * <code>ActivityList</code>.
-     * 
-     * @param other The other <code>ActivityList</code> to compare with.
-     * @return <code>true</code> if both lists contain equal activities in the same
-     *         order, <code>false</code> otherwise.
-     */
     /**
      * Determines whether this activity list is equal to another object.
      * 

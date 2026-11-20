@@ -15,13 +15,32 @@ import javax.swing.UIManager;
 import javax.swing.border.Border;
 
 /**
- * Represents the Swing GUI quit menu..
+ * Represents the Swing GUI quit menu.
  */
 public class GUIQuitMenu extends JFrame {
+    /**
+     * Default dimensions of the quit confirmation window.
+     */
     private static final Dimension DIMS = new Dimension(450, 250);
-	private static final String TITLE = "Exit DayPlanner";
-	private static final int CLOSE = JFrame.DO_NOTHING_ON_CLOSE;
-	private static final Color BACKGROUND = new Color(222, 153, 153);
+
+    /**
+     * Title of the quit confirmation window.
+     */
+    private static final String TITLE = "Exit DayPlanner";
+
+    /**
+     * Window close operation: do nothing on default close so user must choose an option button.
+     */
+    private static final int CLOSE = JFrame.DO_NOTHING_ON_CLOSE;
+
+    /**
+     * Background color for the quit confirmation window.
+     */
+    private static final Color BACKGROUND = new Color(222, 153, 153);
+
+    /**
+     * Padding border applied around panels in the quit window.
+     */
     private static final Border PADDING = BorderFactory.createEmptyBorder(12, 12, 12, 12);
 
 

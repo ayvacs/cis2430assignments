@@ -19,31 +19,61 @@ public class GUIAddWindow extends GUIWindow {
         super(activities);
     }
 
+    /**
+     * {@inheritDoc}
+     * 
+     * @return Title string for the add window.
+     */
     @Override
     public String getWindowTitle() {
         return "DayPlanner - Add";
     }
 
+    /**
+     * {@inheritDoc}
+     * 
+     * @return Header HTML text for the add window form.
+     */
     @Override
     public String getHeaderText() {
         return "<html><b>Adding an activity:</b></html>";
     }
 
+    /**
+     * {@inheritDoc}
+     * 
+     * @return Empty subheader string (no subheader needed for add window).
+     */
     @Override
     public String getSubHeaderText() {
         return new String();
     }
 
+    /**
+     * {@inheritDoc}
+     * 
+     * @return Action button label "Add".
+     */
     @Override
     public String getActionButtonLabel() {
         return "Add";
     }
 
+    /**
+     * {@inheritDoc}
+     * 
+     * @return Action command string "ADD".
+     */
     @Override
     public String getActionButtonCommand() {
         return "ADD";
     }
 
+    /**
+     * {@inheritDoc}
+     * 
+     * @return Array of field labels for the add activity form.
+     */
     @Override
     public String[] getFieldLabels() {
         return new String[] {
@@ -56,6 +86,11 @@ public class GUIAddWindow extends GUIWindow {
         };
     }
 
+    /**
+     * {@inheritDoc}
+     * 
+     * @return true if activity creation succeeded, false otherwise.
+     */
     @Override
     public boolean executeAction() {
         return tryCreate(activities, centerFields);

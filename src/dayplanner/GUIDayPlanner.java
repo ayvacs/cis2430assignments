@@ -16,10 +16,29 @@ import javax.swing.border.Border;
  * Represents the Swing GUI extension.
  */
 public class GUIDayPlanner extends JFrame {
+    /**
+     * Default dimensions of the main GUI window.
+     */
     private static final Dimension DIMS = new Dimension(600, 200);
-	private static final String TITLE = "DayPlanner";
-	private static final int CLOSE = JFrame.DO_NOTHING_ON_CLOSE;
-	private static final Color BACKGROUND = new Color(220, 220, 220);
+
+    /**
+     * Title of the main GUI window.
+     */
+    private static final String TITLE = "DayPlanner";
+
+    /**
+     * Window close operation: do nothing on default close so custom quit flow is used.
+     */
+    private static final int CLOSE = JFrame.DO_NOTHING_ON_CLOSE;
+
+    /**
+     * Background color for the window.
+     */
+    private static final Color BACKGROUND = new Color(220, 220, 220);
+
+    /**
+     * Padding border applied around components.
+     */
     private static final Border PADDING = BorderFactory.createEmptyBorder(12, 12, 12, 12);
 
 

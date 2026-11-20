@@ -6,6 +6,9 @@ import javax.swing.JComboBox;
  * Represents the Swing GUI combo box to select a command.
  */
 public class GUICommandMenu extends JComboBox<String> {
+    /**
+     * Menu options displayed in the command selection combo box.
+     */
     private static final String[] OPTIONS = {
         "< Select a Command >",
         "Add - Insert a new activity",
